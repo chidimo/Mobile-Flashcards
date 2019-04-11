@@ -8,6 +8,7 @@ export default deckStyles = StyleSheet.create({
     headingText: {
         fontSize: 20,
         textAlign: 'center',
-        color: 'midnightblue'
+        color: 'midnightblue',
+        fontWeight: '900',
     },
 })

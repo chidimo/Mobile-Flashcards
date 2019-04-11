@@ -8,7 +8,8 @@ export default decksStyles = StyleSheet.create({
     headingText: {
         fontSize: 20,
         textAlign: 'center',
-        color: 'midnightblue'
+        color: 'midnightblue',
+        fontWeight: '900',
     },
     itemContainer: {
         padding: 8,

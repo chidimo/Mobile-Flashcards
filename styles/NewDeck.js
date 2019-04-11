@@ -8,6 +8,7 @@ export default newDeckStyles = StyleSheet.create({
     headingText: {
         fontSize: 20,
         textAlign: 'center',
-        color: 'midnightblue'
+        color: 'midnightblue',
+        fontWeight: '900',
     },
 })
