@@ -18,7 +18,6 @@ export default decksStyles = StyleSheet.create({
         borderRadius: 2,
         marginBottom: 1,
         borderWidth: StyleSheet.hairlineWidth,
-
     },
     text: {
         color: 'blue',
