@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { get_decks } from '../actions/decks'
 import decksStyles from '../styles/Decks';
+import sharedStyles from '../styles/shared';
 
 class Decks extends Component {
     state = { ready: false }
@@ -31,8 +32,8 @@ class Decks extends Component {
     render() {
         const { decks } = this.props
         return(
-            <View style={decksStyles.container}>
-                <Text style={decksStyles.headingText}>Decks</Text>
+            <View style={sharedStyles.container}>
+                <Text style={sharedStyles.headingText}>Decks</Text>
 
                 <FlatList
                     data={decks}

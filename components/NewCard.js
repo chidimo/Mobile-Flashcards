@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
 import SharedTextInput from './Shared.TextInput';
-import SharedButton from './Shared.Button'
+import SharedButton from './Shared.Button';
+import newCardStyles from '../styles/NewCard';
+import sharedStyles from '../styles/shared';
 
 
 class NewCard extends Component {
@@ -22,8 +24,8 @@ class NewCard extends Component {
         const deck = navigation.state.params.item
 
         return (
-            <View>
-                <Text>
+            <View style={sharedStyles.container}>
+                <Text style={sharedStyles.headingText}>
                     {`Add card to ${deck}`} 
                 </Text>
 

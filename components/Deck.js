@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 import deckStyles from '../styles/Deck';
+import sharedStyles from '../styles/shared';
 
 class Deck extends Component {
     render() {
@@ -9,8 +10,8 @@ class Deck extends Component {
         const item = navigation.state.params.item
 
         return (
-            <View style={deckStyles.container}>
-                <Text style={deckStyles.headingText}>
+            <View style={sharedStyles.container}>
+                <Text style={sharedStyles.headingText}>
                     {item.toUpperCase()}
                 </Text>
 
