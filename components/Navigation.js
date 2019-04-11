@@ -38,18 +38,18 @@ const NewDeckStack = createStackNavigator(
 
 const tabs = createBottomTabNavigator(
     {
-        Add: {
-            screen: NewDeckStack,
-            navigationOptions: {
-                tabBarIcon: ({ tintColor }) => <FontAwesome name='plus-square' size={30} color={tintColor} />
-            }
-        },
-
         Decks: {
             screen: DeckStack,
             navigationOptions: {
                 title: 'Home',
                 tabBarIcon: ({ tintColor }) => <Ionicons name={Platform.OS === 'ios' ? 'ios-home' : 'md-home'} size={30} color={tintColor}/>
+            }
+        },
+
+        Add: {
+            screen: NewDeckStack,
+            navigationOptions: {
+                tabBarIcon: ({ tintColor }) => <FontAwesome name='plus-square' size={30} color={tintColor} />
             }
         },
     },
