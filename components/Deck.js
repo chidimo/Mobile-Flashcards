@@ -15,13 +15,23 @@ class Deck extends Component {
                 </Text>
 
                 <TouchableOpacity
-                    style={deckStyles.itemContainer}
+                    style={deckStyles.startQuizContainer}
+                    onPress={() => this.props.navigation.navigate(
+                        'Quiz', { item }
+                    )}
+                >
+                    <Text style={deckStyles.startQuiztext}>Start quiz</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={deckStyles.addCardContainer}
                     onPress={() => this.props.navigation.navigate(
                         'NewCard', { item }
                     )}
                 >
-                    <Text style={deckStyles.text}>Add Card</Text>
+                    <Text style={deckStyles.addCardText}>Add Card</Text>
                 </TouchableOpacity>
+
             </View>
         )
     }
