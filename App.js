@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 
-import ConnectedNavigation from './components/ConnectedNavigation';
+import ConnectedNavigation, { AppStatusBar } from './components/ConnectedNavigation';
 import { reducer } from './reducers/reducer';
 
 const logger = createLogger()
@@ -14,6 +14,7 @@ export default class App extends React.Component {
     render() {
         return (
             <Provider store={store}>
+                <AppStatusBar />
                 <ConnectedNavigation />
             </Provider>
         );
