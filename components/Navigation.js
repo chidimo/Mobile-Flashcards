@@ -11,6 +11,7 @@ import Decks from './Decks'
 import NewDeck from './NewDeck'
 import Deck from './Deck'
 import NewCard from './NewCard';
+import Quiz from './Quiz';
 
 const DeckStack = createStackNavigator(
     {
@@ -30,6 +31,16 @@ const DeckStack = createStackNavigator(
 
         NewCard: {
             screen: NewCard,
+            navigationOptions: {
+                headerTintColor: 'white',
+                headerStyle: {
+                    backgroundColor: 'purple',
+                }
+            }
+        },
+
+        Quiz: {
+            screen: Quiz,
             navigationOptions: {
                 headerTintColor: 'white',
                 headerStyle: {
