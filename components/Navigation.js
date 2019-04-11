@@ -29,7 +29,13 @@ const DeckStack = createStackNavigator(
         },
 
         NewCard: {
-            screen: NewCard
+            screen: NewCard,
+            navigationOptions: {
+                headerTintColor: 'white',
+                headerStyle: {
+                    backgroundColor: 'purple',
+                }
+            }
         }
     }
 )
