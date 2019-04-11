@@ -1,12 +1,12 @@
-import { ADD_NEW_DECK } from '../actions/types'
+import { ADD_NEW_DECK, GET_DECKS } from '../actions/types'
 
-export const decks = (state={}, action) => {
+export const decks = (state=[], action) => {
     switch (action.type) {
         case ADD_NEW_DECK:
-            return {
-                ...state,
-                [action.name]: action.name
-            }
+            return state.concat(action.name)
+
+        case GET_DECKS:
+            return action.decks
 
         default:
             return state
