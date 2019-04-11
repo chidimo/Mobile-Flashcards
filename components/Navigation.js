@@ -12,42 +12,27 @@ import NewDeck from './NewDeck'
 import Deck from './Deck'
 import NewCard from './NewCard';
 import Quiz from './Quiz';
+import { lightPurp, white,purple, gray } from '../utils/colors'
 
 const DeckStack = createStackNavigator(
     {
-        Decks: {
-            screen: Decks
+        Decks: Decks,
+        Deck: Deck,
+        NewCard: NewCard,
+        Quiz: Quiz
+    },
+    
+    {
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: lightPurp,
+            },
+            headerTintColor: white,
+            headerTitleStyle: {
+                fontWeight: '200',
+                fontSize: 18,
+            },
         },
-
-        Deck: {
-            screen: Deck,
-            navigationOptions: {
-                headerTintColor: 'white',
-                headerStyle: {
-                    backgroundColor: 'purple',
-                }
-            }
-        },
-
-        NewCard: {
-            screen: NewCard,
-            navigationOptions: {
-                headerTintColor: 'white',
-                headerStyle: {
-                    backgroundColor: 'purple',
-                }
-            }
-        },
-
-        Quiz: {
-            screen: Quiz,
-            navigationOptions: {
-                headerTintColor: 'white',
-                headerStyle: {
-                    backgroundColor: 'purple',
-                }
-            }
-        }
     }
 )
 
@@ -55,6 +40,19 @@ const NewDeckStack = createStackNavigator(
     {
         Add: {
             screen: NewDeck
+        },
+    },
+
+    {
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: lightPurp,
+            },
+            headerTintColor: white,
+            headerTitleStyle: {
+                fontWeight: '200',
+                fontSize: 18,
+            },
         },
     }
 )
@@ -79,16 +77,16 @@ const tabs = createBottomTabNavigator(
 
     {
         tabBarOptions: {
-            activeTintColor: 'black',
+            activeTintColor: gray,
             labelStyle: {
                 fontSize: 12,
             },
             style: {
-                color: 'black',
-                backgroundColor: '#2980b6',
+                color: white,
+                backgroundColor: purple,
             },
         }
-    }
+    },    
 )
 
 export default Navigation = createAppContainer(tabs)
