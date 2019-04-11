@@ -20,7 +20,9 @@ class Decks extends Component {
     render_deck = (item) => (
         <TouchableOpacity
             style={decksStyles.itemContainer}
-            onPress={() => console.log(`${item} pressed`)}
+            onPress={() => this.props.navigation.navigate(
+                'Deck', { item }
+            )}
         >
             <Text style={decksStyles.text}>{item.toUpperCase()}</Text>
         </TouchableOpacity>

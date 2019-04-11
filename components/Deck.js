@@ -3,12 +3,12 @@ import { View, Text } from 'react-native';
 
 class Deck extends Component {
     render() {
-        const { deck } = this.props
+        const { navigation } = this.props
 
         return (
             <View>
                 <Text>
-                    Deck detail
+                    {navigation.state.params.item}
                 </Text>
             </View>
         )
