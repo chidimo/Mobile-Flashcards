@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { purple } from '../utils/colors';
 
 export default sharedStyles = StyleSheet.create({
     container: {
@@ -8,11 +9,11 @@ export default sharedStyles = StyleSheet.create({
     headingText: {
         fontSize: 20,
         textAlign: 'center',
-        color: 'midnightblue',
+        color: purple,
         fontWeight: '900',
     },
     text: {
-        color: 'blue',
+        color: purple,
         textAlign: 'center',
         fontWeight: '700',
     }

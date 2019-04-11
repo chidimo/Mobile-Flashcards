@@ -1,21 +1,23 @@
 import { StyleSheet } from 'react-native'
 
+import { purple, lightGrey, white } from '../utils/colors';
+
 export default sharedButtonStyles = StyleSheet.create({
     container: {
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#2980b6',
+        backgroundColor: lightGrey,
         paddingVertical: 15,
         marginBottom: 12,
         paddingVertical: 12,
         borderRadius: 4,
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: 'rgba(255, 255, 255, 0.7)'
+        borderColor: white,
     },
 
     text: {
-        color: '#fff',
+        color: purple,
         textAlign: 'center',
         fontWeight: '700'
     }

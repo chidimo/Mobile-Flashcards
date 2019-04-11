@@ -12,7 +12,8 @@ import NewDeck from './NewDeck'
 import Deck from './Deck'
 import NewCard from './NewCard';
 import Quiz from './Quiz';
-import { lightPurp, white,purple, gray } from '../utils/colors'
+
+import { white, purple } from '../utils/colors';
 
 const DeckStack = createStackNavigator(
     {
@@ -21,16 +22,16 @@ const DeckStack = createStackNavigator(
         NewCard: NewCard,
         Quiz: Quiz
     },
-    
+
     {
         defaultNavigationOptions: {
             headerStyle: {
-                backgroundColor: lightPurp,
+                backgroundColor: white,
             },
-            headerTintColor: white,
+            headerTintColor: purple,
             headerTitleStyle: {
                 fontWeight: '200',
-                fontSize: 18,
+                fontSize: 16,
             },
         },
     }
@@ -46,9 +47,9 @@ const NewDeckStack = createStackNavigator(
     {
         defaultNavigationOptions: {
             headerStyle: {
-                backgroundColor: lightPurp,
+                backgroundColor: white,
             },
-            headerTintColor: white,
+            headerTintColor: purple,
             headerTitleStyle: {
                 fontWeight: '200',
                 fontSize: 18,
@@ -77,13 +78,13 @@ const tabs = createBottomTabNavigator(
 
     {
         tabBarOptions: {
-            activeTintColor: gray,
+            activeTintColor: purple,
             labelStyle: {
                 fontSize: 12,
             },
             style: {
                 color: white,
-                backgroundColor: purple,
+                backgroundColor: white,
             },
         }
     },    
