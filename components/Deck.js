@@ -5,6 +5,12 @@ import deckStyles from '../styles/Deck';
 import sharedStyles from '../styles/shared';
 
 class Deck extends Component {
+    
+    static navigationOptions = ({ navigation }) => {
+        const title = navigation.getParam('item').toUpperCase()
+        return ({ title })
+    }
+    
     render() {
         const { navigation } = this.props
         const item = navigation.state.params.item

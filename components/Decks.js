@@ -7,6 +7,11 @@ import decksStyles from '../styles/Decks';
 import sharedStyles from '../styles/shared';
 
 class Decks extends Component {
+
+    static navigationOptions = {
+        title: 'Home'
+    }
+
     state = { ready: false }
 
     componentDidMount() {

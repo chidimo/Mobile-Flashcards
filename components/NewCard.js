@@ -9,6 +9,11 @@ import sharedStyles from '../styles/shared';
 
 class NewCard extends Component {
 
+    static navigationOptions = ({ navigation }) => {
+        const title = `Add card to ${navigation.getParam('item').toUpperCase()}`
+        return ({ title })
+    }
+
     state = { question: '', answer: ''}
 
     _save_card = () => {
@@ -26,19 +31,19 @@ class NewCard extends Component {
         return (
             <View style={sharedStyles.container}>
                 <Text style={sharedStyles.headingText}>
-                    {`Add card to ${deck}`} 
+                    {`Add card to ${deck.toUpperCase()}`} 
                 </Text>
 
                 <SharedTextInput
                     refValue='question'
                     onSubmitEditing={() => this.answerInput.focus()} 
-                    placeholder={'Question'}
+                    placeholder='Enter question'
                     returnKeyType="next"
                     onChangeText={question => this.setState({question})}
                 />
 
                 <SharedTextInput
-                    placeholder='Answer'
+                    placeholder='Enter answer'
                     returnKeyType="go"
                     refValue={input => this.answerInput = input} 
                     onChangeText={answer => this.setState({answer})}

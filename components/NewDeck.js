@@ -12,6 +12,10 @@ import sharedStyles from '../styles/shared';
 
 class NewDeck extends Component {
 
+    static navigationOptions = {
+        title: 'Add deck'
+    }
+
     state = { name: '' }
 
     _save_deck = () => {
