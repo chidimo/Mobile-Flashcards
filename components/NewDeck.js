@@ -26,6 +26,7 @@ class NewDeck extends Component {
                 </Text>
 
                 <SharedTextInput
+                    returnKeyType="go"
                     placeholder={'Enter deck name'}
                     onChangeText={name => this.setState({name})}
                 />

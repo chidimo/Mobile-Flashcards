@@ -23,6 +23,7 @@ class Deck extends Component {
                     <Text style={deckStyles.startQuiztext}>Start quiz</Text>
                 </TouchableOpacity>
 
+
                 <TouchableOpacity
                     style={deckStyles.addCardContainer}
                     onPress={() => this.props.navigation.navigate(
