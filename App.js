@@ -1,11 +1,21 @@
 import React from 'react';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux'
+import { createLogger } from 'redux-logger';
+import thunk from 'redux-thunk';
 
-import Navigation from './components/Navigation';
+import ConnectedNavigation from './components/ConnectedNavigation';
+import { reducer } from './reducers/reducer';
+
+const logger = createLogger()
+const store = createStore(reducer, applyMiddleware(thunk, logger))
 
 export default class App extends React.Component {
     render() {
         return (
-            <Navigation />
+            <Provider store={store}>
+                <ConnectedNavigation />
+            </Provider>
         );
     }
 }
