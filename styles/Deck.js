@@ -11,16 +11,29 @@ export default deckStyles = StyleSheet.create({
         color: 'midnightblue',
         fontWeight: '900',
     },
-    itemContainer: {
+    addCardContainer: {
         padding: 8,
         alignSelf: 'stretch',
         backgroundColor: 'lightblue',
         borderRadius: 2,
-        marginBottom: 1,
         borderWidth: StyleSheet.hairlineWidth,
     },
-    text: {
+    addCardText: {
         color: 'blue',
+        textAlign: 'center',
+        fontWeight: '700',
+    },
+    startQuizContainer: {
+        padding: 12,
+        alignSelf: 'stretch',
+        backgroundColor: 'purple',
+        borderRadius: 2,
+        marginTop: 10,
+        marginBottom: 30,
+        borderWidth: StyleSheet.hairlineWidth,
+    },
+    startQuiztext: {
+        color: 'black',
         textAlign: 'center',
         fontWeight: '700',
     }
