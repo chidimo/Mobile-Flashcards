@@ -7,6 +7,8 @@ import SharedButton from './Shared.Button'
 
 import { add_new_deck_handler } from '../actions/decks'
 
+import newDeckStyles from '../styles/NewDeck'
+
 class NewDeck extends Component {
 
     state = { name: '' }
@@ -18,8 +20,8 @@ class NewDeck extends Component {
 
     render() {
         return (
-            <View>
-                <Text>
+            <View style={newDeckStyles.container}>
+                <Text style={newDeckStyles.headingText}>
                     Add new deck
                 </Text>
 
