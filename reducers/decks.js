@@ -1,4 +1,4 @@
-import { ADD_NEW_DECK, GET_DECKS } from '../actions/types'
+import { ADD_NEW_DECK, GET_DECKS, REMOVE_DECK } from '../actions/types'
 
 export const decks = (state=[], action) => {
     switch (action.type) {
@@ -7,6 +7,11 @@ export const decks = (state=[], action) => {
 
         case GET_DECKS:
             return action.decks
+
+        case REMOVE_DECK:
+            return state.filter((deck) => {
+                return (deck !== action.name)
+            })
 
         default:
             return state
