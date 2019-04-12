@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StatusBar, AsyncStorage } from 'react-native';
+import { View, Text, StatusBar, AsyncStorage } from 'react-native';
 import { Constants } from 'expo';
 
 import Navigation from './Navigation'
-import { set_deck_key_handler } from '../actions/decks'
+import { get_decks, set_deck_key_handler } from '../actions/decks'
 import { set_card_key_handler } from '../actions/cards'
+
+import sharedStyles from '../styles/shared';
 
 
 export const AppStatusBar = () => {
@@ -19,31 +21,42 @@ export const AppStatusBar = () => {
 
 class ConnectedNavigation extends Component {
 
+    state = { ready: false }
+
     componentDidMount() {
-        const { set_deck_key, set_card_key } = this.props
-        set_card_key()
-        set_deck_key()
+        const { dispatch } = this.props
+
+        dispatch(set_deck_key_handler())
+        dispatch(set_card_key_handler())
+
+        AsyncStorage.getItem('decks')
+        .then(JSON.parse)
+        .then(decks => {
+            console.log('\n\n***** ', decks, '\n\n')
+            dispatch(get_decks(decks))
+            this.setState({ ready: true })
+        })
 
         AsyncStorage.getAllKeys()
         .then(keys => console.log('all keys: ', keys))
     }
 
     render() {
-        return(
-            <Navigation />
+        const { ready } = this.state
+        if (ready){
+            return(
+                <Navigation />
+            )
+        }
+
+        return (
+            <View style={[sharedStyles.container, {justifyContent: 'center'}]}>
+                <Text style={sharedStyles.headingText}>
+                    App loading
+                </Text>
+            </View>
         )
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    const set_deck_key = () => {
-        dispatch(set_deck_key_handler())
-    }
-    const set_card_key = () => {
-        dispatch(set_card_key_handler())
-    }
-
-    return { set_deck_key, set_card_key }
-}
-
-export default connect(null, mapDispatchToProps)(ConnectedNavigation)
+export default connect()(ConnectedNavigation)

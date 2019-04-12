@@ -12,7 +12,7 @@ export const set_card_key_handler = () => {
     return dispatch => {
         AsyncStorage.getItem('cards', (err, result) => {
             if (!result) {
-                AsyncStorage.setItem('cards', '')
+                AsyncStorage.setItem('cards', JSON.stringify([]))
                 .then(dispatch(set_card_key()))
             }
         })

@@ -5,21 +5,11 @@ import { connect } from 'react-redux';
 import { get_decks } from '../actions/decks'
 import decksStyles from '../styles/Decks';
 
+
 class Decks extends Component {
 
     static navigationOptions = {
         title: 'Home'
-    }
-
-    state = { ready: false }
-
-    componentDidMount() {
-        const { dispatch } = this.props
-        AsyncStorage.getAllKeys()
-        .then(decks => {
-            dispatch(get_decks(decks))
-            this.setState({ready: true})
-        })
     }
 
     render_deck = (item) => (
