@@ -5,7 +5,7 @@ export const cards = (state={}, action) => {
         case ADD_CARD:
             return {
                 ...state,
-                [action.question]: action.answer
+                [action.deck]: action.result
             }
 
         default:
