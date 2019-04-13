@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 
-import { white, purple, lightGrey, red, blue, lightGreen } from '../utils/colors';
+import { white, purple, lightGrey, red, green, lightGreen } from '../utils/colors';
 
 export default deckStyles = StyleSheet.create({
     addCardContainer: {
@@ -20,6 +20,16 @@ export default deckStyles = StyleSheet.create({
         padding: 12,
         alignSelf: 'stretch',
         backgroundColor: lightGreen,
+        borderRadius: 2,
+        marginTop: 10,
+        marginBottom: 30,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: white,
+    },
+    beginQuizContainer: {
+        padding: 12,
+        alignSelf: 'stretch',
+        backgroundColor: green,
         borderRadius: 2,
         marginTop: 10,
         marginBottom: 30,

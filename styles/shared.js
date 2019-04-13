@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { purple } from '../utils/colors';
+import { purple, white, red } from '../utils/colors';
 
 export default sharedStyles = StyleSheet.create({
     container: {
@@ -16,5 +16,20 @@ export default sharedStyles = StyleSheet.create({
         color: purple,
         textAlign: 'center',
         fontWeight: '700',
+    },
+    opacityContainer: {
+        // alignSelf: 'stretch',
+        // backgroundColor: lightGreen,
+        padding: 12,
+        borderRadius: 2,
+        marginTop: 10,
+        marginBottom: 30,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: white,
+    },
+    errorText: {
+        color: red,
+        textAlign: 'center',
+        padding: 5,
     }
 })
