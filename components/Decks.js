@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, AsyncStorage, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
 import decksStyles from '../styles/Decks';
@@ -11,23 +11,33 @@ class Decks extends Component {
         title: 'Home'
     }
 
-    render_deck = (item) => (
-        <TouchableOpacity
+    render_deck = item => {
+
+        let card_count
+
+        if (item[1] === 0) card_count = 'No card'
+        else card_count = `${item[1]} card${item[1] === 1 ? '' : 's'}`
+        
+        return (
+            <TouchableOpacity
             style={decksStyles.itemContainer}
             onPress={() => this.props.navigation.navigate(
-                'Deck', { item }
-            )}
-        >
-            <Text style={decksStyles.text}>{item.toUpperCase()}</Text>
-        </TouchableOpacity>
-    )
+                'Deck', { item: item[0] }
+                )}
+                >
+                <Text style={decksStyles.text}>{item[0].toUpperCase()}</Text>
+                <Text style={decksStyles.text}>{card_count}</Text>
+            </TouchableOpacity>
+        )
+    }
+
 
     render() {
-        const { decks } = this.props
+        const { deck_obj } = this.props
         return(
             <View style={decksStyles.container}>
                 <FlatList
-                    data={decks}
+                    data={deck_obj}
                     renderItem={ ({ item }) => (this.render_deck(item))}
                     keyExtractor={(item, index) => index.toString()}
                 />
@@ -36,8 +46,14 @@ class Decks extends Component {
     }
 }
 
-const mapStateToProps = ({ decks }) => {
-    return { decks }
+const mapStateToProps = ({ decks, cards }) => {
+    let deck_obj = []
+
+    for (deck of decks) {
+        let deck_cards_count = cards.filter(card => {return card.deckname === deck}).length
+        deck_obj.push([deck, deck_cards_count])
+    }
+    return { deck_obj }
 }
 
 export default connect(mapStateToProps)(Decks)
