@@ -4,8 +4,8 @@ import { View, Text, StatusBar, AsyncStorage } from 'react-native';
 import { Constants } from 'expo';
 
 import Navigation from './Navigation'
-import { get_decks, set_deck_key_handler } from '../actions/decks'
-import { set_card_key_handler } from '../actions/cards'
+import { set_deck_key_handler, get_decks } from '../actions/decks'
+import { set_card_key_handler, get_cards } from '../actions/cards'
 
 import sharedStyles from '../styles/shared';
 
@@ -32,13 +32,17 @@ class ConnectedNavigation extends Component {
         AsyncStorage.getItem('decks')
         .then(JSON.parse)
         .then(decks => {
-            console.log('\n\n***** ', decks, '\n\n')
             dispatch(get_decks(decks))
             this.setState({ ready: true })
         })
 
-        AsyncStorage.getAllKeys()
-        .then(keys => console.log('all keys: ', keys))
+        AsyncStorage.getItem('cards')
+        .then(JSON.parse)
+        .then(cards => {
+            dispatch(get_cards(cards))
+            this.setState({ ready: true })
+        })
+
     }
 
     render() {
