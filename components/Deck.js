@@ -44,7 +44,7 @@ class Deck extends Component {
 
                 <TouchableOpacity
                     style={deckStyles.removeDeckContainer}
-                    onPress={() => remove_deck(item)}
+                    onPress={() => {remove_deck(item); navigation.navigate('Decks')}}
                 >
                     <Text style={deckStyles.removeDeckText}>Delete</Text>
                 </TouchableOpacity>
