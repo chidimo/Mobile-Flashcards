@@ -14,13 +14,17 @@ class Deck extends Component {
     }
     
     render() {
-        const { navigation, remove_deck } = this.props
+        const { navigation, remove_deck, quiz_count } = this.props
         const item = navigation.state.params.item
 
         return (
             <View style={sharedStyles.container}>
                 <Text style={sharedStyles.headingText}>
                     {item.toUpperCase()}
+                </Text>
+
+                <Text>
+                    {`${quiz_count} cards`}
                 </Text>
 
                 <TouchableOpacity
@@ -31,7 +35,6 @@ class Deck extends Component {
                 >
                     <Text style={deckStyles.startQuiztext}>Start quiz</Text>
                 </TouchableOpacity>
-
 
                 <TouchableOpacity
                     style={deckStyles.addCardContainer}
@@ -48,9 +51,17 @@ class Deck extends Component {
                 >
                     <Text style={deckStyles.removeDeckText}>Delete</Text>
                 </TouchableOpacity>
-
             </View>
         )
+    }
+}
+
+const mapStateToProps = ({ cards }, { navigation }) => {
+    const deck_name = navigation.getParam('item')
+    const deck_cards = cards.filter(card => {return card.deckname === deck_name})
+    const quiz_count = deck_cards.length
+    return {
+        quiz_count
     }
 }
 
@@ -64,4 +75,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(Deck)
+export default connect(mapStateToProps, mapDispatchToProps)(Deck)
