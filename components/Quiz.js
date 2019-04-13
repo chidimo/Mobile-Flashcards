@@ -1,23 +1,26 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
 
 import sharedStyles from '../styles/shared';
 
 class Quiz extends Component {
 
     static navigationOptions = ({ navigation }) => {
-        const title = `Quiz for deck ${navigation.getParam('item').toUpperCase()}`
+        const title = `Take ${navigation.getParam('item').toUpperCase()} quiz`
         return ({ title })
     }
     
     render() {
-        const { navigation } = this.props
+        const { navigation, quizzes } = this.props
 
         return (
             <View style={sharedStyles.container}>
                 <Text style={sharedStyles.headingText}>
                     Quiz
                 </Text>
+
+                <Text>{JSON.stringify(quizzes)}</Text>
 
                 <Text>
                     {JSON.stringify(navigation)}
@@ -27,4 +30,13 @@ class Quiz extends Component {
     }
 }
 
-export default Quiz
+const mapStateToProps = ({ cards }, { navigation }) => {
+    // console.log('nav ', navigation)
+    const deck_name = navigation.getParam('item')
+    const quizzes = cards.filter(card => {return card.deckname === deck_name})
+    return {
+        quizzes
+    }
+}
+
+export default connect(mapStateToProps)(Quiz)
