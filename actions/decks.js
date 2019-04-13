@@ -20,10 +20,10 @@ export const set_deck_key_handler = () => {
     }
 }
 
-export const add_new_deck = ({name}) => {
+export const add_new_deck = ({ updated_deck }) => {
     return {
         type: ADD_NEW_DECK,
-        name,
+        updated_deck,
     }
 }
 
@@ -37,7 +37,7 @@ export const add_new_deck_handler = (info_object) => {
             console.log('existing: ', decks)
             let updated_deck = decks.concat(name)
             AsyncStorage.setItem('decks', JSON.stringify(updated_deck))
-            .then(dispatch(add_new_deck(info_object)))
+            .then(dispatch(add_new_deck({ updated_deck })))
         })
     }
 }

@@ -9,7 +9,7 @@ export const decks = (state=[], action) => {
             return action.decks
 
         case ADD_NEW_DECK:
-            return state.concat(action.name)
+            return action.updated_deck
 
         case REMOVE_DECK:
             return state.filter((deck) => {
