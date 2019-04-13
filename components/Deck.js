@@ -14,23 +14,20 @@ class Deck extends Component {
     }
     
     render() {
-        const { navigation, remove_deck, quiz_count } = this.props
+        const { navigation, remove_deck, quizzes } = this.props
+        const quiz_count = quizzes.length
         const item = navigation.state.params.item
 
         return (
             <View style={sharedStyles.container}>
-                <Text style={sharedStyles.headingText}>
-                    {item.toUpperCase()}
-                </Text>
 
-                <Text>
-                    {`${quiz_count} cards`}
-                </Text>
+                <Text style={sharedStyles.headingText}>{item.toUpperCase()}</Text>
+                <Text>{`${quiz_count} cards`}</Text>
 
                 <TouchableOpacity
-                    style={deckStyles.startQuizContainer}
+                    style={deckStyles.beginQuizContainer}
                     onPress={() => this.props.navigation.navigate(
-                        'Quiz', { item }
+                        'QuizView', { quiz: quizzes[0], quiz_count }
                     )}
                 >
                     <Text style={deckStyles.startQuiztext}>Start quiz</Text>
@@ -58,11 +55,9 @@ class Deck extends Component {
 
 const mapStateToProps = ({ cards }, { navigation }) => {
     const deck_name = navigation.getParam('item')
-    const deck_cards = cards.filter(card => {return card.deckname === deck_name})
-    const quiz_count = deck_cards.length
-    return {
-        quiz_count
-    }
+    const quizzes = cards.filter(card => {return card.deckname === deck_name})
+
+    return { quizzes }
 }
 
 const mapDispatchToProps = dispatch => {

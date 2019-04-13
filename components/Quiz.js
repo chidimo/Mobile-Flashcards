@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
 import sharedStyles from '../styles/shared';
+
 
 class Quiz extends Component {
 
@@ -10,9 +11,37 @@ class Quiz extends Component {
         const title = `Take ${navigation.getParam('item').toUpperCase()} quiz`
         return ({ title })
     }
+
+    render_quiz = (item, index, total) => {
+        // console.log(' total; ', total)
+        // console.log(' itemd; ', item)
+        console.log(' index; ', index)
+        console.log(' index; ', JSON.stringify(item))
+        console.log('******************************')
+
+        return (
+            <View>
+                <Text>
+                    {`Question ${index} of ${total}`}
+                </Text>
+
+                <Text>
+                    {item.quizzes[0].question}
+                </Text>
+
+                <TouchableOpacity>
+                    <Text>
+                        Show answer
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        )
+
+    }
     
     render() {
         const { navigation, quizzes } = this.props
+        const total = quizzes.length
 
         return (
             <View style={sharedStyles.container}>
@@ -20,11 +49,19 @@ class Quiz extends Component {
                     Quiz
                 </Text>
 
-                <Text>{JSON.stringify(quizzes)}</Text>
+                {/* <Text>
+                    {JSON.stringify(quizzes)}
+                </Text> */}
 
+                <FlatList
+                    data={quizzes}
+                    renderItem={ ({ item, index }) => (this.render_quiz(item, index, total))}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+{/* 
                 <Text>
                     {JSON.stringify(navigation)}
-                </Text>
+                </Text> */}
             </View>
         )
     }
