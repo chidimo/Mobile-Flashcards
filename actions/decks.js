@@ -58,8 +58,16 @@ export const remove_deck = ({ name }) => {
 
 export const remove_deck_hander = (info_object) => {
     const { name } = info_object
+
     return dispatch => {
-        AsyncStorage.removeItem(name)
-        .then(dispatch(remove_deck(info_object)))
+        AsyncStorage.getItem('decks')
+        .then(JSON.parse)
+        .then(decks => {
+            let updated_deck = decks.filter((deck) => {
+                return deck !== name
+            })
+            AsyncStorage.setItem('decks', JSON.stringify(updated_deck))
+            .then(dispatch(remove_deck(info_object)))
+        })
     }
 }
