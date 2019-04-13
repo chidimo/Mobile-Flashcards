@@ -16,7 +16,6 @@ class Deck extends Component {
     render() {
         const { navigation, remove_deck } = this.props
         const item = navigation.state.params.item
-        console.log('items: ', item)
 
         return (
             <View style={sharedStyles.container}>
