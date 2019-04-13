@@ -23,6 +23,7 @@ class NewCard extends Component {
         const { navigation, add_card } = this.props
         const deck = navigation.state.params.item
         add_card(deck, question, answer)
+        this.props.navigation.navigate('Deck', { item: deck })
     }
     
     render() {
