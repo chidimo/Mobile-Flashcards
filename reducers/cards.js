@@ -6,10 +6,7 @@ export const cards = (state=[], action) => {
             return state
 
         case ADD_CARD:
-            return {
-                ...state,
-                [action.deck]: action.result
-            }
+            return action.updated_cards
 
         default:
             return state

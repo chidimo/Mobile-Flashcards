@@ -19,32 +19,43 @@ export const set_card_key_handler = () => {
     }
 }
 
-export const add_card = ({ deck, result }) => {
+export const add_card = ({ updated_cards }) => {
     return {
         type: ADD_CARD,
-        deck,
-        result,
+        updated_cards,
     }
 }
 
 export const add_card_handler = (info_object) => {
     const { deck, question, answer } = info_object
-    const card = { question, answer }
-
-    // each key in AsyncStorage is the name of a deck
-    // the value is a string which is formed by concatenating
-    // stringified question and answer objects of the form
-    // { question: 'some question', answer: 'some answer' }
-    // the concatenating string is ":"
-
+    
     return dispatch => {
-        AsyncStorage.getItem(deck)
-        .then(existing_card => {
-            const updated_card = `${existing_card !== null ? existing_card : ''}${existing_card !== null ? ':' : ''}${JSON.stringify(card)}`
-            AsyncStorage.setItem(deck, updated_card)
-            .then(result => {
-                console.log('result; ', result)
-                dispatch(add_card({ deck, result }))
+        AsyncStorage.getItem('cards')
+        .then(JSON.parse)
+        .then(cards => {
+            
+            let new_card
+            let updated_cards
+            // first filter for the current deckname in cards array
+            let current_deck = cards.filter(card => {(card.deckname === deck)})[0]
+
+            if (current_deck === undefined) {
+                new_card = { deckname: deck, quizzes: [{ question, answer }] }
+                updated_cards = cards.concat(new_card)
+            }
+            else {
+                new_card = { question, answer }
+
+                for (let card of cards) {
+                    if (card.deckname === deck) card.quizzes.concat(new_card)
+                }
+                updated_cards = cards
+            }
+
+            AsyncStorage.setItem('cards', JSON.stringify(updated_cards))
+            .then(JSON.parse)
+            .then(data => {
+                dispatch(add_card({ updated_cards }))
             })
         })
     }
