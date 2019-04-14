@@ -34,36 +34,26 @@ export const get_decks = (decks) => {
     }
 }
 
-export const remove_deck = ({ name }) => {
+export const remove_deck = ({ deckname }) => {
     return {
         type: REMOVE_DECK,
-        name,
+        deckname,
     }
 }
 
 export const remove_deck_hander = (info_object) => {
-    const { name } = info_object
+    const { deckname } = info_object
 
     return dispatch => {
-        AsyncStorage.getItem('decks')
+        AsyncStorage.getItem('store')
         .then(JSON.parse)
-        .then(decks => {
-            let updated_deck = decks.filter((deck) => {
-                return deck !== name
-            })
-            AsyncStorage.setItem('decks', JSON.stringify(updated_deck))
+        .then(store => {
+            delete store[deckname]
+            console.log('Store ', store)
+
+            AsyncStorage.setItem('store', JSON.stringify(store))
             .then(() => {
                 dispatch(remove_deck(info_object))
-                // Now remove associated cards
-                AsyncStorage.getItem('cards')
-                .then(JSON.parse)
-                .then(cards => {  
-                    // Filter for cards to keep
-                    let cards_to_keep = cards.filter(card => (card.deckname !== name))
-                    AsyncStorage.setItem('cards', JSON.stringify(cards_to_keep))
-                    .then(JSON.parse)
-                    .then(console.log('Deck and associated cards removed successfully'))
-                })
             })
         })
     }

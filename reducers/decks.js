@@ -10,9 +10,7 @@ export const decks = (state=[], action) => {
             return state.concat(action.name)
 
         case REMOVE_DECK:
-            return state.filter((deck) => {
-                return (deck !== action.name)
-            })
+            return state.filter(deck => (deck !== action.deckname))
 
         default:
             return state

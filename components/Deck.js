@@ -74,8 +74,8 @@ const mapStateToProps = ({ cards }, { navigation }) => {
 }
 
 const mapDispatchToProps = dispatch => {
-    const remove_deck = name => {
-        dispatch(remove_deck_hander({ name }))
+    const remove_deck = deckname => {
+        dispatch(remove_deck_hander({ deckname }))
     }
 
     return {
