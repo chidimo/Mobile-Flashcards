@@ -20,7 +20,9 @@ export const add_new_deck_handler = (info_object) => {
             if (name in store) return
             store[name] = { title: name, questions: []}
             AsyncStorage.setItem('store', JSON.stringify(store))
-            .then(dispatch(add_new_deck({ name })))
+            .then(() => {
+                dispatch(add_new_deck({ name }))
+            })
         })
     }
 }
