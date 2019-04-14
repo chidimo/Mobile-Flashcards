@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { View, Text, StatusBar, AsyncStorage } from 'react-native';
 import { Constants } from 'expo';
 
-import Navigation from './Navigation'
-import { set_deck_key_handler, get_decks } from '../actions/decks'
-import { set_card_key_handler, get_cards } from '../actions/cards'
+import { set_deck_key_handler, get_decks } from '../actions/decks';
+import { set_card_key_handler, get_cards } from '../actions/cards';
 
+import Navigation from './Navigation'
 import sharedStyles from '../styles/shared';
+import { setLocalNotification } from '../utils/notificationSystem'
 
 
 export const AppStatusBar = () => {
@@ -24,6 +25,8 @@ class ConnectedNavigation extends Component {
     state = { ready: false }
 
     componentDidMount() {
+        setLocalNotification()
+
         const { dispatch } = this.props
 
         dispatch(set_deck_key_handler())
