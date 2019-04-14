@@ -20,10 +20,10 @@ export const set_deck_key_handler = () => {
     }
 }
 
-export const add_new_deck = ({ updated_deck }) => {
+export const add_new_deck = ({ name }) => {
     return {
         type: ADD_NEW_DECK,
-        updated_deck,
+        name,
     }
 }
 
@@ -31,13 +31,15 @@ export const add_new_deck_handler = (info_object) => {
     const { name } = info_object
 
     return dispatch => {
-        AsyncStorage.getItem('decks')
+        AsyncStorage.getItem('store')
         .then(JSON.parse)
-        .then(decks => {
-            console.log('existing: ', decks)
-            let updated_deck = decks.concat(name)
-            AsyncStorage.setItem('decks', JSON.stringify(updated_deck))
-            .then(dispatch(add_new_deck({ updated_deck })))
+        .then(store => {
+            console.log('store: ', store)
+            if (name in store) return
+            store[name] = { title: name, questions: []}
+            console.log('updated store: ', store)
+            AsyncStorage.setItem('store', JSON.stringify(store))
+            .then(dispatch(add_new_deck({ name })))
         })
     }
 }

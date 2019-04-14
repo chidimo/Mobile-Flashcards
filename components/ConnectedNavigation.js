@@ -29,8 +29,8 @@ class ConnectedNavigation extends Component {
 
         const { dispatch } = this.props
 
-        dispatch(set_deck_key_handler())
-        dispatch(set_card_key_handler())
+        // dispatch(set_deck_key_handler())
+        // dispatch(set_card_key_handler())
 
         AsyncStorage.getItem('decks')
         .then(JSON.parse)
