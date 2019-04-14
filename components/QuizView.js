@@ -100,18 +100,17 @@ class QuizView extends Component {
             <View style={sharedStyles.container}>
 
                 <View style={quizViewStyles.statsContainer}>
-                    <Text style={quizViewStyles.statsText}>Score: {score}</Text>
                     <Text style={quizViewStyles.statsText}>{`Question ${question_number} of ${quiz_count}`}</Text>
                 </View>
 
 
                 <View style={quizViewStyles.questionContainer}>
-                    <Text style={quizViewStyles.questionText}>{quiz.quizzes[0].question}</Text>
+                    <Text style={quizViewStyles.questionText}>{quiz.quiz.question}</Text>
                 </View>
 
 
                 <View style={[quizViewStyles.answerContainer, {backgroundColor: showAnswer ? white : green}]}>
-                    <Text style={quizViewStyles.answerText}>{quiz.quizzes[0].answer}</Text>
+                    <Text style={quizViewStyles.answerText}>{quiz.quiz.answer}</Text>
                 </View>
 
 
