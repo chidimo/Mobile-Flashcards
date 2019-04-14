@@ -34,10 +34,9 @@ export const add_new_deck_handler = (info_object) => {
         AsyncStorage.getItem('store')
         .then(JSON.parse)
         .then(store => {
-            console.log('store: ', store)
+            if (store === null) store = {} // for the store initiation
             if (name in store) return
             store[name] = { title: name, questions: []}
-            console.log('updated store: ', store)
             AsyncStorage.setItem('store', JSON.stringify(store))
             .then(dispatch(add_new_deck({ name })))
         })
