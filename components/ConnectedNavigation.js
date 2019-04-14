@@ -28,21 +28,14 @@ class ConnectedNavigation extends Component {
         setLocalNotification()
 
         const { dispatch } = this.props
-        
-        AsyncStorage.getItem('decks')
+
+        AsyncStorage.getItem('store')
         .then(JSON.parse)
-        .then(decks => {
+        .then(store => {
+            const decks = Object.keys(store)
             dispatch(get_decks(decks))
             this.setState({ ready: true })
         })
-
-        AsyncStorage.getItem('cards')
-        .then(JSON.parse)
-        .then(cards => {
-            dispatch(get_cards(cards))
-            this.setState({ ready: true })
-        })
-
     }
 
     render() {
