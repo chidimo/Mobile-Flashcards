@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
 
 import SharedTextInput from './Shared.TextInput';
-import SharedButton from './Shared.Button';
-import newCardStyles from '../styles/NewCard';
 import sharedStyles from '../styles/shared';
 import { add_card_handler } from '../actions/cards'
+
+import { purple } from '../utils/colors'
 
 
 class NewCard extends Component {
@@ -68,7 +68,11 @@ class NewCard extends Component {
                     onChangeText={answer => this.setState({ answer: answer.trim().toLowerCase() })}
                 />
 
-                <SharedButton label={'Save card'} onPress={this._save_card}/>
+                <Button
+                    color={purple}
+                    title='Save card'
+                    onPress={this._save_card}
+                />
             </View>
         )
     }

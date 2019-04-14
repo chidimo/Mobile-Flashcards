@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text,   } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
 
 import SharedTextInput from './Shared.TextInput'
-import SharedButton from './Shared.Button'
 import { add_new_deck_handler } from '../actions/decks'
 import sharedStyles from '../styles/shared';
+import { purple } from '../utils/colors';
 
 
 class NewDeck extends Component {
@@ -48,8 +48,9 @@ class NewDeck extends Component {
                     onChangeText={name => this.setState({ name: name.trim().toLowerCase()})}
                 />
 
-                <SharedButton
-                    label='Save deck'
+                <Button
+                    color={purple}
+                    title='Save deck'
                     onPress={this._save_deck}
                 />
             </View>
