@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button, TouchableOpacity } from 'react-native';
+import { Text, View, Button } from 'react-native';
 import { connect } from 'react-redux'
 
 import deckStyles from '../styles/Deck';
@@ -47,10 +47,9 @@ class Quiz extends Component {
         const quiz = quizzes[index]
         const question_number = index + 1
 
-        
         if (end) {
             return (
-                <View style={sharedStyles.container}>
+                <View style={[sharedStyles.container, { flex: 1, justifyContent: 'space-evenly'}]}>
                     <Text style={sharedStyles.headingText}>
                         End of quiz
                     </Text>
@@ -80,7 +79,7 @@ class Quiz extends Component {
 
         if (quiz === undefined) {
             return (
-                <View style={sharedStyles.container}>
+                <View style={[sharedStyles.container, { flex: 1, justifyContent: 'space-evenly'}]}>
                     <Text style={sharedStyles.headingText}>Quiz unavailable</Text>
                     <Text style={sharedStyles.text}>
                         You cannot take this quiz as there are no cards on this deck.
@@ -100,7 +99,7 @@ class Quiz extends Component {
         }
 
         return (
-            <View style={sharedStyles.container}>
+            <View style={[sharedStyles.container, { flex: 1, justifyContent: 'space-evenly'}]}>
 
                 <View style={quizViewStyles.statsContainer}>
                     <Text style={quizViewStyles.statsText}>{`Question ${question_number} of ${quiz_count}`}</Text>
@@ -111,21 +110,17 @@ class Quiz extends Component {
                     <Text style={quizViewStyles.questionText}>{quiz.quiz.question}</Text>
                 </View>
 
-
                 <View style={[quizViewStyles.answerContainer, {backgroundColor: showAnswer ? white : green}]}>
                     <Text style={quizViewStyles.answerText}>{quiz.quiz.answer}</Text>
                 </View>
 
-
-                <View style={quizViewStyles.toggleAnswerContainer}>
+                <View>
                     <Button
                         color={purple}
                         title='Toggle answer'
-                        style={quizViewStyles.toggleAnswerText}
                         onPress={() => this.toggle_answer()}
                     />                        
                 </View>
-
 
                 <View style={quizViewStyles.answerButtonsContainer}>
                     <Button
