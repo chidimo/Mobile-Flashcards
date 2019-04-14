@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { loveRomance, purple, lightGrey, white } from '../utils/colors';
+import { loveRomance, purple, white } from '../utils/colors';
 
 export default decksStyles = StyleSheet.create({
     container: {
