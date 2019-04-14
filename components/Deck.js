@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Button, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
 import deckStyles from '../styles/Deck';
 import sharedStyles from '../styles/shared';
 import { remove_deck_hander } from '../actions/decks';
+import { purple, green, red } from '../utils/colors';
 
 class Deck extends Component {
     
@@ -14,40 +15,52 @@ class Deck extends Component {
     }
     
     render() {
+        let card_count
         const { navigation, remove_deck, quizzes } = this.props
         const quiz_count = quizzes.length
         const item = navigation.state.params.item
 
+        if (quiz_count === 0) card_count = 'No card'
+        else card_count = `${quiz_count} card${quiz_count > 1 ? 's' : ''}`
+
         return (
-            <View style={sharedStyles.container}>
+            <View style={[sharedStyles.container, {justifyContent: 'space-evenly'}]}>
 
-                <Text style={sharedStyles.headingText}>{item.toUpperCase()}</Text>
-                <Text>{`${quiz_count} cards`}</Text>
+                <View>
+                    <Text style={sharedStyles.headingText}>{item.toUpperCase()}</Text>
+                    <Text style={deckStyles.cardCountText}>{card_count}</Text>
+                </View>
 
-                <TouchableOpacity
-                    style={deckStyles.beginQuizContainer}
-                    onPress={() => this.props.navigation.navigate(
-                        'QuizView', { index: 0, score: 0, deckname: item, end: false }
-                    )}
-                >
-                    <Text style={deckStyles.startQuiztext}>Start quiz</Text>
-                </TouchableOpacity>
+                <View style={{flex: 1, justifyContent: 'space-evenly'}}>
+                    <View>
+                        <Button
+                            title='Start quiz'
+                            color={purple}
+                            onPress={() => this.props.navigation.navigate(
+                                'QuizView', { index: 0, score: 0, deckname: item, end: false }
+                            )}
+                        />
+                    </View>
+    
+                    <View>
+                        <Button
+                            color={green}
+                            title='Add Card'
+                            onPress={() => this.props.navigation.navigate(
+                                'NewCard', { item }
+                            )}
+                        />
+                    </View>
+    
+                    <View>
+                        <Button
+                            title='Delete'
+                            color={red}
+                            onPress={() => {remove_deck(item); navigation.navigate('Decks')}}
+                        />
+                    </View>
+                </View>
 
-                <TouchableOpacity
-                    style={deckStyles.addCardContainer}
-                    onPress={() => this.props.navigation.navigate(
-                        'NewCard', { item }
-                    )}
-                >
-                    <Text style={deckStyles.addCardText}>Add Card</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={deckStyles.removeDeckContainer}
-                    onPress={() => {remove_deck(item); navigation.navigate('Decks')}}
-                >
-                    <Text style={deckStyles.removeDeckText}>Delete</Text>
-                </TouchableOpacity>
             </View>
         )
     }

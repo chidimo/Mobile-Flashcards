@@ -82,16 +82,19 @@ class QuizView extends Component {
             return (
                 <View style={sharedStyles.container}>
                     <Text style={sharedStyles.headingText}>Quiz unavailable</Text>
-                    <Text style={sharedStyles.text}>You cannot take this quiz as there are no cards on this deck.</Text>
+                    <Text style={sharedStyles.text}>
+                        You cannot take this quiz as there are no cards on this deck.
+                    </Text>
 
-                    <TouchableOpacity
-                        style={[deckStyles.addCardContainer, {marginTop: 50}]}
-                        onPress={() => this.props.navigation.navigate(
-                            'NewCard', { item: deckname }
-                        )}
-                    >
-                    <Text style={deckStyles.addCardText}>Add a Card</Text>
-                </TouchableOpacity>
+                    <View style={[deckStyles.addCardContainer, {marginTop: 50}]}>
+                        <Button
+                            color={green}
+                            title='Add Card'
+                            onPress={() => this.props.navigation.navigate(
+                                'NewCard', { item: deckname }
+                            )}
+                        />
+                    </View>
                 </View>
             )
         }
