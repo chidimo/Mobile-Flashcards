@@ -1,38 +1,71 @@
 import { StyleSheet } from 'react-native';
-import { lightGreen, white, green } from '../utils/colors'
+import { white, green } from '../utils/colors'
+
 
 export default quizViewStyles = StyleSheet.create({
-    showAnswer: {
-        padding: 12,
-        alignSelf: 'stretch',
-        backgroundColor: lightGreen,
-        borderRadius: 2,
-        marginTop: 10,
-        marginBottom: 30,
+    statsContainer: {
+        marginTop: 20,
+        borderRadius: 4,
+        marginBottom: 4,     
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: white,
     },
+    statsText: {
+        textAlign: 'center',
+        color: green,
+        fontSize: 18,
+    },
+
     questionContainer: {
         padding: 8,
         fontSize: 22,
-        color: green,
-        textAlign: 'center',
+        borderRadius: 4,
+        marginBottom: 40,
+        marginTop: 40,
         borderWidth: StyleSheet.hairlineWidth,
     },
+    questionText: {
+        color: green,
+        textAlign: 'center',
+        fontSize: 28,
+    },
+
     answerContainer: {
         padding: 8,
         fontSize: 22,
-        marginTop: 5,
-        color: green,
-        textAlign: 'center',
+        borderRadius: 4,
         borderWidth: StyleSheet.hairlineWidth,
     },
-    markContainer: {
-        flex: 1,
+    answerText: {
+        textAlign: 'center',
+        color: green,
+        fontSize: 28,
+    },
+
+    toggleAnswerContainer: {
+        marginBottom: 20,
+        marginTop: 20,
+        borderRadius: 2,
+        marginBottom: 30,
+        borderColor: white,
+        borderWidth: StyleSheet.hairlineWidth,
+    },
+    toggleAnswerText: {
+        textAlign: 'center',
+        fontSize: 20
+    },
+
+    answerButtonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
     },
     showAnswerText: {
         textAlign: 'center',
+    },
+
+
+    quizMenuContainer: {
+        marginTop: 40,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
     }
 })
