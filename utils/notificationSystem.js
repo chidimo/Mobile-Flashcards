@@ -26,7 +26,7 @@ const notificationSchedulingOptions = () => {
     let tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
     tomorrow.setHours(18)
-    tomorrow.setTime(0)
+    tomorrow.setMinutes(30)
 
     return {
         time: tomorrow,
