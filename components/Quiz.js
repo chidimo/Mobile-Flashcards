@@ -53,7 +53,7 @@ class Quiz extends Component {
                     <Text style={sharedStyles.headingText}>
                         End of quiz
                     </Text>
-                    <Text style={quizViewStyles.statsText}>
+                    <Text style={quizViewStyles.finalScoreText}>
                         {`You scored ${score} out of ${quizzes.length}`}
                     </Text>
 

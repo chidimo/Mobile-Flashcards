@@ -2,6 +2,12 @@ import { StyleSheet } from 'react-native';
 import { white, green, purple } from '../utils/colors'
 
 export default quizViewStyles = StyleSheet.create({
+    finalScoreText: {
+        textAlign: 'center',
+        fontSize: 18,
+        color: purple,
+    },
+
     statsContainer: {
         borderRadius: 4,
         backgroundColor: purple,
@@ -9,7 +15,7 @@ export default quizViewStyles = StyleSheet.create({
     statsText: {
         textAlign: 'center',
         fontSize: 18,
-        color: purple,
+        color: white,
     },
 
     questionContainer: {
@@ -41,7 +47,6 @@ export default quizViewStyles = StyleSheet.create({
     showAnswerText: {
         textAlign: 'center',
     },
-
 
     quizMenuContainer: {
         flexDirection: 'row',
