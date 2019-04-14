@@ -35,7 +35,6 @@ const notificationSchedulingOptions = () => {
 }
 
 export const setLocalNotification = () => {
-    console.log('set next notification')
     AsyncStorage.getItem(NOTIFICATION_KEY)
     .then(JSON.parse)
     .then(data => {
