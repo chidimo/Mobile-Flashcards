@@ -1,79 +1,156 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
+import { Text, View, Button, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux'
 
+import deckStyles from '../styles/Deck';
 import sharedStyles from '../styles/shared';
+import quizViewStyles from '../styles/Quiz';
+
+import { green, white, purple } from '../utils/colors'
 
 
 class Quiz extends Component {
-
-    static navigationOptions = ({ navigation }) => {
-        const title = `Take ${navigation.getParam('item').toUpperCase()} quiz`
-        return ({ title })
-    }
-
-    render_quiz = (item, index, total) => {
-        // console.log(' total; ', total)
-        // console.log(' itemd; ', item)
-        console.log(' index; ', index)
-        console.log(' index; ', JSON.stringify(item))
-        console.log('******************************')
-
-        return (
-            <View>
-                <Text>
-                    {`Question ${index} of ${total}`}
-                </Text>
-
-                <Text>
-                    {item.quizzes[0].question}
-                </Text>
-
-                <TouchableOpacity>
-                    <Text>
-                        Show answer
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        )
-
-    }
     
+    static navigationOptions = ({ navigation }) => {
+        const title = navigation.getParam('deckname').toUpperCase()
+        return ({ title: `${title} quiz` })
+    }
+
+    state = { showAnswer: false }
+
+    toggle_answer = () => {
+        this.setState((previous_state) => (
+            {showAnswer: !previous_state.showAnswer}
+        ))
+    }
+
+    get_next_question = (deckname, index, score, end, option) => {
+        const { navigation, quizzes } = this.props
+        if (option === 1) score += 1
+        if (index + 1 === quizzes.length) end = true
+
+        this.setState({ showAnswer: false })
+        navigation.navigate(
+            'Quiz', { index: index+1, deckname, score: score, end }
+        )
+    }
+
     render() {
         const { navigation, quizzes } = this.props
-        const total = quizzes.length
+        const { showAnswer } = this.state
+        const index = navigation.getParam('index')
+        const score = navigation.getParam('score')
+        const end = navigation.getParam('end')
+        const deckname = navigation.getParam('deckname')
+
+        const quiz_count = quizzes.length
+        const quiz = quizzes[index]
+        const question_number = index + 1
+
+        
+        if (end) {
+            return (
+                <View style={sharedStyles.container}>
+                    <Text style={sharedStyles.headingText}>
+                        End of quiz
+                    </Text>
+                    <Text style={quizViewStyles.statsText}>
+                        {`You scored ${score} out of ${quizzes.length}`}
+                    </Text>
+
+                    <View style={quizViewStyles.quizMenuContainer}>
+                        <Button
+                            title='Restart Quiz'
+                            onPress={() => this.props.navigation.navigate(
+                                'Quiz', { index: 0, score: 0, deckname: deckname, end: false }
+                            )}
+                        />
+    
+                        <Button
+                            color={purple}
+                            title='Back to Deck'
+                            onPress={() => this.props.navigation.navigate(
+                                'Deck', { item: deckname}
+                            )}
+                        />
+                    </View>
+                </View>
+            )
+        }
+
+        if (quiz === undefined) {
+            return (
+                <View style={sharedStyles.container}>
+                    <Text style={sharedStyles.headingText}>Quiz unavailable</Text>
+                    <Text style={sharedStyles.text}>
+                        You cannot take this quiz as there are no cards on this deck.
+                    </Text>
+
+                    <View style={[deckStyles.addCardContainer, {marginTop: 50}]}>
+                        <Button
+                            color={green}
+                            title='Add Card'
+                            onPress={() => this.props.navigation.navigate(
+                                'NewCard', { item: deckname }
+                            )}
+                        />
+                    </View>
+                </View>
+            )
+        }
 
         return (
             <View style={sharedStyles.container}>
-                <Text style={sharedStyles.headingText}>
-                    Quiz
-                </Text>
 
-                {/* <Text>
-                    {JSON.stringify(quizzes)}
-                </Text> */}
+                <View style={quizViewStyles.statsContainer}>
+                    <Text style={quizViewStyles.statsText}>{`Question ${question_number} of ${quiz_count}`}</Text>
+                </View>
 
-                <FlatList
-                    data={quizzes}
-                    renderItem={ ({ item, index }) => (this.render_quiz(item, index, total))}
-                    keyExtractor={(item, index) => index.toString()}
-                />
-{/* 
-                <Text>
-                    {JSON.stringify(navigation)}
-                </Text> */}
+
+                <View style={quizViewStyles.questionContainer}>
+                    <Text style={quizViewStyles.questionText}>{quiz.quiz.question}</Text>
+                </View>
+
+
+                <View style={[quizViewStyles.answerContainer, {backgroundColor: showAnswer ? white : green}]}>
+                    <Text style={quizViewStyles.answerText}>{quiz.quiz.answer}</Text>
+                </View>
+
+
+                <View style={quizViewStyles.toggleAnswerContainer}>
+                    <Button
+                        color={purple}
+                        title='Toggle answer'
+                        style={quizViewStyles.toggleAnswerText}
+                        onPress={() => this.toggle_answer()}
+                    />                        
+                </View>
+
+
+                <View style={quizViewStyles.answerButtonsContainer}>
+                    <Button
+                        title="Incorrect"
+                        onPress={() => this.get_next_question(deckname, index, score, end, option=0)}
+                    />
+
+                    <Button
+                        title="Correct"
+                        color={purple}
+                        onPress={() => this.get_next_question(deckname, index, score, end, option=1)}
+                    />
+                </View>
+
             </View>
         )
     }
 }
 
+
 const mapStateToProps = ({ cards }, { navigation }) => {
-    // console.log('nav ', navigation)
-    const deck_name = navigation.getParam('item')
+    const deck_name = navigation.getParam('deckname')
     const quizzes = cards.filter(card => {return card.deckname === deck_name})
-    return {
-        quizzes
-    }
+
+    return { quizzes }
 }
 
 export default connect(mapStateToProps)(Quiz)

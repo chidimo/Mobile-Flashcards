@@ -12,7 +12,6 @@ import NewDeck from './NewDeck'
 import Deck from './Deck'
 import NewCard from './NewCard';
 import Quiz from './Quiz';
-import QuizView from './QuizView';
 
 import { white, purple } from '../utils/colors';
 
@@ -22,7 +21,6 @@ const DeckStack = createStackNavigator(
         Deck: Deck,
         NewCard: NewCard,
         Quiz: Quiz,
-        QuizView: QuizView,
     },
 
     {

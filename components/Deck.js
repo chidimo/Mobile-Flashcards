@@ -37,7 +37,7 @@ class Deck extends Component {
                             title='Start quiz'
                             color={purple}
                             onPress={() => this.props.navigation.navigate(
-                                'QuizView', { index: 0, score: 0, deckname: item, end: false }
+                                'Quiz', { index: 0, score: 0, deckname: item, end: false }
                             )}
                         />
                     </View>
