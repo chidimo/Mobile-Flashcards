@@ -11,7 +11,7 @@ import { purple } from '../utils/colors';
 class NewDeck extends Component {
 
     static navigationOptions = {
-        title: 'Add deck'
+        title: 'Create deck'
     }
 
     state = { name: '', error: false }
@@ -25,7 +25,7 @@ class NewDeck extends Component {
         }
         
         this.props.add_deck(name)
-        this.props.navigation.navigate('Decks')
+        this.props.navigation.navigate('Deck', { item: name })
     }
 
     render() {
@@ -33,7 +33,7 @@ class NewDeck extends Component {
         return (
             <View style={sharedStyles.container}>
                 <Text style={sharedStyles.headingText}>
-                    Add new deck
+                    Create deck
                 </Text>
 
                 {
