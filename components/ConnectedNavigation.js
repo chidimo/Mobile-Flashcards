@@ -47,6 +47,7 @@ class ConnectedNavigation extends Component {
 
     render() {
         const { ready } = this.state
+
         if (ready){
             return(
                 <Navigation />
