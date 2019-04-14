@@ -28,12 +28,27 @@ class ConnectedNavigation extends Component {
         setLocalNotification()
 
         const { dispatch } = this.props
+        // AsyncStorage.clear().then(() => console.log('cleared'))
 
         AsyncStorage.getItem('store')
         .then(JSON.parse)
         .then(store => {
+            let cards = []
+            if (store === null) store = []
             const decks = Object.keys(store)
+
+            for (deckname of decks) {
+                for (question of store[deckname].questions) {
+                    cards.push({ deckname, quiz: question})
+                }
+            }
+            console.log('cards **********', cards)
             dispatch(get_decks(decks))
+            dispatch(get_cards(cards))
+            this.setState({ ready: true })
+        })
+        .catch(err => {
+            console.log('catch error', err)
             this.setState({ ready: true })
         })
     }
