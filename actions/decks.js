@@ -67,7 +67,19 @@ export const remove_deck_hander = (info_object) => {
                 return deck !== name
             })
             AsyncStorage.setItem('decks', JSON.stringify(updated_deck))
-            .then(dispatch(remove_deck(info_object)))
+            .then(() => {
+                dispatch(remove_deck(info_object))
+                // Now remove associated cards
+                AsyncStorage.getItem('cards')
+                .then(JSON.parse)
+                .then(cards => {  
+                    // Filter for cards to keep
+                    let cards_to_keep = cards.filter(card => (card.deckname !== name))
+                    AsyncStorage.setItem('cards', JSON.stringify(cards_to_keep))
+                    .then(JSON.parse)
+                    .then(console.log('Deck and associated cards removed successfully'))
+                })
+            })
         })
     }
 }
