@@ -27,7 +27,7 @@ class Deck extends Component {
                 <TouchableOpacity
                     style={deckStyles.beginQuizContainer}
                     onPress={() => this.props.navigation.navigate(
-                        'QuizView', { quiz: quizzes[0], quiz_count }
+                        'QuizView', { index: 0, score: 0, deckname: item, end: false }
                     )}
                 >
                     <Text style={deckStyles.startQuiztext}>Start quiz</Text>

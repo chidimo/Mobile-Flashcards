@@ -16,16 +16,47 @@ class QuizView extends Component {
         this.setState({ showAnswer: true, showBanner: false })
     }
 
+    get_next_question = (deckname, index, score, end, option) => {
+        const { navigation, quizzes } = this.props
+        if (option === 1) score += 1
+        if (index + 1 === quizzes.length) end = true
+
+        this.setState({ showAnswer: false, showBanner: true })
+        navigation.navigate(
+            'QuizView',
+            { index: index+1, deckname, score: score, end })
+    }
+
     render() {
-        const { navigation } = this.props
+        const { navigation, quizzes } = this.props
         const { showAnswer, showBanner } = this.state
-        const quiz = navigation.getParam('quiz')
-        const quiz_count = navigation.getParam('quiz_count')
+        const index = navigation.getParam('index')
+        const score = navigation.getParam('score')
+        const end = navigation.getParam('end')
+        const deckname = navigation.getParam('deckname')
+
+        const quiz_count = quizzes.length
+        const quiz = quizzes[index]
+        const question_number = index + 1
+
+        
+        if (end) {
+            return (
+                <View style={sharedStyles.container}>
+                    <Text style={sharedStyles.headingText}>
+                        End of quiz
+                    </Text>
+                    <Text>
+                        {`You scored ${score} out of ${quizzes.length}`}
+                    </Text>
+                </View>
+            )
+        }
 
         if (quiz === undefined) {
             return (
-                <View>
-                    <Text>You cannot take a quiz yet.</Text>
+                <View style={sharedStyles.container}>
+                    <Text style={sharedStyles.headingText}>You cannot take a quiz yet.</Text>
                 </View>
             )
         }
@@ -33,7 +64,8 @@ class QuizView extends Component {
         return (
             <View style={sharedStyles.container}>
 
-                <Text>{`Question ${quiz_count} of ${quiz_count}`}</Text>
+                <Text>Score: {score}</Text>
+                <Text>{`Question ${question_number} of ${quiz_count}`}</Text>
                 <Text style={quizViewStyles.questionContainer}>{quiz.quizzes[0].question}</Text>
 
                 {
@@ -56,12 +88,14 @@ class QuizView extends Component {
                 <View style={quizViewStyles.markContainer}>
                     <TouchableOpacity
                         style={[sharedStyles.opacityContainer, { backgroundColor: red}]}
+                        onPress={() => this.get_next_question(deckname, index, score, end, option=0)}
                     >
                         <Text>Wrong</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={[sharedStyles.opacityContainer, { backgroundColor: green}]}
+                        onPress={() => this.get_next_question(deckname, index, score, end, option=1)}
                     >
                         <Text>Correct</Text>
                     </TouchableOpacity>
@@ -73,4 +107,12 @@ class QuizView extends Component {
     }
 }
 
-export default connect()(QuizView)
+
+const mapStateToProps = ({ cards }, { navigation }) => {
+    const deck_name = navigation.getParam('deckname')
+    const quizzes = cards.filter(card => {return card.deckname === deck_name})
+
+    return { quizzes }
+}
+
+export default connect(mapStateToProps)(QuizView)
