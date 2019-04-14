@@ -42,7 +42,6 @@ class ConnectedNavigation extends Component {
                     cards.push({ deckname, quiz: question})
                 }
             }
-            console.log('cards **********', cards)
             dispatch(get_decks(decks))
             dispatch(get_cards(cards))
             this.setState({ ready: true })

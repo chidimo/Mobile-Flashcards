@@ -2,12 +2,10 @@ import { AsyncStorage } from 'react-native';
 
 import { ADD_NEW_DECK, GET_DECKS, REMOVE_DECK } from './types'
 
-export const add_new_deck = ({ name }) => {
-    return {
-        type: ADD_NEW_DECK,
-        name,
-    }
-}
+export const add_new_deck = ({ name }) => ({
+    type: ADD_NEW_DECK,
+    name,
+})
 
 export const add_new_deck_handler = (info_object) => {
     const { name } = info_object
@@ -27,19 +25,15 @@ export const add_new_deck_handler = (info_object) => {
     }
 }
 
-export const get_decks = (decks) => {
-    return {
-        type: GET_DECKS,
-        decks
-    }
-}
+export const get_decks = decks => ({
+    type: GET_DECKS,
+    decks
+})
 
-export const remove_deck = ({ deckname }) => {
-    return {
-        type: REMOVE_DECK,
-        deckname,
-    }
-}
+export const remove_deck = ({ deckname }) => ({
+    type: REMOVE_DECK,
+    deckname,
+})
 
 export const remove_deck_hander = (info_object) => {
     const { deckname } = info_object
@@ -49,8 +43,6 @@ export const remove_deck_hander = (info_object) => {
         .then(JSON.parse)
         .then(store => {
             delete store[deckname]
-            console.log('Store ', store)
-
             AsyncStorage.setItem('store', JSON.stringify(store))
             .then(() => {
                 dispatch(remove_deck(info_object))
