@@ -31,9 +31,9 @@ class NewCard extends Component {
             return
         }
         const { navigation, add_card } = this.props
-        const deck = navigation.state.params.item
-        add_card(deck, question, answer)
-        this.props.navigation.navigate('Deck', { item: deck })
+        const deckname = navigation.state.params.item
+        add_card(deckname, question, answer)
+        this.props.navigation.navigate('Deck', { item: deckname })
     }
     
     render() {
@@ -79,8 +79,8 @@ class NewCard extends Component {
 }
 
 const mapDispatchToProps = dispatch => {
-    const add_card = (deck, question, answer) => {
-        return dispatch(add_card_handler({ deck, question, answer }))
+    const add_card = (deckname, question, answer) => {
+        return dispatch(add_card_handler({ deckname, question, answer }))
     }
 
     return {
