@@ -7,6 +7,7 @@ import sharedStyles from '../styles/shared';
 import quizViewStyles from '../styles/Quiz';
 
 import { green, white, purple } from '../utils/colors'
+import { clearLocalNotification, setLocalNotification} from '../utils/notificationSystem'
 
 
 class Quiz extends Component {
@@ -48,6 +49,9 @@ class Quiz extends Component {
         const question_number = index + 1
 
         if (end) {
+            clearLocalNotification()
+            .then(setLocalNotification)
+
             return (
                 <View style={[sharedStyles.container, { flex: 1, justifyContent: 'space-evenly'}]}>
                     <Text style={sharedStyles.headingText}>
