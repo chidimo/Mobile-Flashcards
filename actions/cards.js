@@ -34,23 +34,9 @@ export const add_card_handler = (info_object) => {
         .then(JSON.parse)
         .then(cards => {
             
-            let new_card
-            let updated_cards
-            // first filter for the current deckname in cards array
-            let current_deck = cards.filter(card => {(card.deckname === deck)})[0]
-
-            if (current_deck === undefined) {
-                new_card = { deckname: deck, quizzes: [{ question, answer }] }
-                updated_cards = cards.concat(new_card)
-            }
-            else {
-                new_card = { question, answer }
-
-                for (let card of cards) {
-                    if (card.deckname === deck) card.quizzes.concat(new_card)
-                }
-                updated_cards = cards
-            }
+            let updated_cards = cards.concat(
+                { deckname: deck, quiz: { question, answer } }
+            )
 
             AsyncStorage.setItem('cards', JSON.stringify(updated_cards))
             .then(JSON.parse)
