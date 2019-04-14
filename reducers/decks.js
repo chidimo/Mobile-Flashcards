@@ -2,8 +2,6 @@ import { ADD_NEW_DECK, GET_DECKS, REMOVE_DECK, SET_DECK_KEY } from '../actions/t
 
 export const decks = (state=[], action) => {
     switch (action.type) {
-        case SET_DECK_KEY:
-            return state
 
         case GET_DECKS:
             return action.decks

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { View, Text, StatusBar, AsyncStorage } from 'react-native';
 import { Constants } from 'expo';
 
-import { set_deck_key_handler, get_decks } from '../actions/decks';
-import { set_card_key_handler, get_cards } from '../actions/cards';
+import { get_decks } from '../actions/decks';
+import { get_cards } from '../actions/cards';
 
 import Navigation from './Navigation'
 import sharedStyles from '../styles/shared';
@@ -28,10 +28,7 @@ class ConnectedNavigation extends Component {
         setLocalNotification()
 
         const { dispatch } = this.props
-
-        // dispatch(set_deck_key_handler())
-        // dispatch(set_card_key_handler())
-
+        
         AsyncStorage.getItem('decks')
         .then(JSON.parse)
         .then(decks => {

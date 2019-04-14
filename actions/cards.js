@@ -1,23 +1,6 @@
 import { AsyncStorage } from 'react-native';
 
-import { SET_CARD_KEY, ADD_CARD, GET_CARDS } from './types'
-
-export const set_card_key = () => {
-    return {
-        type: SET_CARD_KEY
-    }
-}
-
-export const set_card_key_handler = () => {
-    return dispatch => {
-        AsyncStorage.getItem('cards', (err, result) => {
-            if (!result) {
-                AsyncStorage.setItem('cards', JSON.stringify([]))
-                .then(dispatch(set_card_key()))
-            }
-        })
-    }
-}
+import { ADD_CARD, GET_CARDS } from './types'
 
 export const add_card = ({ updated_cards }) => {
     return {

@@ -1,24 +1,6 @@
 import { AsyncStorage } from 'react-native';
 
-import { ADD_NEW_DECK, GET_DECKS, REMOVE_DECK, SET_DECK_KEY } from './types'
-
-
-export const set_deck_key = () => {
-    return {
-        type: SET_DECK_KEY
-    }
-}
-
-export const set_deck_key_handler = () => {
-    return dispatch => {
-        AsyncStorage.getItem('decks', (err, result) => {
-            if (!result) {
-                AsyncStorage.setItem('decks', JSON.stringify([]))
-                .then(dispatch(set_deck_key()))
-            }
-        })
-    }
-}
+import { ADD_NEW_DECK, GET_DECKS, REMOVE_DECK } from './types'
 
 export const add_new_deck = ({ name }) => {
     return {
