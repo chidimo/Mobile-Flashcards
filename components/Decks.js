@@ -31,7 +31,6 @@ class Decks extends Component {
         )
     }
 
-
     render() {
         const { deck_obj } = this.props
         return(
@@ -50,7 +49,7 @@ const mapStateToProps = ({ decks, cards }) => {
     let deck_obj = []
 
     for (deck of decks) {
-        let deck_cards_count = cards.filter(card => {return card.deckname === deck})[0].quiz.length
+        let deck_cards_count = cards.filter(card => (card.deckname === deck)).length
         deck_obj.push([deck, deck_cards_count])
     }
     return { deck_obj }
