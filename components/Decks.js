@@ -7,9 +7,7 @@ import decksStyles from '../styles/Decks';
 
 class Decks extends Component {
 
-    static navigationOptions = {
-        title: 'Home'
-    }
+    static navigationOptions = { title: 'Home' }
 
     render_deck = item => {
 

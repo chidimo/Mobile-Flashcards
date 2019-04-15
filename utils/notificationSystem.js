@@ -8,7 +8,7 @@ const createNotification = () => {
     // object for creating notification
     return {
         title: 'Take a quiz',
-        body: "🖐 Don't forget to complete a quiz today",
+        body: "🖐 Don't forget to complete a quiz today😃",
         ios: {
             sound: true,
         },
