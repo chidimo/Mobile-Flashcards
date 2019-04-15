@@ -33,6 +33,10 @@ class NewDeck extends Component {
         this.props.navigation.navigate('Deck', { item: name })
     }
 
+    handle_change_text = (name) => {
+        this.setState({ name: name.trim().toLowerCase() })
+    }
+
     render() {
         const { error, error_text } = this.state
         return (
@@ -51,7 +55,7 @@ class NewDeck extends Component {
                     returnKeyType="go"
                     placeholder='Enter deck name'
                     refValue={input => this.deckNameInput = input} 
-                    onChangeText={name => this.setState({ name: name.trim().toLowerCase()})}
+                    onChangeText={name => this.handle_change_text(name)}
                 />
 
                 <Button

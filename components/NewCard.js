@@ -35,7 +35,11 @@ class NewCard extends Component {
         add_card(deckname, question, answer)
         this.props.navigation.navigate('Deck', { item: deckname })
     }
-    
+
+    handle_change_text = (name, state_name) => {
+        this.setState({ [state_name]: name.trim().toLowerCase() })
+    }
+
     render() {
         const { navigation } = this.props
         const { error, error_text } = this.state
@@ -58,14 +62,14 @@ class NewCard extends Component {
                     onSubmitEditing={() => this.answerInput.focus()} 
                     placeholder='Enter question'
                     returnKeyType="next"
-                    onChangeText={question => this.setState({ question: question.trim().toLowerCase() })}
+                    onChangeText={question => this.handle_change_text(question, 'question')}
                 />
 
                 <SharedTextInput
                     placeholder='Enter answer'
                     returnKeyType="go"
                     refValue={input => this.answerInput = input} 
-                    onChangeText={answer => this.setState({ answer: answer.trim().toLowerCase() })}
+                    onChangeText={answer => this.handle_change_text(answer, 'answer')}
                 />
 
                 <Button
