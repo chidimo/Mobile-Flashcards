@@ -18,18 +18,18 @@ class NewDeck extends Component {
         const { name } = this.state
         const { decks } = this.props
 
-        if (decks.includes(name)) {
-            this.setState({ error: true, error_text: 'This deck already exists'})
-            return
-        }
-
         if (!name) {
             this.setState({ error: true, error_text: 'Please enter a deck name' })
+            return
+        }
+        else if (decks.includes(name)) {
+            this.setState({ error: true, error_text: 'This deck already exists'})
             return
         }
         
         this.props.add_deck(name)
         this.deckNameInput.clear()
+        this.setState({ error: false })
         this.props.navigation.navigate('Deck', { item: name })
     }
 
