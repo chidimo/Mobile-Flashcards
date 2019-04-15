@@ -29,6 +29,7 @@ class NewDeck extends Component {
         }
         
         this.props.add_deck(name)
+        this.deckNameInput.clear()
         this.props.navigation.navigate('Deck', { item: name })
     }
 
@@ -49,6 +50,7 @@ class NewDeck extends Component {
                 <SharedTextInput
                     returnKeyType="go"
                     placeholder='Enter deck name'
+                    refValue={input => this.deckNameInput = input} 
                     onChangeText={name => this.setState({ name: name.trim().toLowerCase()})}
                 />
 
