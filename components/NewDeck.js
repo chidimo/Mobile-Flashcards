@@ -10,17 +10,21 @@ import { purple } from '../utils/colors';
 
 class NewDeck extends Component {
 
-    static navigationOptions = {
-        title: 'Create deck'
-    }
+    static navigationOptions = { title: 'Create deck' }
 
-    state = { name: '', error: false }
+    state = { name: '', error: false, error_text: '' }
 
     _save_deck = () => {
         const { name } = this.state
+        const { decks } = this.props
+
+        if (decks.includes(name)) {
+            this.setState({ error: true, error_text: 'This deck already exists'})
+            return
+        }
 
         if (!name) {
-            this.setState({ error: true })
+            this.setState({ error: true, error_text: 'Please enter a deck name' })
             return
         }
         
@@ -29,7 +33,7 @@ class NewDeck extends Component {
     }
 
     render() {
-        const { error } = this.state
+        const { error, error_text } = this.state
         return (
             <View style={sharedStyles.container}>
                 <Text style={sharedStyles.headingText}>
@@ -38,7 +42,7 @@ class NewDeck extends Component {
 
                 {
                     error && (
-                        <Text style={sharedStyles.errorText}>You must enter a deck name</Text>
+                        <Text style={sharedStyles.errorText}>{error_text}</Text>
                     )
                 }
 
@@ -68,4 +72,7 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(NewDeck);
+const mapStateToProps = ({ decks }) => ({
+    decks
+})
+export default connect(mapStateToProps, mapDispatchToProps)(NewDeck);
