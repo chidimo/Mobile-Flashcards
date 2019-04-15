@@ -15,6 +15,11 @@ This is a mobile flashcard app written in `React-Native`. It uses `expo`'s `Asyn
 1. Run `yarn install` to install the project dependencies.
 1. Run  `yarn start` to start the project.
 
+## Links
+
+1. Expo [documentation](https://docs.expo.io/versions/latest/)
+1. React native [documentation](https://facebook.github.io/react-native/docs/running-on-device#pro-tips)
+
 ## Supported platforms
 
 This app is targeted at both Android and iOS devices but it has only been tested on Android at the time of writing.
