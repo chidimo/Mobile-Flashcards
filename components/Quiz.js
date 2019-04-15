@@ -36,6 +36,35 @@ class Quiz extends Component {
         )
     }
 
+    end_quiz = (score, deckname, total) => (
+        
+        <View style={[sharedStyles.container, { flex: 1, justifyContent: 'space-evenly'}]}>
+            <Text style={sharedStyles.headingText}>
+                End of quiz
+            </Text>
+            <Text style={quizViewStyles.finalScoreText}>
+                {`You scored ${score} out of ${total}`}
+            </Text>
+
+            <View style={quizViewStyles.quizMenuContainer}>
+                <Button
+                    title='Restart Quiz'
+                    onPress={() => this.props.navigation.navigate(
+                        'Quiz', { index: 0, score: 0, deckname: deckname, end: false }
+                    )}
+                />
+
+                <Button
+                    color={purple}
+                    title='Back to Deck'
+                    onPress={() => this.props.navigation.navigate(
+                        'Deck', { item: deckname}
+                    )}
+                />
+            </View>
+        </View>
+    )
+
     render() {
         const { navigation, quizzes } = this.props
         const { showAnswer } = this.state
@@ -47,38 +76,12 @@ class Quiz extends Component {
         const quiz_count = quizzes.length
         const quiz = quizzes[index]
         const question_number = index + 1
+        const total = quizzes.length
 
         if (end) {
             clearLocalNotification()
             .then(setLocalNotification)
-
-            return (
-                <View style={[sharedStyles.container, { flex: 1, justifyContent: 'space-evenly'}]}>
-                    <Text style={sharedStyles.headingText}>
-                        End of quiz
-                    </Text>
-                    <Text style={quizViewStyles.finalScoreText}>
-                        {`You scored ${score} out of ${quizzes.length}`}
-                    </Text>
-
-                    <View style={quizViewStyles.quizMenuContainer}>
-                        <Button
-                            title='Restart Quiz'
-                            onPress={() => this.props.navigation.navigate(
-                                'Quiz', { index: 0, score: 0, deckname: deckname, end: false }
-                            )}
-                        />
-    
-                        <Button
-                            color={purple}
-                            title='Back to Deck'
-                            onPress={() => this.props.navigation.navigate(
-                                'Deck', { item: deckname}
-                            )}
-                        />
-                    </View>
-                </View>
-            )
+            return this.end_quiz(score, deckname, total)
         }
 
         if (quiz === undefined) {
@@ -122,7 +125,7 @@ class Quiz extends Component {
                     <Button
                         color={purple}
                         title='Toggle answer'
-                        onPress={() => this.toggle_answer()}
+                        onPress={this.toggle_answer}
                     />                        
                 </View>
 
