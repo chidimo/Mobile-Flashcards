@@ -13,10 +13,16 @@ class Deck extends Component {
         const title = navigation.getParam('item').toUpperCase()
         return ({ title })
     }
+
+    _remove_deck = (item) => {
+        const { navigation, remove_deck } = this.props
+        remove_deck(item)
+        navigation.navigate('Decks')
+    }
     
     render() {
 
-        const { navigation, remove_deck, quizzes } = this.props
+        const { navigation, quizzes } = this.props
         const item = navigation.state.params.item
 
         return (
@@ -49,7 +55,7 @@ class Deck extends Component {
                         <Button
                             title='Delete'
                             color={red}
-                            onPress={() => {remove_deck(item); navigation.navigate('Decks')}}
+                            onPress={() => this._remove_deck(item)}
                         />
                     </View>
                 </View>
