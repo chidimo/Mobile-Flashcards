@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Button, TouchableOpacity } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
 
-import deckStyles from '../styles/Deck';
+import DeckViewDetails from './DeckViewDetails';
 import sharedStyles from '../styles/shared';
 import { remove_deck_hander } from '../actions/decks';
 import { purple, green, red } from '../utils/colors';
@@ -15,21 +15,14 @@ class Deck extends Component {
     }
     
     render() {
-        let card_count
-        const { navigation, remove_deck, quizzes } = this.props
-        const quiz_count = quizzes.length
-        const item = navigation.state.params.item
 
-        if (quiz_count === 0) card_count = 'No card'
-        else card_count = `${quiz_count} card${quiz_count > 1 ? 's' : ''}`
+        const { navigation, remove_deck, quizzes } = this.props
+        const item = navigation.state.params.item
 
         return (
             <View style={[sharedStyles.container, {justifyContent: 'space-evenly'}]}>
 
-                <View>
-                    <Text style={sharedStyles.headingText}>{item.toUpperCase()}</Text>
-                    <Text style={deckStyles.cardCountText}>{card_count}</Text>
-                </View>
+                <DeckViewDetails title={item} questions={quizzes.length} />
 
                 <View style={{flex: 1, justifyContent: 'space-evenly'}}>
                     <View>

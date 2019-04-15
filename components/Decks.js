@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
+import DeckViewDetails from './DeckViewDetails';
 import decksStyles from '../styles/Decks';
 
 
@@ -11,20 +12,14 @@ class Decks extends Component {
 
     render_deck = item => {
 
-        let card_count
-
-        if (item[1] === 0) card_count = 'No card'
-        else card_count = `${item[1]} card${item[1] === 1 ? '' : 's'}`
-        
         return (
             <TouchableOpacity
             style={decksStyles.itemContainer}
             onPress={() => this.props.navigation.navigate(
                 'Deck', { item: item[0] }
                 )}
-                >
-                <Text style={decksStyles.text}>{item[0].toUpperCase()}</Text>
-                <Text style={decksStyles.text}>{card_count}</Text>
+            >
+                <DeckViewDetails title={item[0]} questions={item[1]} />
             </TouchableOpacity>
         )
     }

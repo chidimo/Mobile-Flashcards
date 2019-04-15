@@ -15,9 +15,4 @@ export default decksStyles = StyleSheet.create({
         marginBottom: 1,
         borderWidth: StyleSheet.hairlineWidth,
     },
-    text: {
-        color: purple,
-        textAlign: 'center',
-        fontWeight: '700',
-    }
 })
