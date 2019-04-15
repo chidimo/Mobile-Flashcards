@@ -8,7 +8,7 @@ import quizViewStyles from '../styles/Quiz';
 
 import { green, white, purple } from '../utils/colors'
 import { clearLocalNotification, setLocalNotification} from '../utils/notificationSystem'
-
+const toTitleCase = require('titlecase')
 
 class Quiz extends Component {
     
@@ -114,11 +114,11 @@ class Quiz extends Component {
 
 
                 <View style={quizViewStyles.questionContainer}>
-                    <Text style={quizViewStyles.questionText}>{quiz.quiz.question}</Text>
+                    <Text style={quizViewStyles.questionText}>{toTitleCase(quiz.quiz.question)}</Text>
                 </View>
 
                 <View style={[quizViewStyles.answerContainer, {backgroundColor: showAnswer ? white : green}]}>
-                    <Text style={quizViewStyles.answerText}>{quiz.quiz.answer}</Text>
+                    <Text style={quizViewStyles.answerText}>{toTitleCase(quiz.quiz.answer)}</Text>
                 </View>
 
                 <View>
