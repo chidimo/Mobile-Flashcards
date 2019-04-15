@@ -42,7 +42,7 @@ class NewCard extends Component {
         const deck = navigation.state.params.item
 
         return (
-            <View style={sharedStyles.container}>
+            <View style={[sharedStyles.container, { justifyContent: 'center'}]}>
                 <Text style={sharedStyles.headingText}>
                     {`Add card to ${deck.toUpperCase()}`} 
                 </Text>

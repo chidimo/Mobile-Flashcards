@@ -36,7 +36,7 @@ class NewDeck extends Component {
     render() {
         const { error, error_text } = this.state
         return (
-            <View style={sharedStyles.container}>
+            <View style={[sharedStyles.container, {justifyContent: 'center'}]}>
                 <Text style={sharedStyles.headingText}>
                     Create deck
                 </Text>
