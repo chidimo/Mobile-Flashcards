@@ -23,7 +23,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "org.mobile.flashcards.chidimo"
+    },
+    "android": {
+      "package": "org.mobile.flashcards.chidimo"
+    },
+    "description": "A mobile flashcards app I built as part of a Udacity nanodegree project.\nSee README for more details",
+    "githubUrl": "https://github.com/chidimo/Mobile-Flashcards"
   }
 }
