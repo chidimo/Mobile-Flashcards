@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import { KeyboardAvoidingView, Text, Button } from 'react-native';
+import { Header } from 'react-navigation';
+import { Constants } from 'expo';
 import { connect } from 'react-redux';
 
 import SharedTextInput from './Shared.TextInput';
@@ -46,7 +48,7 @@ class NewCard extends Component {
         const deck = navigation.state.params.item
 
         return (
-            <View style={[sharedStyles.container, { justifyContent: 'center'}]}>
+            <KeyboardAvoidingView  behavior="padding" keyboardVerticalOffset = {Header.HEIGHT + Constants.statusBarHeight} style={[sharedStyles.container, { justifyContent: 'center'}]}>
                 <Text style={sharedStyles.headingText}>
                     {`Add card to ${deck.toUpperCase()}`} 
                 </Text>
@@ -77,7 +79,7 @@ class NewCard extends Component {
                     title='Save card'
                     onPress={this._save_card}
                 />
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import { KeyboardAvoidingView, Text, Button } from 'react-native';
+import { Header } from 'react-navigation';
+import { Constants } from 'expo';
 import { connect } from 'react-redux';
 
 import SharedTextInput from './Shared.TextInput'
@@ -40,7 +42,7 @@ class NewDeck extends Component {
     render() {
         const { error, error_text } = this.state
         return (
-            <View style={[sharedStyles.container, {justifyContent: 'center'}]}>
+            <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset = {Header.HEIGHT + Constants.statusBarHeight} style={[sharedStyles.container, {justifyContent: 'center'}]}>
                 <Text style={sharedStyles.headingText}>
                     Create deck
                 </Text>
@@ -63,7 +65,7 @@ class NewDeck extends Component {
                     title='Save deck'
                     onPress={this._save_deck}
                 />
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }
