@@ -1,35 +1,45 @@
 {
   "expo": {
-    "name": "Mobile Flashcards",
+    "name": "mobile-flashcards",
     "slug": "mobile-flashcards",
-    "privacy": "public",
-    "sdkVersion": "32.0.0",
-    "platforms": [
-      "ios",
-      "android"
-    ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "org.mobile.flashcards.chidimo"
+      "supportsTablet": true
     },
     "android": {
-      "package": "org.mobile.flashcards.chidimo"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.chidimo.mobileflashcards"
     },
-    "description": "A mobile flashcards app I built as part of a Udacity nanodegree project.\nSee README for more details",
-    "githubUrl": "https://github.com/chidimo/Mobile-Flashcards"
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "af135cb0-5f68-11e9-9464-3f7592df8106"
+      }
+    }
   }
 }

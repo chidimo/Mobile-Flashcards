@@ -1,27 +1,50 @@
-# Mobile Flashcards
+# Welcome to your Expo app 👋
 
-Project home page: 
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## The project
+## Get started
 
-This is a mobile flashcard app written in `React-Native`. It uses `expo`'s `AsyncStorage` to persist the user's data.
+1. Install dependencies
 
-## Installation
+   ```bash
+   npm install
+   ```
 
-1. You must have `node` and `yarn` installed.
-1. Install `expo-cli` using `yarn global add expo-cli`. If you encounter any problems during installation, please checkout the getting started [guide](https://facebook.github.io/react-native/docs/getting-started).
-1. Clone this repo with `git clone https://github.com/chidimo/Mobile-Flashcards.git`
-1. Open a terminal and `cd` into the `Mobile-Flashcards` folder. You might need to run the terminal with administrative rights.
-1. Run `yarn install` to install the project dependencies.
-1. Run  `yarn start` to start the project.
+2. Start the app
 
-## Links
+   ```bash
+    npx expo start
+   ```
 
-1. Expo [documentation](https://docs.expo.io/versions/latest/)
-1. React native [documentation](https://facebook.github.io/react-native/docs/running-on-device#pro-tips)
+In the output, you'll find options to open the app in a
 
-## Supported platforms
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-This app is targeted at both Android and iOS devices but it has only been tested on Android at the time of writing.
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-If its tested on iOS, this space will be updated.
+## Get a fresh project
+
+When you're ready, run:
+
+```bash
+npm run reset-project
+```
+
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+
+## Learn more
+
+To learn more about developing your project with Expo, look at the following resources:
+
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+
+## Join the community
+
+Join our community of developers creating universal apps.
+
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
