@@ -16,11 +16,12 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.chidimo.mobileflashcards",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.chidimo.mobileflashcards"
+      }
     },
     "web": {
       "bundler": "metro",
