@@ -18,13 +18,12 @@ export type BtnVariant =
   | "SECONDARY";
 
 type Props = {
-  title?: string | JSX.Element;
-  iconType?: string;
+  title: string | JSX.Element;
   disabled?: boolean;
   isLoading?: boolean;
   btnVariant?: BtnVariant;
   moreContainerStyle?: StyleProp<ViewStyle>;
-  onPress?: ((event: GestureResponderEvent) => void) | undefined;
+  onPress?: (event: GestureResponderEvent) => void;
 };
 
 export const DefaultButton = (props: Props) => {
@@ -42,8 +41,16 @@ export const DefaultButton = (props: Props) => {
       disabled={disabled}
       onPress={disabled ? () => null : onPress}
       style={[
-        containerStyle.base,
-        btnVariant === "PRIMARY" && containerStyle.primary,
+        {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: 50,
+          borderRadius: 10,
+          paddingVertical: 8,
+          backgroundColor: "#07f",
+        },
         btnVariant === "DANGER" && containerStyle.danger,
         btnVariant === "SUCCESS" && containerStyle.success,
         btnVariant === "SECONDARY" && containerStyle.secondary,
@@ -51,50 +58,47 @@ export const DefaultButton = (props: Props) => {
         moreContainerStyle,
       ]}
     >
-      <View>
-        {isLoading ? (
-          <ActivityIndicator style={{}} size={27} color="#fff" />
-        ) : (
-          <Text
-            style={[
-              titleStyle.base,
-              btnVariant === "PRIMARY" && titleStyle.primary,
-              btnVariant === "DANGER" && titleStyle.danger,
-              btnVariant === "SUCCESS" && titleStyle.success,
-              btnVariant === "SECONDARY" && titleStyle.secondary,
-              btnVariant === "CANCEL" && titleStyle.cancel,
-            ]}
-          >
-            {title}
-          </Text>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {isLoading && (
+          <ActivityIndicator
+            size={22}
+            color={btnVariant === "CANCEL" ? "black" : "#fff"}
+            style={[{ marginRight: 3 }]}
+          />
         )}
+        <Text
+          style={[
+            {
+              fontSize: 18,
+              color: "#fff",
+            },
+            btnVariant === "DANGER" && titleStyle.danger,
+            btnVariant === "SUCCESS" && titleStyle.success,
+            btnVariant === "SECONDARY" && titleStyle.secondary,
+            btnVariant === "CANCEL" && titleStyle.cancel,
+          ]}
+        >
+          {title}
+        </Text>
       </View>
     </TouchableOpacity>
   );
 };
 
 const containerStyle = StyleSheet.create({
-  base: {
-    display: "flex",
-    width: "100%",
-    alignItems: "center",
-    color: "#fff",
-    borderRadius: 10,
-    paddingVertical: 8,
-  },
-  primary: { backgroundColor: "#07f" },
   danger: { backgroundColor: "red" },
   success: { backgroundColor: "green" },
   secondary: { backgroundColor: "grey" },
-  cancel: { backgroundColor: "#fff" },
+  cancel: { backgroundColor: "#ccc" },
 });
 
 const titleStyle = StyleSheet.create({
-  base: {
-    fontSize: 18,
-    color: "#fff",
-  },
-  primary: { color: "#fff" },
   danger: { color: "#fff" },
   success: { color: "#fff" },
   secondary: { color: "#fff" },

@@ -1,8 +1,7 @@
-import { Ref, forwardRef, useState, useEffect } from "react";
+import { Ref, forwardRef } from "react";
 import {
   KeyboardTypeOptions,
   StyleProp,
-  StyleSheet,
   Text,
   TextInput,
   View,
@@ -31,9 +30,7 @@ type Props = {
   value?: any;
   disabled?: boolean;
   multiline?: boolean;
-  secureTextEntry?: boolean;
   selectTextOnFocus?: boolean;
-  showPasswordToggle?: boolean;
 
   error?: any;
   placeholder?: string;
@@ -45,7 +42,7 @@ type Props = {
   autoComplete?: AutoCompleteOptions;
 
   onBlur?: (...args: any[]) => any;
-  onChangeText?: (...args: any[]) => any;
+  onChangeText: (...args: any[]) => any;
   onSubmitEditing?: (...args: any[]) => any;
 };
 
@@ -63,25 +60,26 @@ export const Input = forwardRef((props: Props, ref: Ref<TextInput>) => {
     placeholder = "Enter value",
     keyboardType = "default",
     returnKeyType,
-    showPasswordToggle = false,
     selectTextOnFocus,
-    secureTextEntry = false,
     autoComplete = "off",
   } = props;
 
-  const [isSecure, setIsSecure] = useState<boolean | undefined>(false);
-
-  useEffect(() => setIsSecure(secureTextEntry), []);
-
   return (
-    <View style={[styles.container, containerStyle]}>
-      {label ? <Text style={[styles.label]}>{label}</Text> : null}
+    <View
+      style={[
+        {
+          width: "100%",
+          marginBottom: 10,
+        },
+        containerStyle,
+      ]}
+    >
+      {label ? <Text>{label}</Text> : null}
       <TextInput
         ref={ref}
         value={value}
         editable={!disabled}
         multiline={multiline}
-        secureTextEntry={isSecure || false}
         selectTextOnFocus={selectTextOnFocus}
         placeholder={placeholder}
         autoComplete={autoComplete}
@@ -90,37 +88,22 @@ export const Input = forwardRef((props: Props, ref: Ref<TextInput>) => {
         onBlur={onBlur}
         onChangeText={onChangeText}
         onSubmitEditing={onSubmitEditing}
-        style={[styles.input, error && styles.error]}
+        placeholderTextColor="gray"
+        style={[
+          {
+            width: "100%",
+            borderWidth: 1,
+            borderRadius: 10,
+            fontSize: 18,
+            height: 50,
+            paddingHorizontal: 10,
+            backgroundColor: "#fff",
+            borderColor: error ? "red" : "rgba(0,0,0,0.3)",
+          },
+        ]}
       />
 
       {error && <Text style={{ color: "red" }}>{error}</Text>}
     </View>
   );
-});
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    marginBottom: 10,
-  },
-  label: {},
-  input: {
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.3)",
-    borderRadius: 10,
-    fontSize: 18,
-    height: 50,
-    paddingHorizontal: 10,
-    backgroundColor: "#fff",
-
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowColor: "#000",
-    // shadowOpacity: 0.8,
-    // shadowRadius: 2,
-    // elevation: 5,
-  },
-  error: {
-    borderColor: "red",
-  },
 });
