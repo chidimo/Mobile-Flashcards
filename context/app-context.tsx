@@ -14,13 +14,14 @@ export interface FlashContext {
   deckNames: string[];
   deckOfCards: Deck[] | null;
   addDeck: (name: string, passMark: number) => void;
-  updateDeck: (deckId: string, name: string) => void;
+  updateDeck: (deckId: string, name: string, passMark: number) => void;
   updateCard: (
     deckId: string,
     qId: string,
     question: string,
     answer: string
   ) => void;
+  importDeck: (title: string, passMark: number, questions: Question[]) => void;
   deleteDeck: (deckId: string) => void;
   deleteCard: (deckId: string, qId: string) => void;
   getDeckById: (id: string) => Deck | null;
@@ -168,7 +169,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
         setState(updated);
         showNotification("Success", "Score saved successfully!");
       },
-      updateDeck(deckId: string, title: string) {
+      updateDeck(deckId: string, title: string, passMark: number) {
         if (!state.flashcards) return;
         let updated = {
           ...state,
@@ -177,6 +178,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
             [deckId]: {
               ...state.flashcards[deckId],
               title,
+              passMark,
             },
           },
         };
@@ -204,6 +206,22 @@ export function FlashProvider({ children }: Readonly<Props>) {
         setState(updated);
         showNotification("Success", "Deck added successfully!");
         router.push(`/${id}`);
+      },
+      importDeck(title: string, passMark: number, questions: Question[]) {
+        const id = Crypto.randomUUID();
+        let updated = state;
+        if (state.flashcards === null) {
+          updated.flashcards = {};
+        }
+        updated = {
+          ...state,
+          flashcards: {
+            ...state.flashcards,
+            [id]: { id, title, questions, passMark },
+          },
+        };
+        setItemToStorage(updated, flashCardKey);
+        setState(updated);
       },
     };
   }, [state]);

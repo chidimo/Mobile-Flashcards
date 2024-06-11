@@ -3,9 +3,12 @@ import React from "react";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useFlash } from "@/context/app-context";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import {
+  AntDesign,
+  Feather,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -63,6 +66,18 @@ export default function TabLayout() {
           tabBarActiveTintColor: "purple",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="scoreboard" color={color} size={24} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="manage"
+        options={{
+          headerShown: false,
+          title: "Manage",
+          tabBarActiveTintColor: "purple",
+          tabBarIcon: ({ color }) => (
+            <Feather name="settings" color={color} size={24} />
           ),
         }}
       />

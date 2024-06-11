@@ -10,7 +10,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 
 type Props = {
-  title: string;
+  title: string | React.ReactNode;
   visible: boolean;
   modalBehavior?: "slide-from-bottom" | "fade-into-view";
   onRequestClose: () => void;

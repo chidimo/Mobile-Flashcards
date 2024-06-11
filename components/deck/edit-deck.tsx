@@ -1,12 +1,12 @@
-import { router, useGlobalSearchParams } from "expo-router";
+import { useGlobalSearchParams } from "expo-router";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { useMemo } from "react";
 import { useFlash } from "@/context/app-context";
 import { TCreateDeck } from "@/types/generic";
-import { sharedStyles } from "@/styles";
 import { DeckFormFields } from "./deck-form-fields";
 import { DefaultButton } from "../form-elements/button";
+import { showNotification } from "../notifier";
 
 export const EditDeck = () => {
   const { getDeckById, updateDeck } = useFlash();
@@ -16,8 +16,8 @@ export const EditDeck = () => {
 
   const defaultValues = useMemo(
     () => ({
-      name: deck?.title ?? "",
-      passMark : deck?.passMark ?? 50,
+      title: deck?.title ?? "",
+      passMark: deck?.passMark ?? 50,
     }),
     [deck]
   );
@@ -32,12 +32,12 @@ export const EditDeck = () => {
   });
 
   const saveCard = async (data: TCreateDeck) => {
-    updateDeck(deckId as string, data.name);
+    updateDeck(deckId as string, data.title, data.passMark);
   };
 
   const onSubmit: SubmitHandler<TCreateDeck> = async (data) => {
     saveCard(data).then(() => {
-      router.push(`/${deckId}`);
+      showNotification("Success", "Deck updated successfully");
     });
   };
 
@@ -50,9 +50,6 @@ export const EditDeck = () => {
         justifyContent: "center",
       }}
     >
-      <Text style={[sharedStyles.headingText, { marginBottom: 50 }]}>
-        Edit Deck
-      </Text>
       <DeckFormFields errors={errors} control={control} />
       <DefaultButton
         moreContainerStyle={{ width: "50%" }}

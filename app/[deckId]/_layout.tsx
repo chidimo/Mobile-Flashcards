@@ -3,14 +3,14 @@ import { Stack, useGlobalSearchParams } from "expo-router";
 import React from "react";
 
 export default function TabLayout() {
-  const { getDeckById, saveMyScore } = useFlash();
+  const { getDeckById } = useFlash();
   const { deckId } = useGlobalSearchParams();
   const deck = getDeckById(deckId as string);
 
   return (
     <Stack
       screenOptions={{
-        headerTintColor: 'purple',
+        headerTintColor: "purple",
         headerTitle: `MFC <> ${deck?.title}`,
       }}
     >

@@ -1,25 +1,28 @@
 import { getFieldError } from "@/utils/get-error-message";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { View } from "react-native";
+import { StyleProp, View, ViewStyle } from "react-native";
 import { Input } from "../form-elements/input";
 import { TCreateDeck } from "@/types/generic";
 import { useFlash } from "@/context/app-context";
 
 type Props = {
+  isNew?: boolean;
   control: Control<TCreateDeck>;
   errors: FieldErrors<TCreateDeck>;
+  moreContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export const DeckFormFields = (props: Props) => {
-  const { control, errors } = props;
+  const { isNew = false, control, errors, moreContainerStyle = {} } = props;
   const { deckNames } = useFlash();
   return (
-    <View style={{ width: "100%", marginBottom: 40 }}>
+    <View style={[{ width: "100%", marginBottom: 40 }, moreContainerStyle]}>
       <Controller
-        name="name"
+        name="title"
         rules={{
           validate: (val) => {
-            if (deckNames.includes(val)) return "Deck name already exists";
+            if (isNew && deckNames.includes(val))
+              return "Deck name already exists";
             return true;
           },
           required: { value: true, message: "Name is required" },
@@ -31,10 +34,12 @@ export const DeckFormFields = (props: Props) => {
             value={value}
             onBlur={onBlur}
             onChangeText={onChange}
-            error={getFieldError(errors.name)}
+            error={getFieldError(errors.title)}
+            containerStyle={{ marginBottom: 25 }}
           />
         )}
       />
+
       <Controller
         name="passMark"
         rules={{

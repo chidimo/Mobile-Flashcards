@@ -1,52 +1,9 @@
+import { DeckListItem } from "@/components/deck/deck-list-item";
 import { DefaultButton } from "@/components/form-elements/button";
 import { VirtualizedList } from "@/components/virtualized-list";
 import { useFlash } from "@/context/app-context";
-import { Deck } from "@/types/generic";
 import { router } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-interface Props {
-  deck: Deck;
-}
-
-const DeckView = (props: Props) => {
-  const { deck } = props;
-
-  return (
-    <TouchableOpacity
-      style={{
-        padding: 8,
-        width: "100%",
-        borderBottomWidth: StyleSheet.hairlineWidth,
-      }}
-      onPress={() => {
-        router.push(`/${deck.id}`);
-      }}
-    >
-      <View style={{}}>
-        <Text
-          style={{
-            fontSize: 20,
-            textAlign: "center",
-            color: "purple",
-            fontWeight: "800",
-          }}
-        >
-          {deck.title.toUpperCase()}
-        </Text>
-        <Text
-          style={{
-            color: "purple",
-            textAlign: "center",
-          }}
-        >
-          Cards: {deck.questions.length}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
+import { Text, View } from "react-native";
 
 export default function Index() {
   const { deckOfCards } = useFlash();
@@ -81,7 +38,7 @@ export default function Index() {
           </Text>
           <DefaultButton
             title="Add your first deck"
-            moreContainerStyle={{ width: "50%" }}
+            moreContainerStyle={{ width: "70%" }}
             btnVariant="SUCCESS"
             onPress={() => {
               router.push("/add-deck");
@@ -91,7 +48,7 @@ export default function Index() {
       ) : (
         <VirtualizedList>
           {deckOfCards?.map((d) => {
-            return <DeckView key={d.id} deck={d} />;
+            return <DeckListItem key={d.id} deck={d} />;
           })}
         </VirtualizedList>
       )}

@@ -1,0 +1,1 @@
+allow sharing of flashcards by copy and paste flash object

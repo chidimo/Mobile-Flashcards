@@ -1,6 +1,27 @@
+import { z } from "zod";
+
 export interface TCreateDeck {
-  name: string;
+  title: string;
   passMark: number;
+}
+
+export const ImportSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  passMark: z.number(),
+  questions: z.array(
+    z.object({
+      id: z.string(),
+      question: z.string(),
+      answer: z.string(),
+    })
+  ),
+});
+
+export interface TImportDeck {
+  title: string;
+  passMark: number;
+  importString: z.infer<typeof ImportSchema>;
 }
 
 export interface TCreateCard {

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   StyleProp,
   ViewStyle,
+  TextStyle,
 } from "react-native";
 
 export type BtnVariant =
@@ -22,6 +23,7 @@ type Props = {
   disabled?: boolean;
   isLoading?: boolean;
   btnVariant?: BtnVariant;
+  moreTextStyle?: StyleProp<TextStyle>;
   moreContainerStyle?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 };
@@ -32,7 +34,8 @@ export const DefaultButton = (props: Props) => {
     onPress,
     disabled = false,
     isLoading = false,
-    moreContainerStyle,
+    moreTextStyle = {},
+    moreContainerStyle = {},
     btnVariant = "PRIMARY",
   } = props;
 
@@ -82,6 +85,7 @@ export const DefaultButton = (props: Props) => {
             btnVariant === "SUCCESS" && titleStyle.success,
             btnVariant === "SECONDARY" && titleStyle.secondary,
             btnVariant === "CANCEL" && titleStyle.cancel,
+            moreTextStyle,
           ]}
         >
           {title}
