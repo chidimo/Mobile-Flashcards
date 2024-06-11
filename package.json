@@ -11,9 +11,12 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "dev-client": "expo start --dev-client",
-    "eas:android": "eas build --profile development --platform android",
-    "eas:android:prod": "eas build --profile production --platform android",
-    "eas:ios": "eas build --profile development --platform ios"
+    "build:android": "eas build --profile development --platform android",
+    "build:android:production": "eas build --profile production --platform android",
+    "submit:android": "eas submit --platform android --profile production",
+    "build:ios": "eas build --profile development --platform ios",
+    "build:ios:production": "eas build --profile development --platform ios",
+    "submit:ios": "eas submit --platform android --profile production"
   },
   "jest": {
     "preset": "jest-expo"

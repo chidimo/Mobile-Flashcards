@@ -8,5 +8,13 @@
       "distribution": "internal"
     },
     "production": {}
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./mobile-flashcards-426021-58b967efd5c7.json",
+        "track": "production"
+      }
+    }
   }
 }
