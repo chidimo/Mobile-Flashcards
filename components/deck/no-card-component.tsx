@@ -1,10 +1,9 @@
 import { View } from "react-native";
 import { DefaultButton } from "../form-elements/button";
-import { router } from "expo-router";
 import { NotAvailableMessage } from "./not-available-message";
 
 interface Props {
-  deckId: string;
+  onPress: () => void;
 }
 
 export const NoCardComponent = (props: Props) => {
@@ -22,9 +21,7 @@ export const NoCardComponent = (props: Props) => {
         moreContainerStyle={{ width: "70%" }}
         btnVariant="SUCCESS"
         title="Add your first card "
-        onPress={() => {
-          router.push(`/${props.deckId}/add-card`);
-        }}
+        onPress={props.onPress}
       />
     </View>
   );

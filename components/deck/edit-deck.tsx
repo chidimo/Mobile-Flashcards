@@ -1,14 +1,19 @@
 import { useGlobalSearchParams } from "expo-router";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { View } from "react-native";
+import { StyleProp, View, ViewStyle } from "react-native";
 import { useMemo } from "react";
 import { useFlash } from "@/context/app-context";
 import { TCreateDeck } from "@/types/generic";
 import { DeckFormFields } from "./deck-form-fields";
 import { DefaultButton } from "../form-elements/button";
 import { showNotification } from "../notifier";
+import { pageContainerStyle } from "@/styles";
 
-export const EditDeck = () => {
+interface Props {
+  moreContainerStyle?: StyleProp<ViewStyle>;
+}
+
+export const EditDeck = (props: Props) => {
   const { getDeckById, updateDeck } = useFlash();
   const { deckId } = useGlobalSearchParams();
 
@@ -42,14 +47,7 @@ export const EditDeck = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        padding: 10,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <View style={[pageContainerStyle.view, props.moreContainerStyle]}>
       <DeckFormFields errors={errors} control={control} />
       <DefaultButton
         moreContainerStyle={{ width: "50%" }}

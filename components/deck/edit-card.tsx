@@ -5,15 +5,15 @@ import { useMemo } from "react";
 import { useFlash } from "@/context/app-context";
 import { CardFormFields } from "./card-form-fields";
 import { TCreateCard } from "@/types/generic";
-import { sharedStyles } from "@/styles";
+import { pageContainerStyle, sharedStyles } from "@/styles";
 import { DefaultButton } from "../form-elements/button";
 
 export const EditCard = () => {
   const { getDeckById, getQuestionById, updateCard } = useFlash();
-  const { deckId, questionId } = useGlobalSearchParams();
+  const { deckId, cardId } = useGlobalSearchParams();
 
   const deck = getDeckById(deckId as string);
-  const question = getQuestionById(deckId as string, questionId as string);
+  const question = getQuestionById(deckId as string, cardId as string);
 
   const defaultValues = useMemo(
     () => ({
@@ -36,7 +36,7 @@ export const EditCard = () => {
   const saveCard = async (data: TCreateCard) => {
     updateCard(
       deckId as string,
-      questionId as string,
+      cardId as string,
       data.question,
       data.answer,
       data.hint
@@ -50,14 +50,7 @@ export const EditCard = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingHorizontal: 20,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <View style={[pageContainerStyle.view]}>
       <Text style={[sharedStyles.headerText, { marginBottom: 50 }]}>
         Edit card
       </Text>

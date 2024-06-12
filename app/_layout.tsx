@@ -25,7 +25,7 @@ export default function RootLayout() {
   if (!loaded) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <NotifierWrapper>
         <FlashProvider>
           <Stack>

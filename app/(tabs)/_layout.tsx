@@ -7,8 +7,9 @@ import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 export default function TabLayout() {
   return (
     <Tabs
+      sceneContainerStyle={{ backgroundColor: "#fff" }}
       screenOptions={{
-        tabBarActiveTintColor:  Colors["light"].tint,
+        tabBarActiveTintColor: Colors["light"].tint,
         headerShown: false,
       }}
     >

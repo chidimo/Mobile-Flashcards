@@ -8,3 +8,12 @@ export const sharedStyles = StyleSheet.create({
     fontWeight: "900",
   },
 });
+
+export const pageContainerStyle = StyleSheet.create({
+  view: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 15,
+  },
+});

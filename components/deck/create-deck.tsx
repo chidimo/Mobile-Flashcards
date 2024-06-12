@@ -1,5 +1,5 @@
 import { useFlash } from "@/context/app-context";
-import { sharedStyles } from "@/styles";
+import { pageContainerStyle, sharedStyles } from "@/styles";
 import { TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Text, View } from "react-native";
@@ -38,15 +38,7 @@ export const CreateDeck = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "white",
-        paddingHorizontal: 20,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <View style={[pageContainerStyle.view]}>
       <View style={{ marginBottom: 50 }}>
         <Text style={sharedStyles.headerText}>Create deck</Text>
       </View>

@@ -6,7 +6,7 @@ import { EditDeck } from "./edit-deck";
 import { DefaultModal } from "../modal";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
 import { DefaultButton } from "../form-elements/button";
-import { sharedStyles } from "@/styles";
+import { pageContainerStyle, sharedStyles } from "@/styles";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { showNotification } from "../notifier";
 
@@ -23,12 +23,11 @@ export const ManageDeck = () => {
   } = useOnOffSwitch();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+    <View style={[pageContainerStyle.view, { justifyContent: "space-evenly" }]}>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          padding: 20,
         }}
       >
         <Text
@@ -53,7 +52,7 @@ export const ManageDeck = () => {
         </View>
       </View>
 
-      <EditDeck />
+      <EditDeck moreContainerStyle={{ width: "100%", paddingHorizontal: 0 }} />
 
       <DefaultModal
         visible={deleteOpen}

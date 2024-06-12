@@ -56,6 +56,7 @@ export const DeckFormFields = (props: Props) => {
             placeholder="Set pass mark (percentage)"
             value={String(value)}
             keyboardType="numeric"
+            selectTextOnFocus
             onBlur={onBlur}
             onChangeText={onChange}
             error={getFieldError(errors.passMark)}

@@ -10,12 +10,13 @@ export default function TabLayout() {
   return (
     <Stack
       screenOptions={{
+        contentStyle: { backgroundColor: "#fff" },
         headerTintColor: "purple",
         headerTitle: `MFC <> ${deck?.title}`,
       }}
     >
       <Stack.Screen name="(tabs)" options={{}} />
-      <Stack.Screen name="[questionId]" options={{}} />
+      <Stack.Screen name="[cardId]" options={{}} />
       <Stack.Screen name="edit" options={{}} />
     </Stack>
   );

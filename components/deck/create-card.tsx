@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { sharedStyles } from "@/styles";
+import { pageContainerStyle, sharedStyles } from "@/styles";
 import { router, useGlobalSearchParams } from "expo-router";
 import { useFlash } from "@/context/app-context";
 import { TCreateCard } from "@/types/generic";
@@ -41,15 +41,7 @@ export const CreateCard = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        padding: 20,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#fff",
-      }}
-    >
+    <View style={[pageContainerStyle.view]}>
       <Text style={[sharedStyles.headerText, { marginBottom: 50 }]}>
         Add cards to {deck?.title}
       </Text>

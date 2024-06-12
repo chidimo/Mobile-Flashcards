@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+
 export interface TCreateDeck {
   title: string;
   passMark: number;
