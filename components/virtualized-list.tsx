@@ -7,12 +7,13 @@ type Props = {
 };
 
 export const VirtualizedList = (props: React.PropsWithChildren<Props>) => {
-  const { children, refreshing=false, onRefresh } = props;
+  const { children, refreshing = false, onRefresh } = props;
 
   return (
     <FlatList
       data={[]}
       showsVerticalScrollIndicator={false}
+      style={{ width: "100%" }}
       keyExtractor={() => "key"}
       renderItem={null}
       refreshControl={

@@ -5,6 +5,7 @@ import { DefaultButton } from "../form-elements/button";
 import { pageContainerStyle, sharedStyles } from "@/styles";
 import { NotAvailableMessage } from "./not-available-message";
 import { ScoreCard } from "./score-card";
+import { VirtualizedList } from "../virtualized-list";
 
 export const DeckScores = () => {
   const { getDeckById, getScoresById } = useFlash();
@@ -26,7 +27,19 @@ export const DeckScores = () => {
         </Text>
       </View>
 
-      {!scores ? (
+      {scores?.length ? (
+        <VirtualizedList>
+          {scores?.map((s) => {
+            return (
+              <ScoreCard
+                key={s.date}
+                score={s}
+                passMark={deck?.passMark ?? 50}
+              />
+            );
+          })}
+        </VirtualizedList>
+      ) : (
         <View style={{ alignItems: "center", justifyContent: "center" }}>
           <NotAvailableMessage message="You have not taken this quiz yet." />
           <DefaultButton
@@ -37,18 +50,6 @@ export const DeckScores = () => {
               router.push(`/${deck?.id}/add-card`);
             }}
           />
-        </View>
-      ) : (
-        <View style={{ width: "100%" }}>
-          {scores?.map((s) => {
-            return (
-              <ScoreCard
-                key={s.date}
-                score={s}
-                passMark={deck?.passMark ?? 50}
-              />
-            );
-          })}
         </View>
       )}
     </View>

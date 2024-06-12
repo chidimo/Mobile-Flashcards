@@ -22,16 +22,16 @@ export const ScoreCard = (props: Props) => {
         padding: 10,
       }}
     >
-      <Text style={{ fontSize: 20, color:'purple' }}>{formatDate(score.date, true)}</Text>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text style={{ fontSize: 20 }}>
+      <Text style={{ fontSize: 20, color: "purple" }}>
+        {formatDate(score.date, true)}
+      </Text>
+      <View
+        style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
+      >
+        <Text style={{ fontSize: 20, color: "purple" }}>
           Score: {score.actualScore}/{score.numberOfQuestions} |
           <Text style={{ color: isPass ? "green" : "red" }}>
             {percent.toFixed(2)}%
-          </Text>
-          |
-          <Text style={{ fontSize: 20, color: isPass ? "green" : "red" }}>
-            {isPass ? "Pass" : "Fail"}
           </Text>
         </Text>
       </View>

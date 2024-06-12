@@ -37,7 +37,7 @@ export interface FlashContext {
   saveMyScore: (deckId: string, actualScore: number, qstns: number) => void;
 }
 
-export const FlashContext = createContext<FlashContext | null>(null);
+const FlashContext = createContext<FlashContext | null>(null);
 
 interface Props {
   children: React.ReactNode;

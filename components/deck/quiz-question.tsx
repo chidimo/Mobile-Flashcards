@@ -3,15 +3,17 @@ import { useState } from "react";
 import { DefaultButton } from "../form-elements/button";
 import { NotAvailableMessage } from "./not-available-message";
 import { Question } from "@/types/generic";
+import { useQuiz } from "@/context/quiz-context";
 
-export type SelectedAnswer = "right" | "left";
 interface Props {
   qs: Question | null;
-  onAnswer: (selected: SelectedAnswer) => void;
+  showHint?: boolean;
+  peekAnswer?: boolean;
 }
 
 export const QuizQuestion = (props: Props) => {
-  const { qs, onAnswer } = props;
+  const { qs } = props;
+  const { showHint, peekAnswer, onAnswerQuestion } = useQuiz();
 
   const [showAnswer, setShowAnswer] = useState(false);
 
@@ -41,14 +43,19 @@ export const QuizQuestion = (props: Props) => {
             backgroundColor: showAnswer ? "#fff" : "green",
           }}
           onPress={() => {
-            setShowAnswer((prev) => !prev);
+            if (peekAnswer) {
+              setShowAnswer((prev) => !prev);
+            }
           }}
         >
           <Text style={{ textAlign: "center", color: "green", fontSize: 28 }}>
             {qs.answer}
           </Text>
         </Pressable>
-        <NotAvailableMessage message="Tap to reveal answer" />
+        {peekAnswer ? (
+          <NotAvailableMessage message="Tap to reveal answer" />
+        ) : null}
+        {showHint ? <NotAvailableMessage message={qs?.hint!} /> : null}
       </View>
 
       <View style={styles.answerButtonsContainer}>
@@ -57,7 +64,7 @@ export const QuizQuestion = (props: Props) => {
           title="Incorrect"
           btnVariant="DANGER"
           onPress={() => {
-            onAnswer("left");
+            onAnswerQuestion("left");
           }}
         />
 
@@ -66,7 +73,7 @@ export const QuizQuestion = (props: Props) => {
           title="Correct"
           btnVariant="SUCCESS"
           onPress={() => {
-            onAnswer("right");
+            onAnswerQuestion("right");
           }}
         />
       </View>

@@ -15,5 +15,6 @@ export const pageContainerStyle = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 15,
+    width: "100%",
   },
 });
