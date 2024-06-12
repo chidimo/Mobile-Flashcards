@@ -8,7 +8,7 @@ export interface TCreateDeck {
 export const ImportSchema = z.object({
   id: z.string(),
   title: z.string(),
-  passMark: z.number(),
+  passMark: z.string().or(z.number()),
   questions: z.array(
     z.object({
       id: z.string(),

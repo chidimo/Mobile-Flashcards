@@ -81,7 +81,7 @@ export const ImportDeck = (props: Props) => {
               ImportSchema.parseAsync(data)
                 .then((res) => {
                   setValue("title", res.title);
-                  setValue("passMark", res.passMark);
+                  setValue("passMark", Number(res.passMark));
                   setQuestions(res.questions);
                   setError(null);
                 })
