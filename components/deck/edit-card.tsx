@@ -19,6 +19,7 @@ export const EditCard = () => {
     () => ({
       answer: question?.answer ?? "",
       question: question?.question ?? "",
+      hint: question?.hint ?? "",
     }),
     [deck]
   );
@@ -37,7 +38,8 @@ export const EditCard = () => {
       deckId as string,
       questionId as string,
       data.question,
-      data.answer
+      data.answer,
+      data.hint
     );
   };
 
@@ -56,7 +58,7 @@ export const EditCard = () => {
         justifyContent: "center",
       }}
     >
-      <Text style={[sharedStyles.headingText, { marginBottom: 50 }]}>
+      <Text style={[sharedStyles.headerText, { marginBottom: 50 }]}>
         Edit card
       </Text>
       <CardFormFields errors={errors} control={control} />

@@ -54,7 +54,7 @@ export const EditDeck = () => {
       <DefaultButton
         moreContainerStyle={{ width: "50%" }}
         btnVariant="SUCCESS"
-        title="Save Changes"
+        title="Save changes"
         onPress={handleSubmit(onSubmit)}
       />
     </View>

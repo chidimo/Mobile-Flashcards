@@ -1,7 +1,7 @@
 import { useFlash } from "@/context/app-context";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { router, useGlobalSearchParams } from "expo-router";
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View } from "react-native";
 import { EditDeck } from "./edit-deck";
 import { DefaultModal } from "../modal";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
@@ -23,7 +23,7 @@ export const ManageDeck = () => {
   } = useOnOffSwitch();
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <View
         style={{
           flexDirection: "row",
@@ -32,26 +32,24 @@ export const ManageDeck = () => {
         }}
       >
         <Text
-          style={[
-            sharedStyles.headingText,
-            { width: "80%", textAlign: "left" },
-          ]}
+          style={[sharedStyles.headerText, { width: "80%", textAlign: "left" }]}
         >
           Manage {deck?.title} deck
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TouchableOpacity
-            style={{ marginRight: 10 }}
+          <DefaultButton
+            title={<MaterialIcons name="content-copy" size={30} color="#07f" />}
+            moreContainerStyle={{ marginRight: 10, backgroundColor: "#fff" }}
             onPress={() => {
               copyToClipboard(JSON.stringify(deck));
               showNotification("Success", "Deck copied successfully!");
             }}
-          >
-            <MaterialIcons name="content-copy" size={30} color="blue" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onDeleteOpen}>
-            <AntDesign name="delete" size={30} color={"red"} />
-          </TouchableOpacity>
+          />
+          <DefaultButton
+            moreContainerStyle={{ backgroundColor: "#fff" }}
+            onPress={onDeleteOpen}
+            title={<AntDesign name="delete" size={30} color="red" />}
+          />
         </View>
       </View>
 

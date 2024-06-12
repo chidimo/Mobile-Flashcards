@@ -1,10 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   ActivityIndicator,
   GestureResponderEvent,
   Text,
   View,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
   StyleProp,
   ViewStyle,
@@ -19,7 +19,7 @@ export type BtnVariant =
   | "SECONDARY";
 
 type Props = {
-  title: string | JSX.Element;
+  title: string | ReactNode;
   disabled?: boolean;
   isLoading?: boolean;
   btnVariant?: BtnVariant;
@@ -36,30 +36,35 @@ export const DefaultButton = (props: Props) => {
     isLoading = false,
     moreTextStyle = {},
     moreContainerStyle = {},
-    btnVariant = "PRIMARY",
+    btnVariant = "DANGER",
   } = props;
 
   return (
-    <TouchableOpacity
+    <Pressable
       disabled={disabled}
       onPress={disabled ? () => null : onPress}
-      style={[
-        {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          height: 50,
-          borderRadius: 10,
-          paddingVertical: 8,
-          backgroundColor: "#07f",
-        },
-        btnVariant === "DANGER" && containerStyle.danger,
-        btnVariant === "SUCCESS" && containerStyle.success,
-        btnVariant === "SECONDARY" && containerStyle.secondary,
-        btnVariant === "CANCEL" && containerStyle.cancel,
-        moreContainerStyle,
-      ]}
+      style={({ pressed }) => {
+        return [
+          typeof title === "string"
+            ? {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: 50,
+                borderRadius: 10,
+                paddingVertical: 8,
+                backgroundColor: "#07f",
+                opacity: pressed || disabled ? 0.8 : 1.0,
+              }
+            : {},
+          btnVariant === "DANGER" && containerStyle.danger,
+          btnVariant === "SUCCESS" && containerStyle.success,
+          btnVariant === "SECONDARY" && containerStyle.secondary,
+          btnVariant === "CANCEL" && containerStyle.cancel,
+          moreContainerStyle,
+        ];
+      }}
     >
       <View
         style={{
@@ -75,28 +80,33 @@ export const DefaultButton = (props: Props) => {
             style={[{ marginRight: 3 }]}
           />
         )}
-        <Text
-          style={[
-            {
-              fontSize: 18,
-              color: "#fff",
-            },
-            btnVariant === "DANGER" && titleStyle.danger,
-            btnVariant === "SUCCESS" && titleStyle.success,
-            btnVariant === "SECONDARY" && titleStyle.secondary,
-            btnVariant === "CANCEL" && titleStyle.cancel,
-            moreTextStyle,
-          ]}
-        >
-          {title}
-        </Text>
+        {typeof title === "string" ? (
+          <Text
+            style={[
+              {
+                fontSize: 18,
+                color: "#fff",
+                fontWeight: "bold",
+              },
+              btnVariant === "DANGER" && titleStyle.danger,
+              btnVariant === "SUCCESS" && titleStyle.success,
+              btnVariant === "SECONDARY" && titleStyle.secondary,
+              btnVariant === "CANCEL" && titleStyle.cancel,
+              moreTextStyle,
+            ]}
+          >
+            {title}
+          </Text>
+        ) : (
+          <>{title}</>
+        )}
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
 const containerStyle = StyleSheet.create({
-  danger: { backgroundColor: "red" },
+  danger: { backgroundColor: "#C31818" },
   success: { backgroundColor: "green" },
   secondary: { backgroundColor: "grey" },
   cancel: { backgroundColor: "#ccc" },

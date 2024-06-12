@@ -54,7 +54,7 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
             <View style={styles.titleContainer}>
               <Text style={styles.title}>{title}</Text>
               <Pressable onPress={onRequestClose}>
-                <MaterialIcons name="close" size={24} color="black" />
+                <MaterialIcons name="close" size={30} color="black" />
               </Pressable>
             </View>
             <ScrollView>{children}</ScrollView>

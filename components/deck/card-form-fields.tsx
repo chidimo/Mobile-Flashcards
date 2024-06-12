@@ -46,6 +46,24 @@ export const CardFormFields = (props: Props) => {
             onChangeText={onChange}
             value={value}
             error={getFieldError(errors.answer)}
+            containerStyle={{ marginBottom: 30 }}
+          />
+        )}
+      />
+
+      <Controller
+        name="hint"
+        rules={{
+          required: false,
+        }}
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <Input
+            placeholder="Enter hint (optional)"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            error={getFieldError(errors.hint)}
           />
         )}
       />

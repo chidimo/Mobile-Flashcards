@@ -4,11 +4,12 @@ import { useGlobalSearchParams } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
 import { NoCardComponent } from "@/components/deck/no-card-component";
 import { sharedStyles } from "@/styles";
-import { QuestionListItem } from "@/components/deck/question-list-item";
+import { CardListItem } from "@/components/deck/card-list-item";
+import { formatDate } from "@/utils/format-datetime";
 
 export default function Index() {
   const { deckId } = useGlobalSearchParams();
-  const { getDeckById,   } = useFlash();
+  const { getDeckById } = useFlash();
 
   const deck = getDeckById(deckId as string);
 
@@ -22,14 +23,22 @@ export default function Index() {
     >
       <View style={{ marginBottom: 10 }}>
         <View style={{}}>
-          <Text style={[sharedStyles.headingText]}>{deck?.title}</Text>
+          <Text style={[sharedStyles.headerText]}>{deck?.title}</Text>
           <Text
             style={[
-              sharedStyles.headingText,
+              sharedStyles.headerText,
               { fontSize: 16, fontWeight: "normal" },
             ]}
           >
             Pass mark: {deck?.passMark}
+          </Text>
+          <Text
+            style={[
+              sharedStyles.headerText,
+              { fontSize: 16, fontWeight: "normal" },
+            ]}
+          >
+            Added on: {formatDate(deck?.addedOn, true)}
           </Text>
         </View>
       </View>
@@ -39,7 +48,7 @@ export default function Index() {
       <VirtualizedList>
         {deck?.questions.map((qs, idx) => {
           return (
-            <QuestionListItem
+            <CardListItem
               key={qs.id}
               index={idx}
               question={qs}

@@ -1,4 +1,5 @@
 import { DeckListItem } from "@/components/deck/deck-list-item";
+import { NotAvailableMessage } from "@/components/deck/not-available-message";
 import { DefaultButton } from "@/components/form-elements/button";
 import { VirtualizedList } from "@/components/virtualized-list";
 import { useFlash } from "@/context/app-context";
@@ -27,15 +28,15 @@ export default function Index() {
           }}
         >
           <View style={{ alignItems: "center", marginBottom: 50 }}>
-            <Text style={{ fontSize: 26, color: "green" }}>Welcome to</Text>
-            <Text style={{ fontSize: 38, color: "green" }}>
+            <Text style={{ fontSize: 26, color: "green", fontWeight: "bold" }}>
+              Welcome to
+            </Text>
+            <Text style={{ fontSize: 38, color: "green", fontWeight: "900" }}>
               Mobile Flashcards
             </Text>
           </View>
 
-          <Text style={{ marginBottom: 20, fontSize: 16 }}>
-            Please add a deck of cards to continue
-          </Text>
+          <NotAvailableMessage message="Please add a deck of cards to continue" />
           <DefaultButton
             title="Add your first deck"
             moreContainerStyle={{ width: "70%" }}

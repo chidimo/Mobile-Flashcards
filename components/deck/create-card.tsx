@@ -21,11 +21,12 @@ export const CreateCard = () => {
     defaultValues: {
       question: "",
       answer: "",
+      hint: "",
     },
   });
 
   const saveCard = async (data: TCreateCard) => {
-    addCardToDeck(deck?.id!, data.question, data.answer);
+    addCardToDeck(deck?.id!, data.question, data.answer, data.hint);
     reset();
   };
 
@@ -46,9 +47,10 @@ export const CreateCard = () => {
         padding: 20,
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "#fff",
       }}
     >
-      <Text style={[sharedStyles.headingText, { marginBottom: 50 }]}>
+      <Text style={[sharedStyles.headerText, { marginBottom: 50 }]}>
         Add cards to {deck?.title}
       </Text>
 

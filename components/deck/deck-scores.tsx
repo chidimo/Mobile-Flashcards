@@ -4,6 +4,7 @@ import { router, useGlobalSearchParams } from "expo-router";
 import { Text, View } from "react-native";
 import { DefaultButton } from "../form-elements/button";
 import { sharedStyles } from "@/styles";
+import { NotAvailableMessage } from "./not-available-message";
 
 export const DeckScores = () => {
   const { getDeckById, getScoresById } = useFlash();
@@ -14,10 +15,10 @@ export const DeckScores = () => {
   return (
     <View style={{ flex: 1, paddingHorizontal: 20 }}>
       <View style={{ marginBottom: 30 }}>
-        <Text style={[sharedStyles.headingText]}>My scores</Text>
+        <Text style={[sharedStyles.headerText]}>My scores</Text>
         <Text
           style={[
-            sharedStyles.headingText,
+            sharedStyles.headerText,
             { fontSize: 16, fontWeight: "normal" },
           ]}
         >
@@ -27,9 +28,7 @@ export const DeckScores = () => {
 
       {!scores ? (
         <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <Text style={{ marginBottom: 20 }}>
-            You have not taken this quiz yet.
-          </Text>
+          <NotAvailableMessage message="You have not taken this quiz yet." />
           <DefaultButton
             moreContainerStyle={{ width: "50%" }}
             btnVariant="SUCCESS"

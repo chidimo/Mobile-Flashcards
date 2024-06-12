@@ -19,7 +19,8 @@ export interface FlashContext {
     deckId: string,
     qId: string,
     question: string,
-    answer: string
+    answer: string,
+    hint?: string
   ) => void;
   importDeck: (title: string, passMark: number, questions: Question[]) => void;
   deleteDeck: (deckId: string) => void;
@@ -27,7 +28,12 @@ export interface FlashContext {
   getDeckById: (id: string) => Deck | null;
   getScoresById: (id: string) => ScoreSaver[] | null;
   getQuestionById: (deckId: string, qId: string) => Question | null;
-  addCardToDeck: (id: string, question: string, answer: string) => void;
+  addCardToDeck: (
+    id: string,
+    question: string,
+    answer: string,
+    hint?: string
+  ) => void;
   saveMyScore: (deckId: string, actualScore: number, qstns: number) => void;
 }
 
@@ -99,7 +105,12 @@ export function FlashProvider({ children }: Readonly<Props>) {
         if (deck) return deck.questions.find((q) => q.id === qId) ?? null;
         return null;
       },
-      addCardToDeck(deckId: string, question: string, answer: string) {
+      addCardToDeck(
+        deckId: string,
+        question: string,
+        answer: string,
+        hint?: string
+      ) {
         if (!state.flashcards) return;
         const id = Crypto.randomUUID();
         const updated = {
@@ -110,7 +121,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
               ...state.flashcards[deckId],
               questions: [
                 ...(state.flashcards?.[deckId].questions ?? []),
-                { id, question, answer },
+                { id, question, answer, hint },
               ],
             },
           },
@@ -122,7 +133,8 @@ export function FlashProvider({ children }: Readonly<Props>) {
         deckId: string,
         qId: string,
         question: string,
-        answer: string
+        answer: string,
+        hint?: string
       ) {
         if (!state.flashcards) return;
         let updated = {
@@ -132,7 +144,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
             [deckId]: {
               ...state.flashcards[deckId],
               questions: state.flashcards?.[deckId].questions.map((q) => {
-                if (q.id === qId) return { ...q, question, answer };
+                if (q.id === qId) return { ...q, question, answer, hint };
                 return q;
               }),
             },
@@ -199,7 +211,13 @@ export function FlashProvider({ children }: Readonly<Props>) {
           ...state,
           flashcards: {
             ...state.flashcards,
-            [id]: { id, title: name, questions: [], passMark },
+            [id]: {
+              id,
+              title: name,
+              questions: [],
+              passMark,
+              addedOn: new Date().toISOString(),
+            },
           },
         };
         setItemToStorage(updated, flashCardKey);
@@ -217,7 +235,13 @@ export function FlashProvider({ children }: Readonly<Props>) {
           ...state,
           flashcards: {
             ...state.flashcards,
-            [id]: { id, title, questions, passMark },
+            [id]: {
+              id,
+              title,
+              questions,
+              passMark,
+              addedOn: new Date().toISOString(),
+            },
           },
         };
         setItemToStorage(updated, flashCardKey);

@@ -48,7 +48,7 @@ export const CreateDeck = () => {
       }}
     >
       <View style={{ marginBottom: 50 }}>
-        <Text style={sharedStyles.headingText}>Create deck</Text>
+        <Text style={sharedStyles.headerText}>Create deck</Text>
       </View>
 
       <DeckFormFields isNew={true} control={control} errors={errors} />

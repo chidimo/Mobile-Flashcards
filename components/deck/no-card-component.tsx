@@ -1,6 +1,7 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { DefaultButton } from "../form-elements/button";
 import { router } from "expo-router";
+import { NotAvailableMessage } from "./not-available-message";
 
 interface Props {
   deckId: string;
@@ -16,7 +17,7 @@ export const NoCardComponent = (props: Props) => {
         justifyContent: "center",
       }}
     >
-      <Text style={{marginBottom : 30}}>There are no cards on this deck yet</Text>
+      <NotAvailableMessage message="There are no cards on this deck yet" />
       <DefaultButton
         moreContainerStyle={{ width: "70%" }}
         btnVariant="SUCCESS"

@@ -1,1 +1,7 @@
-allow sharing of flashcards by copy and paste flash object
+encode copied deck as jwt
+implement swiping for quiz
+
+on quiz start modal
+toggle if you want previous button
+toggle if you want hints
+toggle if you can peek answer

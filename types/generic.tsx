@@ -27,12 +27,14 @@ export interface TImportDeck {
 export interface TCreateCard {
   question: string;
   answer: string;
+  hint?: string;
 }
 
 export interface Question {
   id: string;
   question: string;
   answer: string;
+  hint?: string;
 }
 
 export interface Deck {
@@ -40,6 +42,7 @@ export interface Deck {
   title: string;
   questions: Question[];
   passMark: number;
+  addedOn: string;
 }
 
 export interface ScoreSaver {

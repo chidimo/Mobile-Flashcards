@@ -62,7 +62,7 @@ export default function TabLayout() {
         name="my-scores"
         options={{
           headerShown: false,
-          title: "My scores",
+          title: "Scoreboard",
           tabBarActiveTintColor: "purple",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="scoreboard" color={color} size={24} />

@@ -10,7 +10,7 @@ interface Props {
   question: Question;
 }
 
-export const QuestionListItem = (props: Props) => {
+export const CardListItem = (props: Props) => {
   const { index, deckId, question } = props;
   const { deleteCard } = useFlash();
 
@@ -30,7 +30,13 @@ export const QuestionListItem = (props: Props) => {
           marginBottom: 15,
         }}
       >
-        <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: 10,
+          }}
+        >
           <Text style={[styles.text, { fontWeight: "bold", marginRight: 5 }]}>
             {index + 1}
           </Text>
@@ -49,7 +55,7 @@ export const QuestionListItem = (props: Props) => {
               size={22}
               color={"red"}
               onPress={() => {
-                deleteCard(deckId as string, question.id);
+                deleteCard(deckId, question.id);
               }}
             />
           </View>
@@ -59,6 +65,9 @@ export const QuestionListItem = (props: Props) => {
             {question.question}
           </Text>
           <Text style={styles.text}>{question.answer}</Text>
+          {question.hint && (
+            <Text style={styles.text}>Hint: {question.hint}</Text>
+          )}
         </View>
       </View>
     </View>

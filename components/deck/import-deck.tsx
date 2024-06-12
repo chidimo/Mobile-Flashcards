@@ -52,7 +52,7 @@ export const ImportDeck = (props: Props) => {
       }}
     >
       <View style={{ marginBottom: 30 }}>
-        <Text style={sharedStyles.headingText}>Import deck</Text>
+        <Text style={sharedStyles.headerText}>Import deck</Text>
         {error && (
           <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
         )}

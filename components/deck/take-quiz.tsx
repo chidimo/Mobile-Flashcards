@@ -1,10 +1,10 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
-import { sharedStyles } from "@/styles";
 import { useState } from "react";
 import { useGlobalSearchParams } from "expo-router";
 import { useFlash } from "@/context/app-context";
 import { DefaultButton } from "../form-elements/button";
 import { NoCardComponent } from "./no-card-component";
+import { NotAvailableMessage } from "./not-available-message";
 
 interface QuizState {
   index: number;
@@ -25,7 +25,6 @@ export const TakeQuiz = () => {
     end: false,
   };
 
-  const [scoreSaved, setScoreSaved] = useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
   const [state, setState] = useState<QuizState>(initState);
 
@@ -34,11 +33,14 @@ export const TakeQuiz = () => {
   const question_number = index + 1;
 
   const get_next_question = (index: number, score: number, option: number) => {
-    setShowAnswer(false);
+    const end = index + 1 === quizzes.length;
+    if (end) {
+      saveMyScore(deckId as string, score, quizzes.length);
+    }
     setState((prev) => ({
       ...prev,
+      end,
       index: index + 1,
-      end: index + 1 === quizzes.length,
       score: option === 1 ? score + 1 : score,
     }));
   };
@@ -47,138 +49,120 @@ export const TakeQuiz = () => {
     return <NoCardComponent deckId={deckId as string} />;
   }
 
-  if (state.end) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          paddingHorizontal: 20,
-          justifyContent: "space-evenly",
-        }}
-      >
-        <Text style={sharedStyles.headingText}>End of quiz</Text>
-        <Text
-          style={{
-            textAlign: "center",
-            fontSize: 28,
-            color: "purple",
-          }}
-        >
-          Your score: {score}/{quizzes.length}
-        </Text>
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-          }}
-        >
-          <DefaultButton
-            title="Retake quiz"
-            moreContainerStyle={{ width: "45%" }}
-            onPress={() => {
-              setScoreSaved(false);
-              setState(initState);
-            }}
-          />
-          <DefaultButton
-            title="Save my score"
-            moreContainerStyle={{ width: "45%" }}
-            btnVariant="SUCCESS"
-            disabled={scoreSaved}
-            onPress={() => {
-              saveMyScore(deckId as string, score, quizzes.length);
-              setScoreSaved(true);
-            }}
-          />
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View
       style={{
         flex: 1,
-        padding: 10,
+        paddingHorizontal: 20,
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "#fff",
       }}
     >
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
-          paddingHorizontal: 15,
-          justifyContent: "space-evenly",
-        }}
-      >
-        <Text
-          style={{
-            textAlign: "center",
-            fontSize: 18,
-            color: "purple",
-          }}
-        >
-          Question {question_number} of {quiz_count}
-        </Text>
-
-        <View style={styles.questionContainer}>
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 28,
-              color: "purple",
-            }}
-          >
-            {quiz.question}
+      {state.end ? (
+        <View style={[styles.sectionContainer]}>
+          <Text style={[styles.text, { fontSize: 30 }]}>End of quiz</Text>
+          <Text style={[styles.text, { fontSize: 28 }]}>
+            Your score: {score}/{quizzes.length}
           </Text>
-        </View>
 
-        <View style={{ width: "100%", alignItems: "center" }}>
-          <Pressable
-            style={{
-              width: "100%",
-              padding: 8,
-              borderRadius: 4,
-              backgroundColor: showAnswer ? "#fff" : "green",
-            }}
+          <DefaultButton
+            title="Retake quiz"
+            moreContainerStyle={{ width: "70%" }}
+            btnVariant="PRIMARY"
             onPress={() => {
-              setShowAnswer((prev) => !prev);
+              setState(initState);
             }}
+          />
+        </View>
+      ) : (
+        <View style={[styles.sectionContainer]}>
+          <Text
+            style={[
+              styles.text,
+              {
+                fontSize: 18,
+              },
+            ]}
           >
-            <Text style={{ textAlign: "center", color: "green", fontSize: 28 }}>
-              {quiz.answer}
+            Question {question_number} of {quiz_count}
+          </Text>
+
+          <View style={styles.questionContainer}>
+            <Text
+              style={[
+                styles.text,
+                {
+                  fontSize: 28,
+                },
+              ]}
+            >
+              {quiz.question}
             </Text>
-          </Pressable>
-          <Text>Tap to reveal answer</Text>
-        </View>
+          </View>
 
-        <View style={styles.answerButtonsContainer}>
-          <DefaultButton
-            moreContainerStyle={{ width: "45%" }}
-            title="Incorrect"
-            btnVariant="DANGER"
-            onPress={() => get_next_question(index, score, 0)}
-          />
+          <View style={{ width: "100%", alignItems: "center" }}>
+            <Pressable
+              style={{
+                width: "100%",
+                padding: 8,
+                borderRadius: 4,
+                backgroundColor: showAnswer ? "#fff" : "green",
+              }}
+              onPress={() => {
+                setShowAnswer((prev) => !prev);
+              }}
+            >
+              <Text
+                style={{ textAlign: "center", color: "green", fontSize: 28 }}
+              >
+                {quiz.answer}
+              </Text>
+            </Pressable>
+            <NotAvailableMessage message="Tap to reveal answer" />
+          </View>
 
-          <DefaultButton
-            moreContainerStyle={{ width: "45%" }}
-            title="Correct"
-            btnVariant="SUCCESS"
-            onPress={() => get_next_question(index, score, 1)}
-          />
+          <View style={styles.answerButtonsContainer}>
+            <DefaultButton
+              moreContainerStyle={{ width: "45%" }}
+              title="Incorrect"
+              btnVariant="DANGER"
+              onPress={() => {
+                get_next_question(index, score, 0);
+              }}
+            />
+
+            <DefaultButton
+              moreContainerStyle={{ width: "45%" }}
+              title="Correct"
+              btnVariant="SUCCESS"
+              onPress={() => {
+                get_next_question(index, score, 1);
+              }}
+            />
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  text: {
+    color: "purple",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
   questionContainer: {
     padding: 8,
     fontSize: 22,
     borderRadius: 4,
+  },
+  sectionContainer: {
+    flex: 1,
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
   },
   answerButtonsContainer: {
     width: "100%",
