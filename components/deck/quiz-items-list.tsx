@@ -10,6 +10,7 @@ import { QuizQuestion, SelectedAnswer } from "./quiz-question";
 
 interface QuizState {
   idx: number;
+  started: boolean;
   ended: boolean;
   currentScore: number;
   currentQuestion: Question | null;
@@ -17,6 +18,7 @@ interface QuizState {
 
 const initState = {
   idx: 0,
+  started: false,
   ended: false,
   currentScore: 0,
   currentQuestion: null,
@@ -32,12 +34,6 @@ export const TakeQuiz = () => {
   const [quizState, setQuizState] = useState<QuizState>(initState);
 
   console.log(JSON.stringify(quizState, null, 2));
-
-  useEffect(() => {
-    if (quizzes.length) {
-      setQuizState((prev) => ({ ...prev, currentQuestion: quizzes[0] }));
-    }
-  }, []);
 
   useEffect(() => {
     if (quizState.ended) {
@@ -57,7 +53,7 @@ export const TakeQuiz = () => {
 
   return (
     <View style={[pageContainerStyle.view]}>
-      {quizState.ended ? (
+      {quizState.ended && (
         <View style={[styles.sectionContainer]}>
           <Text style={[styles.text, { fontSize: 30 }]}>End of quiz</Text>
           <Text style={[styles.text, { fontSize: 28 }]}>
@@ -69,24 +65,45 @@ export const TakeQuiz = () => {
             moreContainerStyle={{ width: "70%" }}
             btnVariant="PRIMARY"
             onPress={() => {
-              setQuizState(initState);
+              setQuizState(() => ({
+                ...initState,
+                currentQuestion: quizzes[0],
+              }));
             }}
           />
         </View>
-      ) : (
+      )}
+      {!quizState.currentQuestion && (
+        <View style={[styles.sectionContainer]}>
+          <Text>You are about to start a quiz on {deck?.title}</Text>
+          <Text>Here's a few options for you to set before we start</Text>
+
+          <DefaultButton
+            title="Start quiz"
+            moreContainerStyle={{ width: "70%" }}
+            btnVariant="PRIMARY"
+            onPress={() => {
+              setQuizState((prev) => ({
+                ...prev,
+                currentQuestion: quizzes[0],
+              }));
+            }}
+          />
+        </View>
+      )}
+      {quizState.currentQuestion && (
         <View>
-          {quizState.currentQuestion && (
-            <Text
-              style={[
-                styles.text,
-                {
-                  fontSize: 18,
-                },
-              ]}
-            >
-              Question {quizState.idx + 1} of {quiz_count}
-            </Text>
-          )}
+          <Text
+            style={[
+              styles.text,
+              {
+                fontSize: 18,
+              },
+            ]}
+          >
+            Question {quizState.idx + 1} of {quiz_count}
+          </Text>
+
           <QuizQuestion
             qs={quizState.currentQuestion}
             onAnswer={(selected: SelectedAnswer) => {
