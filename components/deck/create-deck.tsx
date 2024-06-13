@@ -1,5 +1,10 @@
 import { useFlash } from "@/context/app-context";
-import { pageContainerStyle, sharedStyles } from "@/styles";
+import {
+  primaryTextColor,
+  pageContainerStyle,
+  sharedStyles,
+  primaryBgColor,
+} from "@/styles";
 import { TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Text, View } from "react-native";
@@ -55,8 +60,8 @@ export const CreateDeck = () => {
       <DefaultButton
         title={"Import a deck"}
         onPress={setOn}
-        moreTextStyle={{ color: "purple" }}
-        moreContainerStyle={{ backgroundColor: "white", marginTop: 20 }}
+        moreTextStyle={{ color: primaryTextColor }}
+        moreContainerStyle={{ backgroundColor: primaryBgColor, marginTop: 20 }}
       />
 
       <DefaultModal visible={isOn} onRequestClose={setOff} title="Import deck">

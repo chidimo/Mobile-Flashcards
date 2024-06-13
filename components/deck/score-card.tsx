@@ -1,6 +1,7 @@
 import { formatDate } from "@/utils/format-datetime";
 import { Text, View } from "react-native";
 import { ScoreSaver } from "@/types/generic";
+import { primaryTextColor } from "@/styles";
 
 interface Props {
   index: number;
@@ -18,18 +19,18 @@ export const ScoreCard = (props: Props) => {
       style={{
         marginBottom: 10,
         borderWidth: 1,
-        borderColor: "purple",
+        borderColor: primaryTextColor,
         borderRadius: 5,
         padding: 10,
       }}
     >
-      <Text style={{ fontSize: 20, color: "purple" }}>
+      <Text style={{ fontSize: 20, color: primaryTextColor }}>
         {index}. {formatDate(score.date, true)}
       </Text>
       <View
         style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
       >
-        <Text style={{ fontSize: 20, color: "purple" }}>
+        <Text style={{ fontSize: 20, color: primaryTextColor }}>
           Score: {score.actualScore}/{score.numberOfQuestions} |
           <Text style={{ color: isPass ? "green" : "red" }}>
             {percent.toFixed(2)}%

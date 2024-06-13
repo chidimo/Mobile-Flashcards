@@ -1,7 +1,5 @@
 import { Tabs, useGlobalSearchParams } from "expo-router";
 import React from "react";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { useFlash } from "@/context/app-context";
 import {
   AntDesign,
@@ -9,20 +7,17 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { tabBarProps } from "@/styles";
+import { primaryBgColor, tabBarProps } from "@/styles";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const { deckId } = useGlobalSearchParams();
   const { getDeckById } = useFlash();
+  const { deckId } = useGlobalSearchParams();
   const deck = getDeckById(deckId as string);
 
   return (
     <Tabs
-      sceneContainerStyle={{ backgroundColor: "#fff" }}
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-      }}
+      sceneContainerStyle={{ backgroundColor: primaryBgColor }}
+      screenOptions={{}}
     >
       <Tabs.Screen
         name="index"

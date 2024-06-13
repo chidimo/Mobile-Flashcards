@@ -1,3 +1,4 @@
+import { primaryBgColor } from "@/styles";
 import { Ref, forwardRef } from "react";
 import {
   KeyboardTypeOptions,
@@ -97,7 +98,7 @@ export const Input = forwardRef((props: Props, ref: Ref<TextInput>) => {
             fontSize: 18,
             height: 50,
             paddingHorizontal: 10,
-            backgroundColor: "#fff",
+            backgroundColor: primaryBgColor,
             borderColor: error ? "red" : "rgba(0,0,0,0.3)",
           },
         ]}

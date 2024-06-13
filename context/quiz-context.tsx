@@ -51,7 +51,6 @@ export function QuizProvider({ children }: Readonly<Props>) {
   const quiz_count = quizzes.length;
 
   const [state, setState] = useState<QuizState>(initState);
-  console.log(JSON.stringify(state, null, 2));
 
   const memoizedCtxValue = useMemo(() => {
     return {

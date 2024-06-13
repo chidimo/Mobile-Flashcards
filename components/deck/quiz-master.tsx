@@ -4,7 +4,7 @@ import { router, useGlobalSearchParams } from "expo-router";
 import { useFlash } from "@/context/app-context";
 import { DefaultButton } from "../form-elements/button";
 import { NoCardComponent } from "./no-card-component";
-import { pageContainerStyle } from "@/styles";
+import { primaryTextColor, pageContainerStyle } from "@/styles";
 import { QuizQuestion } from "./quiz-question";
 import { QuizStarter } from "./quiz-starter";
 import { useQuiz } from "@/context/quiz-context";
@@ -22,7 +22,6 @@ export const QuizMaster = () => {
     currentScore,
     onEndQuiz,
     onRetakeQuiz,
-    onAnswerQuestion,
   } = useQuiz();
 
   useEffect(() => {
@@ -87,7 +86,7 @@ export const QuizMaster = () => {
 
 const styles = StyleSheet.create({
   text: {
-    color: "purple",
+    color: primaryTextColor,
     fontWeight: "bold",
     textAlign: "center",
   },

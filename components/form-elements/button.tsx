@@ -98,7 +98,7 @@ export const DefaultButton = (props: Props) => {
             {title}
           </Text>
         ) : (
-          <>{title}</>
+          title
         )}
       </View>
     </Pressable>

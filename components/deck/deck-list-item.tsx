@@ -1,3 +1,4 @@
+import { primaryTextColor } from "@/styles";
 import { Deck } from "@/types/generic";
 import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -25,7 +26,7 @@ export const DeckListItem = (props: Props) => {
           style={{
             fontSize: 20,
             textAlign: "center",
-            color: "purple",
+            color: primaryTextColor,
             fontWeight: "800",
           }}
         >
@@ -33,7 +34,7 @@ export const DeckListItem = (props: Props) => {
         </Text>
         <Text
           style={{
-            color: "purple",
+            color: primaryTextColor,
             textAlign: "center",
           }}
         >

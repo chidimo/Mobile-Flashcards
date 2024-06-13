@@ -1,3 +1,4 @@
+import { primaryBgColor } from "@/styles";
 import React, { ReactNode } from "react";
 
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
@@ -14,7 +15,7 @@ export const ShadowBox = (props: Props) => {
 
 const styles = StyleSheet.create({
   boxContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: primaryBgColor,
     shadowOffset: { width: 0, height: 2 },
     shadowColor: "#000",
     shadowOpacity: 0.8,

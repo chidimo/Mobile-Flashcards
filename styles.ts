@@ -1,10 +1,14 @@
 import { StyleProp, StyleSheet, TextStyle } from "react-native";
 
+const tabBarInactiveTint = "gray";
+export const primaryBgColor = "#fff";
+export const primaryTextColor = "purple";
+
 export const sharedStyles = StyleSheet.create({
   headerText: {
     fontSize: 30,
     textAlign: "center",
-    color: "purple",
+    color: primaryTextColor,
     fontWeight: "900",
   },
 });
@@ -28,7 +32,7 @@ export const pageContainerStyle = StyleSheet.create({
 
 export const tabBarProps = {
   tabBarStyle: { height: 55 },
-  tabBarActiveTintColor: "purple",
-  tabBarInactiveTintColor: "gray",
+  tabBarActiveTintColor: primaryTextColor,
+  tabBarInactiveTintColor: tabBarInactiveTint,
   tabBarLabelStyle: { fontWeight: "900", fontSize: 11 } as StyleProp<TextStyle>,
 };

@@ -1,5 +1,5 @@
 import { useFlash } from "@/context/app-context";
-import { sharedStyles } from "@/styles";
+import { primaryBgColor, primaryTextColor, sharedStyles } from "@/styles";
 import { ImportSchema, Question, TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Text, View } from "react-native";
@@ -57,7 +57,7 @@ export const ImportDeck = (props: Props) => {
           <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
         )}
         {questions.length ? (
-          <Text style={{ color: "purple" }}>
+          <Text style={{ color: primaryTextColor }}>
             There are {questions.length} cards on this deck
           </Text>
         ) : null}
@@ -72,8 +72,11 @@ export const ImportDeck = (props: Props) => {
 
       <DefaultButton
         title={"Click to paste imported string"}
-        moreTextStyle={{ color: "purple" }}
-        moreContainerStyle={{ backgroundColor: "white", marginBottom: 20 }}
+        moreTextStyle={{ color: primaryTextColor }}
+        moreContainerStyle={{
+          backgroundColor: primaryBgColor,
+          marginBottom: 20,
+        }}
         onPress={() => {
           fetchCopiedText((val) => {
             try {

@@ -1,16 +1,14 @@
 import { Tabs } from "expo-router";
 import React from "react";
 
-import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
-import { tabBarProps } from "@/styles";
+import { primaryBgColor, tabBarProps } from "@/styles";
 
 export default function TabLayout() {
   return (
     <Tabs
-      sceneContainerStyle={{ backgroundColor: "#fff" }}
+      sceneContainerStyle={{ backgroundColor: primaryBgColor }}
       screenOptions={{
-        tabBarActiveTintColor: Colors["light"].tint,
         headerShown: false,
       }}
     >

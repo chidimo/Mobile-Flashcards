@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Question } from "@/types/generic";
+import { primaryTextColor } from "@/styles";
 
 interface Props {
   index: number;
@@ -72,6 +73,6 @@ export const CardListItem = (props: Props) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: 18,
-    color: "purple",
+    color: primaryTextColor,
   },
 });

@@ -6,7 +6,12 @@ import { EditDeck } from "./edit-deck";
 import { DefaultModal } from "../modal";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
 import { DefaultButton } from "../form-elements/button";
-import { pageContainerStyle, sharedStyles } from "@/styles";
+import {
+  primaryTextColor,
+  pageContainerStyle,
+  sharedStyles,
+  primaryBgColor,
+} from "@/styles";
 
 export const ManageDeck = () => {
   const { deckId } = useGlobalSearchParams();
@@ -51,11 +56,14 @@ export const ManageDeck = () => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <DefaultButton
             title={<MaterialIcons name="share" size={30} color="#07f" />}
-            moreContainerStyle={{ marginRight: 10, backgroundColor: "#fff" }}
             onPress={onShare}
+            moreContainerStyle={{
+              marginRight: 10,
+              backgroundColor: primaryBgColor,
+            }}
           />
           <DefaultButton
-            moreContainerStyle={{ backgroundColor: "#fff" }}
+            moreContainerStyle={{ backgroundColor: primaryBgColor }}
             onPress={onDeleteOpen}
             title={<AntDesign name="delete" size={30} color="red" />}
           />
@@ -90,7 +98,7 @@ export const ManageDeck = () => {
               marginBottom: 50,
               fontSize: 18,
               textAlign: "center",
-              color: "purple",
+              color: primaryTextColor,
             }}
           >
             Are you sure you want to delete this deck and all its cards

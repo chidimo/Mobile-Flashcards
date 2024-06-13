@@ -2,6 +2,7 @@ import { Text, View, StyleSheet } from "react-native";
 import { DefaultButton } from "../form-elements/button";
 import { AppCheckbox } from "../form-elements/check-box";
 import { useQuiz } from "@/context/quiz-context";
+import { primaryTextColor, pageContainerStyle } from "@/styles";
 
 export const QuizStarter = () => {
   const {
@@ -14,9 +15,14 @@ export const QuizStarter = () => {
   } = useQuiz();
 
   return (
-    <View style={[styles.sectionContainer]}>
+    <View
+      style={[
+        pageContainerStyle.minorPageView,
+        { justifyContent: "space-evenly" },
+      ]}
+    >
       <View>
-        <View style={{marginBottom: 30}}>
+        <View style={{ marginBottom: 30 }}>
           <Text style={[styles.text, { fontSize: 20 }]}>
             You are about to start a quiz on {deckName}
           </Text>
@@ -65,14 +71,8 @@ export const QuizStarter = () => {
 
 const styles = StyleSheet.create({
   text: {
-    color: "purple",
+    color: primaryTextColor,
     fontWeight: "bold",
     textAlign: "center",
-  },
-  sectionContainer: {
-    flex: 1,
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    width: "100%",
   },
 });

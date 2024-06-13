@@ -7,6 +7,7 @@ import "react-native-reanimated";
 import { FlashProvider } from "@/context/app-context";
 import { NotifierWrapper } from "react-native-notifier";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { primaryTextColor } from "@/styles";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -33,7 +34,7 @@ export default function RootLayout() {
               name="(tabs)"
               options={{
                 headerTitle: "Home <> Mobile flashcards",
-                headerTintColor: "purple",
+                headerTintColor: primaryTextColor,
               }}
             />
             <Stack.Screen name="[deckId]" options={{ headerShown: false }} />

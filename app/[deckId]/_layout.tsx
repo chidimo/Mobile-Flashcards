@@ -1,4 +1,5 @@
 import { useFlash } from "@/context/app-context";
+import { primaryBgColor, primaryTextColor } from "@/styles";
 import { Stack, useGlobalSearchParams } from "expo-router";
 import React from "react";
 
@@ -10,8 +11,8 @@ export default function TabLayout() {
   return (
     <Stack
       screenOptions={{
-        contentStyle: { backgroundColor: "#fff" },
-        headerTintColor: "purple",
+        contentStyle: { backgroundColor: primaryBgColor },
+        headerTintColor: primaryTextColor,
         headerTitle: `MFC <> ${deck?.title}`,
       }}
     >

@@ -4,11 +4,10 @@ import { DefaultButton } from "../form-elements/button";
 import { NotAvailableMessage } from "./not-available-message";
 import { Question } from "@/types/generic";
 import { useQuiz } from "@/context/quiz-context";
+import { primaryBgColor, primaryTextColor } from "@/styles";
 
 interface Props {
   qs: Question | null;
-  showHint?: boolean;
-  peekAnswer?: boolean;
 }
 
 export const QuizQuestion = (props: Props) => {
@@ -40,7 +39,7 @@ export const QuizQuestion = (props: Props) => {
             width: "100%",
             padding: 8,
             borderRadius: 4,
-            backgroundColor: showAnswer ? "#fff" : "green",
+            backgroundColor: showAnswer ? primaryBgColor : "green",
           }}
           onPress={() => {
             if (peekAnswer) {
@@ -83,7 +82,7 @@ export const QuizQuestion = (props: Props) => {
 
 const styles = StyleSheet.create({
   text: {
-    color: "purple",
+    color: primaryTextColor,
     fontWeight: "bold",
     textAlign: "center",
   },

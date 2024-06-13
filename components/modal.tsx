@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { primaryBgColor } from "@/styles";
 
 type Props = {
   title: string | React.ReactNode;
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.7)",
   },
   modalView: {
-    backgroundColor: "white",
+    backgroundColor: primaryBgColor,
     paddingHorizontal: 10,
     shadowColor: "#000",
     shadowOffset: {
