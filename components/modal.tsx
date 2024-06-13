@@ -31,7 +31,7 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
           borderTopLeftRadius: 10,
           borderTopRightRadius: 10,
         }
-      : {   borderRadius: 10, paddingVertical: 20 };
+      : { borderRadius: 10, paddingVertical: 20 };
 
   return (
     <View>
@@ -52,9 +52,15 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
         >
           <View style={[styles.modalView, modalViewStyle]}>
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>{title}</Text>
+              <View style={{ width: "89%" }}>
+                {typeof title === "string" ? (
+                  <Text style={[styles.title]}>{title}</Text>
+                ) : (
+                  title
+                )}
+              </View>
               <Pressable onPress={onRequestClose}>
-                <MaterialIcons name="close" size={30} color="black" />
+                <MaterialIcons name="close" size={40} color="black" />
               </Pressable>
             </View>
             <ScrollView>{children}</ScrollView>

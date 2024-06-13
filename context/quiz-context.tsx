@@ -44,13 +44,14 @@ interface Props {
 }
 
 export function QuizProvider({ children }: Readonly<Props>) {
-  const { getDeckById, saveMyScore } = useFlash();
+  const { getDeckById } = useFlash();
   const { deckId } = useGlobalSearchParams();
   const deck = getDeckById(deckId as string);
   const quizzes = deck?.questions ?? [];
   const quiz_count = quizzes.length;
 
   const [state, setState] = useState<QuizState>(initState);
+  console.log(JSON.stringify(state, null, 2));
 
   const memoizedCtxValue = useMemo(() => {
     return {
@@ -80,8 +81,8 @@ export function QuizProvider({ children }: Readonly<Props>) {
         }));
       },
       onStartQuiz() {
-        setState((prev) => ({
-          ...prev,
+        setState(() => ({
+          ...initState,
           started: true,
           currentQuestion: quizzes[0],
         }));

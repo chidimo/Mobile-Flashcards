@@ -29,9 +29,10 @@ export const DeckScores = () => {
 
       {scores?.length ? (
         <VirtualizedList>
-          {scores?.map((s) => {
+          {scores?.map((s, idx) => {
             return (
               <ScoreCard
+                index={idx + 1}
                 key={s.date}
                 score={s}
                 passMark={deck?.passMark ?? 50}

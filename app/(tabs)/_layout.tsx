@@ -3,6 +3,7 @@ import React from "react";
 
 import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
+import { tabBarProps } from "@/styles";
 
 export default function TabLayout() {
   return (
@@ -17,7 +18,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Decks",
-          tabBarActiveTintColor: "purple",
+          ...tabBarProps,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="cards-outline"
@@ -31,7 +32,7 @@ export default function TabLayout() {
         name="add-deck"
         options={{
           title: "Add deck",
-          tabBarActiveTintColor: "purple",
+          ...tabBarProps,
           tabBarIcon: ({ color }) => (
             <AntDesign name="plus" size={24} color={color} />
           ),

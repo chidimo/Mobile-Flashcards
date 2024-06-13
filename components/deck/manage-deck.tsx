@@ -1,5 +1,5 @@
 import { useFlash } from "@/context/app-context";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import { router, useGlobalSearchParams } from "expo-router";
 import { Text, View } from "react-native";
 import { EditDeck } from "./edit-deck";
@@ -37,7 +37,7 @@ export const ManageDeck = () => {
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <DefaultButton
-            title={<MaterialIcons name="content-copy" size={30} color="#07f" />}
+            title={<FontAwesome5 name="copy" size={30} color="#07f" />}
             moreContainerStyle={{ marginRight: 10, backgroundColor: "#fff" }}
             onPress={() => {
               copyToClipboard(JSON.stringify(deck));
@@ -61,27 +61,34 @@ export const ManageDeck = () => {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "flex-start",
             }}
           >
             <Text>
               <AntDesign name="warning" size={24} color="red" />
             </Text>
-            <Text style={{ fontSize: 24, fontWeight: "bold", marginLeft: 5 }}>
-              Delete deck
+            <Text style={{ fontSize: 22, fontWeight: "bold", marginLeft: 5 }}>
+              Delete {deck?.title}
             </Text>
           </View>
         }
         onRequestClose={onDeleteClose}
       >
         <View style={{ flex: 1, alignItems: "center", paddingBottom: 50 }}>
-          <Text style={{ marginBottom: 50, fontSize: 18, textAlign: "center" }}>
+          <Text
+            style={{
+              marginBottom: 50,
+              fontSize: 18,
+              textAlign: "center",
+              color: "purple",
+            }}
+          >
             Are you sure you want to delete this deck and all its cards
           </Text>
           <DefaultButton
             moreContainerStyle={{ width: "50%" }}
             btnVariant="DANGER"
-            title="Delete deck"
+            title="Delete"
             onPress={() => {
               deleteDeck(deckId as string);
               router.replace(`/(tabs)`);

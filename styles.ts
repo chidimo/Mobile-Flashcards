@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleProp, StyleSheet, TextStyle } from "react-native";
 
 export const sharedStyles = StyleSheet.create({
   headerText: {
@@ -18,3 +18,10 @@ export const pageContainerStyle = StyleSheet.create({
     width: "100%",
   },
 });
+
+export const tabBarProps = {
+  tabBarStyle: {height: 55},
+  tabBarActiveTintColor: "purple",
+  tabBarInactiveTintColor: "gray",
+  tabBarLabelStyle: { fontWeight: "900", fontSize: 11 } as StyleProp<TextStyle>,
+};

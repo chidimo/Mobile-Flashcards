@@ -1,7 +1,6 @@
 encode copied deck as jwt
 implement swiping for quiz
+archive deck
 
 on quiz start modal
 toggle if you want previous button
-toggle if you want hints
-toggle if you can peek answer

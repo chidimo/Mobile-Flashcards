@@ -9,6 +9,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { tabBarProps } from "@/styles";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -28,7 +29,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: deck?.title,
-          tabBarActiveTintColor: "purple",
+          ...tabBarProps,
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="subject" color={color} size={24} />
           ),
@@ -40,7 +41,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: "Add card",
-          tabBarActiveTintColor: "purple",
+          ...tabBarProps,
           tabBarIcon: ({ color }) => (
             <AntDesign name="plus" size={24} color={color} />
           ),
@@ -52,7 +53,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: "Take Quiz",
-          tabBarActiveTintColor: "purple",
+          ...tabBarProps,
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="quiz" color={color} size={24} />
           ),
@@ -64,7 +65,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: "Scoreboard",
-          tabBarActiveTintColor: "purple",
+          ...tabBarProps,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="scoreboard" color={color} size={24} />
           ),
@@ -76,7 +77,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: "Manage",
-          tabBarActiveTintColor: "purple",
+          ...tabBarProps,
           tabBarIcon: ({ color }) => (
             <Feather name="settings" color={color} size={24} />
           ),

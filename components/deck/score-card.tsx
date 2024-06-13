@@ -3,12 +3,13 @@ import { Text, View } from "react-native";
 import { ScoreSaver } from "@/types/generic";
 
 interface Props {
+  index: number;
   score: ScoreSaver;
   passMark: number;
 }
 
 export const ScoreCard = (props: Props) => {
-  const { score, passMark } = props;
+  const { index, score, passMark } = props;
   const percent = (score.actualScore / score.numberOfQuestions) * 100;
   const isPass = percent >= passMark;
 
@@ -23,7 +24,7 @@ export const ScoreCard = (props: Props) => {
       }}
     >
       <Text style={{ fontSize: 20, color: "purple" }}>
-        {formatDate(score.date, true)}
+        {index}. {formatDate(score.date, true)}
       </Text>
       <View
         style={{ flexDirection: "row", alignItems: "center", width: "100%" }}

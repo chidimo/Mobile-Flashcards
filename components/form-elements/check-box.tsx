@@ -16,14 +16,14 @@ type Props = {
   disabled?: boolean;
   checked?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
-  onValueChange: (...args: any[]) => any;
+  onValueChange: (value: boolean) => void;
 };
 
 export const AppCheckbox = (props: Props): JSX.Element => {
   const {
     label,
     error,
-    disabled,
+    disabled = false,
     checked = false,
     containerStyle,
     boxPosition = "left",
@@ -42,8 +42,11 @@ export const AppCheckbox = (props: Props): JSX.Element => {
         }}
       >
         <ExpoCheckBox
+          style={{ width: 36, height: 36 }}
+          accessible
+          accessibilityLabel={label}
           value={checked}
-          disabled={disabled !== undefined ? disabled : false}
+          disabled={disabled}
           onValueChange={onValueChange}
         />
         <Text
