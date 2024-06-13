@@ -50,7 +50,7 @@ export const EditCard = () => {
   };
 
   return (
-    <View style={[pageContainerStyle.view]}>
+    <View style={[pageContainerStyle.mainPageView]}>
       <Text style={[sharedStyles.headerText, { marginBottom: 50 }]}>
         Edit card
       </Text>

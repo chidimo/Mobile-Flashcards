@@ -11,13 +11,13 @@ export const DeckList = () => {
   const { deckOfCards } = useFlash();
 
   return (
-    <View style={[pageContainerStyle.view]}>
+    <View style={[pageContainerStyle.mainPageView]}>
       {deckOfCards?.length === 0 ? (
         <View
           style={{
+            width: "100%",
             alignItems: "center",
             justifyContent: "center",
-            width: "100%",
           }}
         >
           <View style={{ alignItems: "center", marginBottom: 50 }}>

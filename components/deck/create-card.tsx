@@ -41,25 +41,29 @@ export const CreateCard = () => {
   };
 
   return (
-    <View style={[pageContainerStyle.view]}>
-      <Text style={[sharedStyles.headerText, { marginBottom: 50 }]}>
-        Add cards to {deck?.title}
-      </Text>
+    <View style={[pageContainerStyle.mainPageView]}>
+      <View style={{}}>
+        <Text style={[sharedStyles.headerText, { marginBottom: 50 }]}>
+          Add cards to {deck?.title}
+        </Text>
+      </View>
 
-      <CardFormFields control={control} errors={errors} />
+      <View style={[pageContainerStyle.minorPageView]}>
+        <CardFormFields control={control} errors={errors} />
 
-      <DefaultButton
-        moreContainerStyle={{ width: "60%", marginBottom: 25 }}
-        btnVariant="SUCCESS"
-        title="Save and view deck"
-        onPress={handleSubmit(submitAndViewDeck)}
-      />
-      <DefaultButton
-        moreContainerStyle={{ width: "70%" }}
-        btnVariant="SUCCESS"
-        title="Save and add another"
-        onPress={handleSubmit(submitAndAddAnother)}
-      />
+        <DefaultButton
+          moreContainerStyle={{ width: "60%", marginBottom: 25 }}
+          btnVariant="SUCCESS"
+          title="Save and view deck"
+          onPress={handleSubmit(submitAndViewDeck)}
+        />
+        <DefaultButton
+          moreContainerStyle={{ width: "70%" }}
+          btnVariant="SUCCESS"
+          title="Save and add another"
+          onPress={handleSubmit(submitAndAddAnother)}
+        />
+      </View>
     </View>
   );
 };

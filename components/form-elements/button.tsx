@@ -50,7 +50,7 @@ export const DefaultButton = (props: Props) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: "100%",
+                width: "50%",
                 height: 50,
                 borderRadius: 10,
                 paddingVertical: 8,

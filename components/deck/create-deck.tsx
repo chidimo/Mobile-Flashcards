@@ -38,7 +38,7 @@ export const CreateDeck = () => {
   };
 
   return (
-    <View style={[pageContainerStyle.view]}>
+    <View style={[pageContainerStyle.mainPageView]}>
       <View style={{ marginBottom: 50 }}>
         <Text style={sharedStyles.headerText}>Create deck</Text>
       </View>

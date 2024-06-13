@@ -15,7 +15,7 @@ export const CardList = () => {
   const questionList = deck?.questions ?? [];
 
   return (
-    <View style={[pageContainerStyle.view]}>
+    <View style={[pageContainerStyle.mainPageView]}>
       <View style={{ marginBottom: 10 }}>
         <View>
           <Text style={[sharedStyles.headerText]}>{deck?.title}</Text>

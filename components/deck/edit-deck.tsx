@@ -47,7 +47,7 @@ export const EditDeck = (props: Props) => {
   };
 
   return (
-    <View style={[pageContainerStyle.view, props.moreContainerStyle]}>
+    <View style={[pageContainerStyle.mainPageView, props.moreContainerStyle]}>
       <DeckFormFields errors={errors} control={control} />
       <DefaultButton
         moreContainerStyle={{ width: "50%" }}

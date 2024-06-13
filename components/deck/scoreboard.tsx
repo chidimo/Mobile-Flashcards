@@ -14,7 +14,12 @@ export const DeckScores = () => {
   const scores = getScoresById(deckId as string);
 
   return (
-    <View style={[pageContainerStyle.view, { justifyContent: "flex-start" }]}>
+    <View
+      style={[
+        pageContainerStyle.mainPageView,
+        { justifyContent: "flex-start" },
+      ]}
+    >
       <View style={{ marginBottom: 30 }}>
         <Text style={[sharedStyles.headerText]}>My scores</Text>
         <Text
@@ -41,7 +46,7 @@ export const DeckScores = () => {
           })}
         </VirtualizedList>
       ) : (
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <View style={[pageContainerStyle.minorPageView]}>
           <NotAvailableMessage message="You have not taken this quiz yet." />
           <DefaultButton
             moreContainerStyle={{ width: "50%" }}

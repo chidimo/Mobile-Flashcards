@@ -10,17 +10,24 @@ export const sharedStyles = StyleSheet.create({
 });
 
 export const pageContainerStyle = StyleSheet.create({
-  view: {
+  mainPageView: {
     flex: 1,
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
+    paddingTop: 10,
     paddingHorizontal: 15,
+  },
+  minorPageView: {
+    flex: 1,
     width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
 export const tabBarProps = {
-  tabBarStyle: {height: 55},
+  tabBarStyle: { height: 55 },
   tabBarActiveTintColor: "purple",
   tabBarInactiveTintColor: "gray",
   tabBarLabelStyle: { fontWeight: "900", fontSize: 11 } as StyleProp<TextStyle>,

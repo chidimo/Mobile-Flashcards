@@ -23,7 +23,12 @@ export const ManageDeck = () => {
   } = useOnOffSwitch();
 
   return (
-    <View style={[pageContainerStyle.view, { justifyContent: "space-evenly" }]}>
+    <View
+      style={[
+        pageContainerStyle.mainPageView,
+        { justifyContent: "space-evenly" },
+      ]}
+    >
       <View
         style={{
           flexDirection: "row",
@@ -52,7 +57,7 @@ export const ManageDeck = () => {
         </View>
       </View>
 
-      <EditDeck moreContainerStyle={{ width: "100%", paddingHorizontal: 0 }} />
+      <EditDeck moreContainerStyle={{ paddingHorizontal: 0 }} />
 
       <DefaultModal
         visible={deleteOpen}

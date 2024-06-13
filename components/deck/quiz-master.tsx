@@ -42,7 +42,7 @@ export const QuizMaster = () => {
   }
 
   return (
-    <View style={[pageContainerStyle.view]}>
+    <View style={[pageContainerStyle.mainPageView]}>
       {ended && currentQuestion && (
         <View style={[styles.sectionContainer]}>
           <Text style={[styles.text, { fontSize: 30 }]}>End of quiz</Text>
