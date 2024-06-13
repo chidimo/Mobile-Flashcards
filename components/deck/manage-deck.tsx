@@ -1,26 +1,34 @@
 import { useFlash } from "@/context/app-context";
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { router, useGlobalSearchParams } from "expo-router";
-import { Text, View } from "react-native";
+import { Text, View, Share, Alert } from "react-native";
 import { EditDeck } from "./edit-deck";
 import { DefaultModal } from "../modal";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
 import { DefaultButton } from "../form-elements/button";
 import { pageContainerStyle, sharedStyles } from "@/styles";
-import { useClipboard } from "@/hooks/use-clipboard";
-import { showNotification } from "../notifier";
 
 export const ManageDeck = () => {
   const { deckId } = useGlobalSearchParams();
   const { deleteDeck, getDeckById } = useFlash();
   const deck = getDeckById(deckId as string);
-  const { copyToClipboard } = useClipboard();
 
   const {
     isOn: deleteOpen,
     setOn: onDeleteOpen,
     setOff: onDeleteClose,
   } = useOnOffSwitch();
+
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message: JSON.stringify(deck),
+        title: `Deck ${deck?.title}`,
+      });
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
 
   return (
     <View
@@ -42,12 +50,9 @@ export const ManageDeck = () => {
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <DefaultButton
-            title={<FontAwesome5 name="copy" size={30} color="#07f" />}
+            title={<MaterialIcons name="share" size={30} color="#07f" />}
             moreContainerStyle={{ marginRight: 10, backgroundColor: "#fff" }}
-            onPress={() => {
-              copyToClipboard(JSON.stringify(deck));
-              showNotification("Success", "Deck copied successfully!");
-            }}
+            onPress={onShare}
           />
           <DefaultButton
             moreContainerStyle={{ backgroundColor: "#fff" }}

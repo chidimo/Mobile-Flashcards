@@ -2,6 +2,5 @@ encode copied deck as jwt
 implement swiping for quiz
 archive deck
 
-on quiz start modal
 toggle if you want previous button
 bug: creating card for first time quiz doesn't load

@@ -71,7 +71,7 @@ export const ImportDeck = (props: Props) => {
       />
 
       <DefaultButton
-        title={"Click to paste import string"}
+        title={"Click to paste imported string"}
         moreTextStyle={{ color: "purple" }}
         moreContainerStyle={{ backgroundColor: "white", marginBottom: 20 }}
         onPress={() => {
