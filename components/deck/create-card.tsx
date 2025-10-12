@@ -1,11 +1,12 @@
-import { Text, View } from "react-native";
-import { pageContainerStyle, sharedStyles } from "@/styles";
+import { View } from "react-native";
+import { buttonStyles, pageContainerStyle } from "@/styles";
 import { router, useGlobalSearchParams } from "expo-router";
 import { useFlash } from "@/context/app-context";
 import { TCreateCard } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { CardFormFields } from "./card-form-fields";
 import { DefaultButton } from "../form-elements/button";
+import { CustomText } from "../custom-text";
 
 export const CreateCard = () => {
   const { getDeckById, addCardToDeck } = useFlash();
@@ -42,27 +43,24 @@ export const CreateCard = () => {
 
   return (
     <View style={[pageContainerStyle.mainPageView]}>
-      <View style={{}}>
-        <Text style={[sharedStyles.headerText, { marginBottom: 50 }]}>
-          Add cards to {deck?.title}
-        </Text>
-      </View>
-
+      <CustomText isHeader text="Add a card" />
       <View style={[pageContainerStyle.minorPageView]}>
         <CardFormFields control={control} errors={errors} />
 
-        <DefaultButton
-          moreContainerStyle={{ width: "60%", marginBottom: 25 }}
-          btnVariant="SUCCESS"
-          title="Save and view deck"
-          onPress={handleSubmit(submitAndViewDeck)}
-        />
-        <DefaultButton
-          moreContainerStyle={{ width: "70%" }}
-          btnVariant="SUCCESS"
-          title="Save and add another"
-          onPress={handleSubmit(submitAndAddAnother)}
-        />
+        <View style={buttonStyles.twoColumnBtns}>
+          <DefaultButton
+            moreContainerStyle={{ width: "47%" }}
+            btnVariant="SUCCESS"
+            title="Save and exit"
+            onPress={handleSubmit(submitAndViewDeck)}
+          />
+          <DefaultButton
+            moreContainerStyle={{ width: "47%" }}
+            btnVariant="SECONDARY"
+            title="Save and add another"
+            onPress={handleSubmit(submitAndAddAnother)}
+          />
+        </View>
       </View>
     </View>
   );

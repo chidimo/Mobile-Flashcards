@@ -1,19 +1,20 @@
 import { useGlobalSearchParams } from "expo-router";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { StyleProp, View, ViewStyle } from "react-native";
+import { View } from "react-native";
 import { useMemo } from "react";
 import { useFlash } from "@/context/app-context";
 import { TCreateDeck } from "@/types/generic";
 import { DeckFormFields } from "./deck-form-fields";
 import { DefaultButton } from "../form-elements/button";
 import { showNotification } from "../notifier";
-import { pageContainerStyle } from "@/styles";
+import { buttonStyles, pageContainerStyle } from "@/styles";
 
 interface Props {
-  moreContainerStyle?: StyleProp<ViewStyle>;
+  onCancel: () => void;
+  onSuccess: () => void;
 }
 
-export const EditDeck = (props: Props) => {
+export const EditDeck = ({ onCancel, onSuccess }: Props) => {
   const { getDeckById, updateDeck } = useFlash();
   const { deckId } = useGlobalSearchParams();
 
@@ -43,18 +44,27 @@ export const EditDeck = (props: Props) => {
   const onSubmit: SubmitHandler<TCreateDeck> = async (data) => {
     saveCard(data).then(() => {
       showNotification("Success", "Deck updated successfully");
+      onSuccess();
     });
   };
 
   return (
-    <View style={[pageContainerStyle.mainPageView, props.moreContainerStyle]}>
+    <View style={[pageContainerStyle.mainPageView, { paddingHorizontal: 0 }]}>
       <DeckFormFields errors={errors} control={control} />
-      <DefaultButton
-        moreContainerStyle={{ width: "50%" }}
-        btnVariant="SUCCESS"
-        title="Save changes"
-        onPress={handleSubmit(onSubmit)}
-      />
+      <View style={buttonStyles.twoColumnBtns}>
+        <DefaultButton
+          moreContainerStyle={{ width: "47%" }}
+          btnVariant="DANGER"
+          title="Cancel"
+          onPress={onCancel}
+        />
+        <DefaultButton
+          moreContainerStyle={{ width: "47%" }}
+          btnVariant="SUCCESS"
+          title="Save changes"
+          onPress={handleSubmit(onSubmit)}
+        />
+      </View>
     </View>
   );
 };

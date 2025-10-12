@@ -35,18 +35,9 @@ export const CardListItem = (props: Props) => {
         }}
       >
         <Text style={[styles.text, { fontWeight: "bold", marginRight: 5 }]}>
-          {index + 1}
+          Question {index + 1}
         </Text>
         <View style={{ flexDirection: "row" }}>
-          <AntDesign
-            name="edit"
-            size={22}
-            style={{ marginRight: 20 }}
-            color={"#07f"}
-            onPress={() => {
-              router.push(`/${deckId}/${question.id}`);
-            }}
-          />
           <AntDesign
             name="delete"
             size={22}

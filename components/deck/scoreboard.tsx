@@ -1,11 +1,12 @@
 import { useFlash } from "@/context/app-context";
 import { router, useGlobalSearchParams } from "expo-router";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { DefaultButton } from "../form-elements/button";
-import { pageContainerStyle, sharedStyles } from "@/styles";
+import { pageContainerStyle } from "@/styles";
 import { NotAvailableMessage } from "./not-available-message";
 import { ScoreCard } from "./score-card";
 import { VirtualizedList } from "../virtualized-list";
+import { CustomText } from "../custom-text";
 
 export const DeckScores = () => {
   const { getDeckById, getScoresById } = useFlash();
@@ -21,15 +22,11 @@ export const DeckScores = () => {
       ]}
     >
       <View style={{ marginBottom: 30 }}>
-        <Text style={[sharedStyles.headerText]}>My scores</Text>
-        <Text
-          style={[
-            sharedStyles.headerText,
-            { fontSize: 16, fontWeight: "normal" },
-          ]}
-        >
-          Pass mark: {deck?.passMark}
-        </Text>
+        <CustomText text="My scores" isHeader />
+        <CustomText
+          text={`Pass mark: ${deck?.passMark?.toString() ?? ""}`}
+          moreTextStyle={{ fontSize: 16, fontWeight: "normal" }}
+        />
       </View>
 
       {scores?.length ? (
@@ -49,11 +46,11 @@ export const DeckScores = () => {
         <View style={[pageContainerStyle.minorPageView]}>
           <NotAvailableMessage message="You have not taken this quiz yet." />
           <DefaultButton
-            moreContainerStyle={{ width: "50%" }}
+            moreContainerStyle={{ width: "100%" }}
             btnVariant="SUCCESS"
             title="Take quiz"
             onPress={() => {
-              router.push(`/${deck?.id}/add-card`);
+              router.push(`/${deck?.id}/take-quiz`);
             }}
           />
         </View>

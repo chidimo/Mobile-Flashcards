@@ -1,12 +1,13 @@
 import { router, useGlobalSearchParams } from "expo-router";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { useMemo } from "react";
 import { useFlash } from "@/context/app-context";
 import { CardFormFields } from "./card-form-fields";
 import { TCreateCard } from "@/types/generic";
-import { pageContainerStyle, sharedStyles } from "@/styles";
+import { pageContainerStyle } from "@/styles";
 import { DefaultButton } from "../form-elements/button";
+import { CustomText } from "../custom-text";
 
 export const EditCard = () => {
   const { getDeckById, getQuestionById, updateCard } = useFlash();
@@ -51,9 +52,11 @@ export const EditCard = () => {
 
   return (
     <View style={[pageContainerStyle.mainPageView]}>
-      <Text style={[sharedStyles.headerText, { marginBottom: 50 }]}>
-        Edit card
-      </Text>
+      <CustomText
+        isHeader
+        text="Edit card"
+        moreContainerStyle={{ marginBottom: 50 }}
+      />
       <CardFormFields errors={errors} control={control} />
       <View
         style={{

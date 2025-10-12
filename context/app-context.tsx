@@ -35,6 +35,7 @@ export interface FlashContext {
     hint?: string
   ) => void;
   saveMyScore: (deckId: string, actualScore: number, qstns: number) => void;
+  resetScore: (deckId: string) => void;
 }
 
 const FlashContext = createContext<FlashContext | null>(null);
@@ -246,6 +247,19 @@ export function FlashProvider({ children }: Readonly<Props>) {
         };
         setItemToStorage(updated, flashCardKey);
         setState(updated);
+      },
+      resetScore(deckId: string) {
+        if (!state.myScores) return;
+        let updated = {
+          ...state,
+          myScores: {
+            ...state.myScores,
+            [deckId]: [],
+          },
+        };
+        setItemToStorage(updated, flashCardKey);
+        setState(updated);
+        showNotification("Success", "Scoreboard reset successfully!");
       },
     };
   }, [state]);

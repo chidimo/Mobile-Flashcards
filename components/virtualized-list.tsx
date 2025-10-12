@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
+import { FlatList, RefreshControl, View } from "react-native";
 
 type Props = {
   refreshing?: boolean;
@@ -22,14 +22,16 @@ export const VirtualizedList = (props: React.PropsWithChildren<Props>) => {
           refreshing={refreshing || false}
         />
       }
-      ListHeaderComponent={<View style={styles.header}>{children}</View>}
+      ListHeaderComponent={
+        <View
+          style={{
+            flex: 1,
+            marginBottom: 50,
+          }}
+        >
+          {children}
+        </View>
+      }
     />
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    flex: 1,
-    marginBottom: 50,
-  },
-});

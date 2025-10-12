@@ -76,7 +76,7 @@ export const DefaultButton = (props: Props) => {
         {isLoading && (
           <ActivityIndicator
             size={22}
-            color={btnVariant === "CANCEL" ? "black" : "#fff"}
+            color={btnVariant === "CANCEL" ? "rgba(0,0,0, 0.7)" : "#fff"}
             style={[{ marginRight: 3 }]}
           />
         )}
@@ -116,5 +116,5 @@ const titleStyle = StyleSheet.create({
   danger: { color: "#fff" },
   success: { color: "#fff" },
   secondary: { color: "#fff" },
-  cancel: { color: "black" },
+  cancel: { color: "rgba(0, 0, 0, 0.7)" },
 });

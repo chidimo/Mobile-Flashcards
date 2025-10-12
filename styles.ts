@@ -4,15 +4,6 @@ const tabBarInactiveTint = "gray";
 export const primaryBgColor = "#fff";
 export const primaryTextColor = "purple";
 
-export const sharedStyles = StyleSheet.create({
-  headerText: {
-    fontSize: 30,
-    textAlign: "center",
-    color: primaryTextColor,
-    fontWeight: "900",
-  },
-});
-
 export const pageContainerStyle = StyleSheet.create({
   mainPageView: {
     flex: 1,
@@ -36,3 +27,12 @@ export const tabBarProps = {
   tabBarInactiveTintColor: tabBarInactiveTint,
   tabBarLabelStyle: { fontWeight: "900", fontSize: 11 } as StyleProp<TextStyle>,
 };
+
+export const buttonStyles = StyleSheet.create({
+  twoColumnBtns: {
+    width: "100%",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+});

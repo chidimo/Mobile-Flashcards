@@ -2,6 +2,7 @@ import { createContext, useMemo, useState, useContext } from "react";
 import { Question } from "@/types/generic";
 import { useGlobalSearchParams } from "expo-router";
 import { useFlash } from "./app-context";
+import { debounce, shuffle, groupBy } from "es-toolkit";
 
 export type SelectedAnswer = "right" | "left";
 
@@ -13,6 +14,7 @@ interface QuizState {
   showHint: boolean;
   peekAnswer: boolean;
   currentQuestion: Question | null;
+  randomizeQuestions: boolean;
 }
 
 const initState: QuizState = {
@@ -21,8 +23,9 @@ const initState: QuizState = {
   ended: false,
   currentScore: 0,
   showHint: false,
-  peekAnswer: true,
+  peekAnswer: false,
   currentQuestion: null,
+  randomizeQuestions: false,
 };
 
 interface QuizCtx extends QuizState {
@@ -32,8 +35,9 @@ interface QuizCtx extends QuizState {
   onEndQuiz: () => void;
   onStartQuiz: () => void;
   onRetakeQuiz: () => void;
-  onUpdateHint: (val: boolean) => void;
-  onUpdatePeek: (val: boolean) => void;
+  onUpdateHint: () => void;
+  onUpdatePeek: () => void;
+  onUpdateRandomizeQuestions: () => void;
   onAnswerQuestion: (selected: SelectedAnswer) => void;
 }
 
@@ -47,10 +51,15 @@ export function QuizProvider({ children }: Readonly<Props>) {
   const { getDeckById } = useFlash();
   const { deckId } = useGlobalSearchParams();
   const deck = getDeckById(deckId as string);
-  const quizzes = deck?.questions ?? [];
-  const quiz_count = quizzes.length;
 
   const [state, setState] = useState<QuizState>(initState);
+
+  const deckQuestions = deck?.questions ?? [];
+
+  const quizzes = state.randomizeQuestions
+    ? shuffle(deckQuestions)
+    : deckQuestions;
+  const quiz_count = quizzes.length;
 
   const memoizedCtxValue = useMemo(() => {
     return {
@@ -58,11 +67,11 @@ export function QuizProvider({ children }: Readonly<Props>) {
       deckName: deck?.title,
       quizzes,
       quiz_count,
-      onUpdateHint(val: boolean) {
-        setState((prev) => ({ ...prev, showHint: val }));
+      onUpdateHint() {
+        setState((prev) => ({ ...prev, showHint: !prev.showHint }));
       },
-      onUpdatePeek(val: boolean) {
-        setState((prev) => ({ ...prev, peekAnswer: val }));
+      onUpdatePeek() {
+        setState((prev) => ({ ...prev, peekAnswer: !prev.peekAnswer }));
       },
       onRetakeQuiz() {
         setState(() => ({
@@ -72,16 +81,19 @@ export function QuizProvider({ children }: Readonly<Props>) {
         }));
       },
       onEndQuiz() {
-        setState((prev) => ({
-          ...prev,
+        setState(() => ({
+          ...initState,
           started: false,
           ended: true,
           currentQuestion: null,
         }));
       },
       onStartQuiz() {
-        setState(() => ({
+        setState((prev) => ({
           ...initState,
+          showHint: prev.showHint,
+          peekAnswer: prev.peekAnswer,
+          randomizeQuestions: prev.randomizeQuestions,
           started: true,
           currentQuestion: quizzes[0],
         }));
@@ -96,6 +108,12 @@ export function QuizProvider({ children }: Readonly<Props>) {
           currentScore:
             selected === "right" ? prev.currentScore + 1 : prev.currentScore,
           currentQuestion: ended ? quizzes[prev.idx] : quizzes[prev.idx + 1],
+        }));
+      },
+      onUpdateRandomizeQuestions() {
+        setState((prev) => ({
+          ...prev,
+          randomizeQuestions: !prev.randomizeQuestions,
         }));
       },
     };

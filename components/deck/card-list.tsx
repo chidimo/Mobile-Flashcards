@@ -1,11 +1,12 @@
 import { VirtualizedList } from "@/components/virtualized-list";
 import { useFlash } from "@/context/app-context";
 import { router, useGlobalSearchParams } from "expo-router";
-import { Text, View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import { NoCardComponent } from "@/components/deck/no-card-component";
-import { pageContainerStyle, sharedStyles } from "@/styles";
+import { pageContainerStyle } from "@/styles";
 import { CardListItem } from "@/components/deck/card-list-item";
 import { formatDate } from "@/utils/format-datetime";
+import { CustomText } from "../custom-text";
 
 export const CardList = () => {
   const { deckId } = useGlobalSearchParams();
@@ -17,24 +18,10 @@ export const CardList = () => {
   return (
     <View style={[pageContainerStyle.mainPageView]}>
       <View style={{ marginBottom: 10 }}>
-        <View>
-          <Text style={[sharedStyles.headerText]}>{deck?.title}</Text>
-          <Text
-            style={[
-              sharedStyles.headerText,
-              { fontSize: 16, fontWeight: "normal" },
-            ]}
-          >
-            Pass mark: {deck?.passMark}
-          </Text>
-          <Text
-            style={[
-              sharedStyles.headerText,
-              { fontSize: 16, fontWeight: "normal" },
-            ]}
-          >
-            Added on: {formatDate(deck?.addedOn, true)}
-          </Text>
+        <View style={{ width: "100%" }}>
+          <CustomText isHeader text={deck?.title ?? ""} />
+          <CustomText text={`Pass mark: ${deck?.passMark ?? ""}`} />
+          <CustomText text={`Added on: ${formatDate(deck?.addedOn, true)}`} />
         </View>
       </View>
 
@@ -62,9 +49,3 @@ export const CardList = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 18,
-  },
-});

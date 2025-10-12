@@ -4,7 +4,7 @@ import { DefaultButton } from "../form-elements/button";
 import { NotAvailableMessage } from "./not-available-message";
 import { Question } from "@/types/generic";
 import { useQuiz } from "@/context/quiz-context";
-import { primaryBgColor, primaryTextColor } from "@/styles";
+import { buttonStyles, primaryBgColor, primaryTextColor } from "@/styles";
 
 interface Props {
   qs: Question | null;
@@ -12,9 +12,8 @@ interface Props {
 
 export const QuizQuestion = (props: Props) => {
   const { qs } = props;
-  const { showHint, peekAnswer, onAnswerQuestion } = useQuiz();
-
   const [showAnswer, setShowAnswer] = useState(false);
+  const { showHint, peekAnswer, onAnswerQuestion, onEndQuiz } = useQuiz();
 
   if (!qs) return null;
 
@@ -25,7 +24,8 @@ export const QuizQuestion = (props: Props) => {
           style={[
             styles.text,
             {
-              fontSize: 28,
+              flex: 1,
+              fontSize: 24,
             },
           ]}
         >
@@ -36,10 +36,10 @@ export const QuizQuestion = (props: Props) => {
       <View style={{ width: "100%", alignItems: "center" }}>
         <Pressable
           style={{
-            width: "100%",
-            padding: 8,
+            paddingVertical: 4,
             borderRadius: 4,
             backgroundColor: showAnswer ? primaryBgColor : "green",
+            flexDirection: "row",
           }}
           onPress={() => {
             if (peekAnswer) {
@@ -47,20 +47,27 @@ export const QuizQuestion = (props: Props) => {
             }
           }}
         >
-          <Text style={{ textAlign: "center", color: "green", fontSize: 28 }}>
+          <Text
+            style={{
+              flex: 1,
+              textAlign: "center",
+              color: "green",
+              fontSize: 22,
+            }}
+          >
             {qs.answer}
           </Text>
         </Pressable>
         {peekAnswer ? (
-          <NotAvailableMessage message="Tap to reveal answer" />
+          <NotAvailableMessage message="Tap to peek answer" />
         ) : null}
         {showHint ? <NotAvailableMessage message={qs?.hint!} /> : null}
       </View>
 
-      <View style={styles.answerButtonsContainer}>
+      <View style={buttonStyles.twoColumnBtns}>
         <DefaultButton
           moreContainerStyle={{ width: "45%" }}
-          title="Incorrect"
+          title="I missed 😏"
           btnVariant="DANGER"
           onPress={() => {
             onAnswerQuestion("left");
@@ -69,13 +76,22 @@ export const QuizQuestion = (props: Props) => {
 
         <DefaultButton
           moreContainerStyle={{ width: "45%" }}
-          title="Correct"
+          title="I got it! 😎"
           btnVariant="SUCCESS"
           onPress={() => {
             onAnswerQuestion("right");
+            setShowAnswer(false);
           }}
         />
       </View>
+
+      <DefaultButton
+        title="End quiz"
+        moreContainerStyle={{ paddingHorizontal: 10, height: 40 }}
+        moreTextStyle={{ fontSize: 16 }}
+        btnVariant="SECONDARY"
+        onPress={onEndQuiz}
+      />
     </View>
   );
 };
@@ -90,17 +106,12 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 22,
     borderRadius: 4,
+    flexDirection: "row",
   },
   sectionContainer: {
     flex: 1,
     justifyContent: "space-evenly",
     alignItems: "center",
     width: "100%",
-  },
-  answerButtonsContainer: {
-    width: "100%",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
 });

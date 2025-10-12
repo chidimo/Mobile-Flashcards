@@ -1,15 +1,17 @@
 import { useFlash } from "@/context/app-context";
-import { primaryBgColor, primaryTextColor, sharedStyles } from "@/styles";
+import { buttonStyles, primaryTextColor } from "@/styles";
 import { ImportSchema, Question, TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { DefaultButton } from "../form-elements/button";
 import { useState } from "react";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { DeckFormFields } from "./deck-form-fields";
+import { CustomText } from "../custom-text";
 
 interface Props {
   onSuccess: () => void;
+  onCancel: () => void;
 }
 export const ImportDeck = (props: Props) => {
   const { importDeck } = useFlash();
@@ -52,15 +54,20 @@ export const ImportDeck = (props: Props) => {
       }}
     >
       <View style={{ marginBottom: 30 }}>
-        <Text style={sharedStyles.headerText}>Import deck</Text>
+        <CustomText
+          text={
+            questions.length
+              ? `This deck has ${questions.length} cards`
+              : "Click the button to paste import string"
+          }
+          moreTextStyle={{ color: primaryTextColor, fontSize: 18 }}
+        />
         {error && (
-          <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
+          <CustomText
+            text={error}
+            moreTextStyle={{ color: "red", fontSize: 16 }}
+          />
         )}
-        {questions.length ? (
-          <Text style={{ color: primaryTextColor }}>
-            There are {questions.length} cards on this deck
-          </Text>
-        ) : null}
       </View>
 
       <DeckFormFields
@@ -71,10 +78,9 @@ export const ImportDeck = (props: Props) => {
       />
 
       <DefaultButton
-        title={"Click to paste imported string"}
-        moreTextStyle={{ color: primaryTextColor }}
+        title={"Click to paste"}
+        btnVariant="SECONDARY"
         moreContainerStyle={{
-          backgroundColor: primaryBgColor,
           marginBottom: 20,
         }}
         onPress={() => {
@@ -100,12 +106,23 @@ export const ImportDeck = (props: Props) => {
         }}
       />
 
-      <DefaultButton
-        moreContainerStyle={{ width: "70%" }}
-        btnVariant="SUCCESS"
-        title="Save deck"
-        onPress={handleSubmit(onSubmit)}
-      />
+      <View style={buttonStyles.twoColumnBtns}>
+        <DefaultButton
+          moreContainerStyle={{ width: "47%" }}
+          btnVariant="SUCCESS"
+          title="Save deck"
+          onPress={handleSubmit(onSubmit)}
+        />
+        <DefaultButton
+          moreContainerStyle={{ width: "47%" }}
+          btnVariant="CANCEL"
+          title="Cancel"
+          onPress={() => {
+            reset();
+            props.onCancel();
+          }}
+        />
+      </View>
     </View>
   );
 };

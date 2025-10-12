@@ -61,7 +61,11 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
                 )}
               </View>
               <Pressable onPress={onRequestClose}>
-                <MaterialIcons name="close" size={48} color="black" />
+                <MaterialIcons
+                  name="close"
+                  size={48}
+                  color="rgba(0,0,0, 0.7)"
+                />
               </Pressable>
             </View>
             <ScrollView>{children}</ScrollView>
@@ -76,6 +80,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    color: "rgba(0,0,0, 0.7)",
   },
   titleContainer: {
     display: "flex",

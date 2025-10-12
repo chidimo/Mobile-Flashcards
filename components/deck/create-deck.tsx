@@ -1,13 +1,8 @@
 import { useFlash } from "@/context/app-context";
-import {
-  primaryTextColor,
-  pageContainerStyle,
-  sharedStyles,
-  primaryBgColor,
-} from "@/styles";
+import { primaryTextColor, pageContainerStyle, primaryBgColor } from "@/styles";
 import { TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { DeckFormFields } from "./deck-form-fields";
 import { DefaultButton } from "../form-elements/button";
 import { DefaultModal } from "../modal";
@@ -15,6 +10,7 @@ import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
 import { ImportDeck } from "./import-deck";
 import { router } from "expo-router";
 import { showNotification } from "../notifier";
+import { CustomText } from "../custom-text";
 
 export const CreateDeck = () => {
   const { addDeck } = useFlash();
@@ -44,14 +40,16 @@ export const CreateDeck = () => {
 
   return (
     <View style={[pageContainerStyle.mainPageView]}>
-      <View style={{ marginBottom: 50 }}>
-        <Text style={sharedStyles.headerText}>Create deck</Text>
-      </View>
+      <CustomText
+        isHeader
+        text="Create deck"
+        moreContainerStyle={{ marginBottom: 50 }}
+      />
 
       <DeckFormFields isNew={true} control={control} errors={errors} />
 
       <DefaultButton
-        moreContainerStyle={{ width: "70%" }}
+        moreContainerStyle={{ width: "100%" }}
         btnVariant="SUCCESS"
         title="Save deck"
         onPress={handleSubmit(onSubmit)}
@@ -60,8 +58,8 @@ export const CreateDeck = () => {
       <DefaultButton
         title={"Import a deck"}
         onPress={setOn}
-        moreTextStyle={{ color: primaryTextColor }}
-        moreContainerStyle={{ backgroundColor: primaryBgColor, marginTop: 20 }}
+        btnVariant="SECONDARY"
+        moreContainerStyle={{ marginTop: 20 }}
       />
 
       <DefaultModal visible={isOn} onRequestClose={setOff} title="Import deck">
@@ -71,6 +69,9 @@ export const CreateDeck = () => {
               setOff();
               showNotification("Success", "Deck imported successfully!");
               router.push("/(tabs)");
+            }}
+            onCancel={() => {
+              setOff();
             }}
           />
         </View>

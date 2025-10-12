@@ -4,7 +4,7 @@ import { router, useGlobalSearchParams } from "expo-router";
 import { useFlash } from "@/context/app-context";
 import { DefaultButton } from "../form-elements/button";
 import { NoCardComponent } from "./no-card-component";
-import { primaryTextColor, pageContainerStyle } from "@/styles";
+import { primaryTextColor, pageContainerStyle, buttonStyles } from "@/styles";
 import { QuizQuestion } from "./quiz-question";
 import { QuizStarter } from "./quiz-starter";
 import { useQuiz } from "@/context/quiz-context";
@@ -49,18 +49,20 @@ export const QuizMaster = () => {
             Your score: {currentScore}/{quizzes.length}
           </Text>
 
-          <DefaultButton
-            title="Retake quiz"
-            moreContainerStyle={{ width: "70%" }}
-            btnVariant="PRIMARY"
-            onPress={onRetakeQuiz}
-          />
-          <DefaultButton
-            title="End quiz"
-            moreContainerStyle={{ width: "70%" }}
-            btnVariant="SECONDARY"
-            onPress={onEndQuiz}
-          />
+          <View style={buttonStyles.twoColumnBtns}>
+            <DefaultButton
+              title="Retake quiz"
+              moreContainerStyle={{ width: "45%" }}
+              btnVariant="PRIMARY"
+              onPress={onRetakeQuiz}
+            />
+            <DefaultButton
+              title="End quiz"
+              moreContainerStyle={{ width: "45%" }}
+              btnVariant="SECONDARY"
+              onPress={onEndQuiz}
+            />
+          </View>
         </View>
       )}
       {!currentQuestion && <QuizStarter />}

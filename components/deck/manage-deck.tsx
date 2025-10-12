@@ -1,28 +1,29 @@
 import { useFlash } from "@/context/app-context";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { router, useGlobalSearchParams } from "expo-router";
-import { Text, View, Share, Alert } from "react-native";
+import { Text, View, Share, Alert, ScrollView } from "react-native";
 import { EditDeck } from "./edit-deck";
 import { DefaultModal } from "../modal";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
 import { DefaultButton } from "../form-elements/button";
-import {
-  primaryTextColor,
-  pageContainerStyle,
-  sharedStyles,
-  primaryBgColor,
-} from "@/styles";
+import { primaryTextColor, pageContainerStyle, primaryBgColor } from "@/styles";
+import { CustomText } from "../custom-text";
+import { useState } from "react";
+import { Deck } from "@/types/generic";
 
-export const ManageDeck = () => {
-  const { deckId } = useGlobalSearchParams();
-  const { deleteDeck, getDeckById } = useFlash();
-  const deck = getDeckById(deckId as string);
-
+const Parent = ({
+  children,
+  deck,
+}: {
+  children: React.ReactNode;
+  deck: Deck | null;
+}) => {
   const {
     isOn: deleteOpen,
     setOn: onDeleteOpen,
     setOff: onDeleteClose,
   } = useOnOffSwitch();
+  const { deleteDeck } = useFlash();
 
   const onShare = async () => {
     try {
@@ -39,7 +40,7 @@ export const ManageDeck = () => {
     <View
       style={[
         pageContainerStyle.mainPageView,
-        { justifyContent: "space-evenly" },
+        { justifyContent: "flex-start" },
       ]}
     >
       <View
@@ -48,14 +49,14 @@ export const ManageDeck = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text
-          style={[sharedStyles.headerText, { width: "80%", textAlign: "left" }]}
-        >
-          Manage {deck?.title} deck
-        </Text>
+        <CustomText
+          text={`Manage ${deck?.title} deck`}
+          isHeader
+          moreContainerStyle={{ width: "80%", alignItems: "flex-start" }}
+        />
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <DefaultButton
-            title={<MaterialIcons name="share" size={30} color="#07f" />}
+            title={<MaterialIcons name="share" size={30} color="blue" />}
             onPress={onShare}
             moreContainerStyle={{
               marginRight: 10,
@@ -70,7 +71,7 @@ export const ManageDeck = () => {
         </View>
       </View>
 
-      <EditDeck moreContainerStyle={{ paddingHorizontal: 0 }} />
+      <ScrollView style={{ width: "100%" }}>{children}</ScrollView>
 
       <DefaultModal
         visible={deleteOpen}
@@ -108,12 +109,59 @@ export const ManageDeck = () => {
             btnVariant="DANGER"
             title="Delete"
             onPress={() => {
-              deleteDeck(deckId as string);
+              deleteDeck(deck?.id as string);
               router.replace(`/(tabs)`);
             }}
           />
         </View>
       </DefaultModal>
     </View>
+  );
+};
+
+export const ManageDeck = () => {
+  const { deckId } = useGlobalSearchParams();
+  const { getDeckById, resetScore } = useFlash();
+  const deck = getDeckById(deckId as string);
+
+  const [isEdit, setIsEdit] = useState(false);
+
+  if (isEdit) {
+    return (
+      <Parent deck={deck}>
+        <EditDeck
+          onCancel={() => setIsEdit(false)}
+          onSuccess={() => setIsEdit(false)}
+        />
+      </Parent>
+    );
+  }
+
+  return (
+    <Parent deck={deck}>
+      <DefaultButton
+        moreContainerStyle={{
+          width: "100%",
+          marginTop: 20,
+        }}
+        btnVariant="SUCCESS"
+        title="Edit deck"
+        onPress={() => {
+          setIsEdit(true);
+        }}
+      />
+
+      <DefaultButton
+        moreContainerStyle={{
+          width: "100%",
+          marginTop: 20,
+        }}
+        btnVariant="SUCCESS"
+        title="Reset scoreboard"
+        onPress={() => {
+          resetScore(deckId as string);
+        }}
+      />
+    </Parent>
   );
 };
