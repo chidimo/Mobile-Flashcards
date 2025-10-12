@@ -21,7 +21,7 @@ export const CardList = () => {
         <View style={{ width: "100%" }}>
           <CustomText isHeader text={deck?.title ?? ""} />
           <CustomText text={`Pass mark: ${deck?.passMark ?? ""}`} />
-          <CustomText text={`Added on: ${formatDate(deck?.addedOn, true)}`} />
+          <CustomText text={`Created on: ${formatDate(deck?.addedOn, true)}`} />
         </View>
       </View>
 

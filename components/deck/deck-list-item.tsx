@@ -1,14 +1,15 @@
-import { primaryTextColor } from "@/styles";
 import { Deck } from "@/types/generic";
 import { router } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { CustomText } from "../custom-text";
 
 interface Props {
   deck: Deck;
+  index: number;
 }
 
 export const DeckListItem = (props: Props) => {
-  const { deck } = props;
+  const { deck, index } = props;
 
   return (
     <TouchableOpacity
@@ -22,24 +23,8 @@ export const DeckListItem = (props: Props) => {
       }}
     >
       <View style={{}}>
-        <Text
-          style={{
-            fontSize: 20,
-            textAlign: "center",
-            color: primaryTextColor,
-            fontWeight: "800",
-          }}
-        >
-          {deck.title.toUpperCase()}
-        </Text>
-        <Text
-          style={{
-            color: primaryTextColor,
-            textAlign: "center",
-          }}
-        >
-          Cards: {deck.questions.length}
-        </Text>
+        <CustomText isHeader text={`${index + 1}. ${deck.title}`} />
+        <CustomText text={`Cards: ${deck.questions.length}`} />
       </View>
     </TouchableOpacity>
   );

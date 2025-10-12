@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { primaryBgColor } from "@/styles";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Props = {
   title: string | React.ReactNode;
@@ -25,6 +26,7 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
     onRequestClose,
     modalBehavior = "slide-from-bottom",
   } = props;
+  const { bottom } = useSafeAreaInsets();
 
   const modalViewStyle =
     modalBehavior === "slide-from-bottom"
@@ -35,7 +37,7 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
       : { borderRadius: 10, paddingVertical: 20 };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Modal
         animationType="slide"
         visible={visible}
@@ -48,6 +50,7 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
             {
               justifyContent:
                 modalBehavior === "slide-from-bottom" ? "flex-end" : "center",
+              marginBottom: bottom,
             },
           ]}
         >

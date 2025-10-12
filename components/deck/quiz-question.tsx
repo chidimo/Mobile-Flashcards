@@ -1,10 +1,10 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import { useState } from "react";
 import { DefaultButton } from "../form-elements/button";
-import { NotAvailableMessage } from "./not-available-message";
 import { Question } from "@/types/generic";
 import { useQuiz } from "@/context/quiz-context";
 import { buttonStyles, primaryBgColor, primaryTextColor } from "@/styles";
+import { CustomText } from "../custom-text";
 
 interface Props {
   qs: Question | null;
@@ -53,15 +53,19 @@ export const QuizQuestion = (props: Props) => {
               textAlign: "center",
               color: "green",
               fontSize: 22,
+              borderWidth: 1,
+              borderColor: "green",
+              borderRadius: 4,
+              padding: 4,
             }}
           >
             {qs.answer}
           </Text>
         </Pressable>
-        {peekAnswer ? (
-          <NotAvailableMessage message="Tap to peek answer" />
+        {peekAnswer ? <CustomText text="Tap to peek answer" /> : null}
+        {showHint ? (
+          <CustomText text={`Hint: ${qs?.hint ? qs.hint : "N/A"}`} />
         ) : null}
-        {showHint ? <NotAvailableMessage message={qs?.hint!} /> : null}
       </View>
 
       <View style={buttonStyles.twoColumnBtns}>
@@ -71,6 +75,7 @@ export const QuizQuestion = (props: Props) => {
           btnVariant="DANGER"
           onPress={() => {
             onAnswerQuestion("left");
+            setShowAnswer(false);
           }}
         />
 
@@ -86,11 +91,14 @@ export const QuizQuestion = (props: Props) => {
       </View>
 
       <DefaultButton
-        title="End quiz"
+        title="Exit quiz"
         moreContainerStyle={{ paddingHorizontal: 10, height: 40 }}
         moreTextStyle={{ fontSize: 16 }}
         btnVariant="SECONDARY"
-        onPress={onEndQuiz}
+        onPress={() => {
+          onEndQuiz();
+          setShowAnswer(false);
+        }}
       />
     </View>
   );

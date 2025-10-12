@@ -19,9 +19,9 @@ export const CustomText = ({
       <Text
         style={[
           isHeader
-            ? { fontSize: 28, fontWeight: "bold" }
+            ? { fontSize: 24, fontWeight: "bold" }
             : { fontSize: 16, fontWeight: "normal" },
-          { flex: 1, color: primaryTextColor },
+          { flex: 1, color: primaryTextColor, width: '50%' },
           moreTextStyle,
         ]}
       >

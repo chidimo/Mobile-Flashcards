@@ -17,7 +17,6 @@ export default function TabLayout() {
       }}
     >
       <Stack.Screen name="(tabs)" options={{}} />
-      <Stack.Screen name="[cardId]" options={{}} />
     </Stack>
   );
 }

@@ -1,83 +1,104 @@
-import { Tabs, useGlobalSearchParams } from "expo-router";
+import { Href, useGlobalSearchParams } from "expo-router";
 import React from "react";
-import { useFlash } from "@/context/app-context";
 import {
   AntDesign,
   Feather,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { primaryBgColor, tabBarProps } from "@/styles";
+import { primaryTextColor } from "@/styles";
+import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
+import { TabMenuContainer, TabMenuItem } from "@/components/tab-menu-item";
 
 export default function TabLayout() {
-  const { getDeckById } = useFlash();
   const { deckId } = useGlobalSearchParams();
-  const deck = getDeckById(deckId as string);
+
+  const tabItems = [
+    {
+      name: "deck-index",
+      displayName: "View",
+      href: "/index",
+      icon: (isFocused: boolean) => (
+        <MaterialIcons
+          name="subject"
+          size={24}
+          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+        />
+      ),
+    },
+    {
+      name: "add-card",
+      displayName: "Add card",
+      href: `/${deckId}/add-card`,
+      icon: (isFocused: boolean) => (
+        <AntDesign
+          name="plus"
+          size={24}
+          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+        />
+      ),
+    },
+    {
+      name: "take-quiz",
+      displayName: "Take quiz",
+      href: `/${deckId}/take-quiz`,
+      icon: (isFocused: boolean) => (
+        <MaterialIcons
+          name="quiz"
+          size={24}
+          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+        />
+      ),
+    },
+    {
+      name: "my-scores",
+      displayName: "Scoreboard",
+      href: `/${deckId}/my-scores`,
+      icon: (isFocused: boolean) => (
+        <MaterialCommunityIcons
+          name="scoreboard"
+          size={24}
+          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+        />
+      ),
+    },
+    {
+      name: "manage",
+      displayName: "Manage",
+      href: `/${deckId}/manage`,
+      icon: (isFocused: boolean) => (
+        <Feather
+          name="settings"
+          size={24}
+          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+        />
+      ),
+    },
+  ];
 
   return (
-    <Tabs
-      sceneContainerStyle={{ backgroundColor: primaryBgColor }}
-      screenOptions={{}}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          headerShown: false,
-          title: deck?.title,
-          ...tabBarProps,
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="subject" color={color} size={24} />
-          ),
-        }}
-      />
+    <Tabs>
+      <TabSlot />
 
-      <Tabs.Screen
-        name="add-card"
-        options={{
-          headerShown: false,
-          title: "Add card",
-          ...tabBarProps,
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="plus" size={24} color={color} />
-          ),
-        }}
-      />
+      <TabMenuContainer>
+        {tabItems.map(({ href, ...item }) => (
+          <TabTrigger key={href} name={item.name} asChild>
+            <TabMenuItem name={item.displayName} icon={item.icon} />
+          </TabTrigger>
+        ))}
+      </TabMenuContainer>
 
-      <Tabs.Screen
-        name="take-quiz"
-        options={{
-          headerShown: false,
-          title: "Take Quiz",
-          ...tabBarProps,
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="quiz" color={color} size={24} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="my-scores"
-        options={{
-          headerShown: false,
-          title: "Scoreboard",
-          ...tabBarProps,
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="scoreboard" color={color} size={24} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="manage"
-        options={{
-          headerShown: false,
-          title: "Manage",
-          ...tabBarProps,
-          tabBarIcon: ({ color }) => (
-            <Feather name="settings" color={color} size={24} />
-          ),
-        }}
-      />
+      <TabList style={{ display: "none" }}>
+        {tabItems.map((item) => {
+          return (
+            <TabTrigger
+              key={item.href}
+              name={item.name}
+              href={item.href as Href}
+            />
+          );
+        })}
+      </TabList>
     </Tabs>
   );
 }

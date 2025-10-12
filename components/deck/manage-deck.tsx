@@ -86,9 +86,7 @@ const Parent = ({
             <Text>
               <AntDesign name="warning" size={24} color="red" />
             </Text>
-            <Text style={{ fontSize: 22, fontWeight: "bold", marginLeft: 5 }}>
-              Delete {deck?.title}
-            </Text>
+            <CustomText text={`Delete ${deck?.title}`} />
           </View>
         }
         onRequestClose={onDeleteClose}

@@ -16,3 +16,4 @@
 2. Add customizable timer
 3. Work on color theme
 4. Display markdown
+5. Include multiple choice questions

@@ -18,9 +18,9 @@ export const NoCardComponent = (props: Props) => {
     >
       <NotAvailableMessage message="There are no cards on this deck yet" />
       <DefaultButton
-        moreContainerStyle={{ width: "60%" }}
+        moreContainerStyle={{ width: "100%" }}
         btnVariant="SUCCESS"
-        title="Add your first card "
+        title="Add your first card"
         onPress={props.onPress}
       />
     </View>

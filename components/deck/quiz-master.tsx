@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useEffect } from "react";
-import { router, useGlobalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams, useRouter } from "expo-router";
 import { useFlash } from "@/context/app-context";
 import { DefaultButton } from "../form-elements/button";
 import { NoCardComponent } from "./no-card-component";
@@ -10,6 +10,7 @@ import { QuizStarter } from "./quiz-starter";
 import { useQuiz } from "@/context/quiz-context";
 
 export const QuizMaster = () => {
+  const router = useRouter();
   const { saveMyScore } = useFlash();
   const { deckId } = useGlobalSearchParams();
 
@@ -32,11 +33,13 @@ export const QuizMaster = () => {
 
   if (quizzes.length === 0) {
     return (
-      <NoCardComponent
-        onPress={() => {
-          router.push(`/${deckId}/add-card`);
-        }}
-      />
+      <View style={[pageContainerStyle.mainPageView]}>
+        <NoCardComponent
+          onPress={() => {
+            router.push(`/${deckId}/add-card`);
+          }}
+        />
+      </View>
     );
   }
 
@@ -60,7 +63,10 @@ export const QuizMaster = () => {
               title="End quiz"
               moreContainerStyle={{ width: "45%" }}
               btnVariant="SECONDARY"
-              onPress={onEndQuiz}
+              onPress={() => {
+                onEndQuiz();
+                router.push(`/${deckId}/my-scores`);
+              }}
             />
           </View>
         </View>

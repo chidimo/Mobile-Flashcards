@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { FlashProvider } from "@/context/app-context";
 import { NotifierWrapper } from "react-native-notifier";
@@ -27,21 +28,23 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NotifierWrapper>
-        <FlashProvider>
-          <Stack>
-            <Stack.Screen
-              name="(tabs)"
-              options={{
-                headerTitle: "Home <> Mobile flashcards",
-                headerTintColor: primaryTextColor,
-              }}
-            />
-            <Stack.Screen name="[deckId]" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </FlashProvider>
-      </NotifierWrapper>
+      <SafeAreaProvider>
+        <NotifierWrapper>
+          <FlashProvider>
+            <Stack>
+              <Stack.Screen
+                name="(tabs)"
+                options={{
+                  headerTitle: "Home <> Mobile flashcards",
+                  headerTintColor: primaryTextColor,
+                }}
+              />
+              <Stack.Screen name="[deckId]" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </FlashProvider>
+        </NotifierWrapper>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
