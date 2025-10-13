@@ -7,24 +7,24 @@ import { debounce, shuffle, groupBy } from "es-toolkit";
 export type SelectedAnswer = "right" | "left";
 
 interface QuizState {
-  idx: number;
   started: boolean;
   ended: boolean;
   currentScore: number;
   showHint: boolean;
   peekAnswer: boolean;
   currentQuestion: Question | null;
+  currentPosition: number | null;
   randomizeQuestions: boolean;
 }
 
 const initState: QuizState = {
-  idx: 0,
   started: false,
   ended: false,
   currentScore: 0,
   showHint: false,
   peekAnswer: false,
   currentQuestion: null,
+  currentPosition: null,
   randomizeQuestions: false,
 };
 
@@ -39,6 +39,8 @@ interface QuizCtx extends QuizState {
   onUpdatePeek: () => void;
   onUpdateRandomizeQuestions: () => void;
   onAnswerQuestion: (selected: SelectedAnswer) => void;
+  // you may go to previous question but not next. To do that you simply answer and continue
+  onPreviousQuestion: () => void;
 }
 
 export const QuizCtx = createContext<QuizCtx | null>(null);
@@ -77,13 +79,13 @@ export function QuizProvider({ children }: Readonly<Props>) {
         setState(() => ({
           ...initState,
           started: true,
+          currentPosition: 0,
           currentQuestion: quizzes[0],
         }));
       },
       onEndQuiz() {
         setState(() => ({
           ...initState,
-          started: false,
           ended: true,
           currentQuestion: null,
         }));
@@ -95,25 +97,46 @@ export function QuizProvider({ children }: Readonly<Props>) {
           peekAnswer: prev.peekAnswer,
           randomizeQuestions: prev.randomizeQuestions,
           started: true,
+          currentPosition: 0,
           currentQuestion: quizzes[0],
         }));
       },
       onAnswerQuestion(selected: SelectedAnswer) {
-        const ended = quiz_count === state.idx + 1;
+        if (!state.currentPosition) {
+          return;
+        }
+        const position = state.currentPosition;
+        const ended = quiz_count === position + 1;
 
         setState((prev) => ({
           ...prev,
           ended,
-          idx: ended ? prev.idx : prev.idx + 1,
+          currentPosition: ended ? null : position + 1,
           currentScore:
             selected === "right" ? prev.currentScore + 1 : prev.currentScore,
-          currentQuestion: ended ? quizzes[prev.idx] : quizzes[prev.idx + 1],
+          currentQuestion: ended ? null : quizzes[position + 1],
         }));
       },
       onUpdateRandomizeQuestions() {
         setState((prev) => ({
           ...prev,
           randomizeQuestions: !prev.randomizeQuestions,
+        }));
+      },
+      onPreviousQuestion() {
+        if (!state.currentPosition) {
+          return;
+        }
+        const position = state.currentPosition;
+        const currentPosition = position - 1;
+        const atStart = position === 0;
+
+        setState((prev) => ({
+          ...prev,
+          currentPosition,
+          currentQuestion: atStart
+            ? prev.currentQuestion
+            : quizzes[currentPosition],
         }));
       },
     };
