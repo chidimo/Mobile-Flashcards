@@ -2,7 +2,7 @@ import { createContext, useMemo, useState, useContext } from "react";
 import { Question } from "@/types/generic";
 import { useGlobalSearchParams } from "expo-router";
 import { useFlash } from "./app-context";
-import { debounce, shuffle, groupBy } from "es-toolkit";
+import { shuffle } from "es-toolkit";
 
 export type SelectedAnswer = "right" | "left";
 
