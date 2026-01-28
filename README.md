@@ -17,3 +17,9 @@
 3. Work on color theme
 4. Display markdown
 5. Include multiple choice questions
+6. Implement update detection
+7. Swipe right/left
+8. Make question space scrollable vertically
+9. Show high and average score for each quiz on home screen cards
+10. Include difficulty levels
+11. Do not show score save message when quiz is exited

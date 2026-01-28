@@ -9,6 +9,7 @@ import { createContext, useMemo, useState, useContext, useEffect } from "react";
 import { Deck, Question, ScoreSaver, StoreValue } from "@/types/generic";
 import { router } from "expo-router";
 import * as Crypto from "expo-crypto";
+import { isValidV4UUID } from "@/utils/validate-uuid";
 
 export interface FlashContext {
   deckNames: string[];
@@ -22,7 +23,12 @@ export interface FlashContext {
     answer: string,
     hint?: string
   ) => void;
-  importDeck: (title: string, passMark: number, questions: Question[]) => void;
+  importDeck: (
+    id: string | null,
+    title: string,
+    passMark: number,
+    questions: Question[]
+  ) => void;
   deleteDeck: (deckId: string) => void;
   deleteCard: (deckId: string, qId: string) => void;
   getDeckById: (id: string) => Deck | null;
@@ -226,8 +232,13 @@ export function FlashProvider({ children }: Readonly<Props>) {
         showNotification("Success", "Deck added successfully!");
         router.push(`/${id}`);
       },
-      importDeck(title: string, passMark: number, questions: Question[]) {
-        const id = Crypto.randomUUID();
+      importDeck(
+        id: string | null,
+        title: string,
+        passMark: number,
+        questions: Question[]
+      ) {
+        const newId = id && isValidV4UUID(id) ? id : Crypto.randomUUID();
         let updated = state;
         if (state.flashcards === null) {
           updated.flashcards = {};
@@ -236,8 +247,8 @@ export function FlashProvider({ children }: Readonly<Props>) {
           ...state,
           flashcards: {
             ...state.flashcards,
-            [id]: {
-              id,
+            [newId]: {
+              id: newId,
               title,
               questions,
               passMark,

@@ -15,7 +15,7 @@ export const QuizMaster = () => {
   const { deckId } = useGlobalSearchParams();
 
   const {
-    idx,
+    currentPosition,
     ended,
     quiz_count,
     quizzes,
@@ -82,7 +82,7 @@ export const QuizMaster = () => {
               },
             ]}
           >
-            Question {idx + 1} of {quiz_count}
+            Question {(currentPosition ?? 0) + 1} of {quiz_count}
           </Text>
 
           <QuizQuestion qs={currentQuestion} />
