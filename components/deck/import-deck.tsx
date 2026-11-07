@@ -1,5 +1,6 @@
 import { useFlash } from "@/context/app-context";
-import { buttonStyles, primaryTextColor } from "@/styles";
+import { buttonStyles } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { ImportSchema, Question, TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { View } from "react-native";
@@ -18,6 +19,7 @@ interface Props {
 export const ImportDeck = (props: Props) => {
   const { importDeck } = useFlash();
   const { fetchCopiedText } = useClipboard();
+  const { primary, danger } = useAppTheme();
   const [error, setError] = useState<string | null>(null);
   const [qId, setQId] = useState<string | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -63,12 +65,12 @@ export const ImportDeck = (props: Props) => {
               ? `This deck has ${questions.length} cards`
               : "Click the button to paste import string"
           }
-          moreTextStyle={{ color: primaryTextColor, fontSize: 18 }}
+          moreTextStyle={{ color: primary, fontSize: 18 }}
         />
         {error && (
           <CustomText
             text={error}
-            moreTextStyle={{ color: "red", fontSize: 16 }}
+            moreTextStyle={{ color: danger, fontSize: 16 }}
           />
         )}
       </View>

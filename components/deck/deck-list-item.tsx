@@ -1,5 +1,6 @@
 import { Deck } from "@/types/generic";
 import { router } from "expo-router";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { CustomText } from "../custom-text";
 
@@ -10,6 +11,7 @@ interface Props {
 
 export const DeckListItem = (props: Props) => {
   const { deck, index } = props;
+  const { border } = useAppTheme();
 
   return (
     <TouchableOpacity
@@ -17,6 +19,7 @@ export const DeckListItem = (props: Props) => {
         padding: 8,
         width: "100%",
         borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: border,
       }}
       onPress={() => {
         router.push(`/${deck.id}`);

@@ -6,7 +6,8 @@ import { EditDeck } from "./edit-deck";
 import { DefaultModal } from "../modal";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
 import { DefaultButton } from "../form-elements/button";
-import { primaryTextColor, pageContainerStyle, primaryBgColor } from "@/styles";
+import { pageContainerStyle } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { CustomText } from "../custom-text";
 import { useState } from "react";
 import { Deck } from "@/types/generic";
@@ -18,13 +19,14 @@ const DeleteDeck = ({ deck }: { deck: Deck | null }) => {
     setOff: onDeleteClose,
   } = useOnOffSwitch();
   const { deleteDeck } = useFlash();
+  const { background, primary, danger } = useAppTheme();
 
   return (
     <>
       <DefaultButton
-        moreContainerStyle={{ backgroundColor: primaryBgColor }}
+        moreContainerStyle={{ backgroundColor: background }}
         onPress={onDeleteOpen}
-        title={<AntDesign name="delete" size={30} color="red" />}
+        title={<AntDesign name="delete" size={30} color={danger} />}
       />
 
       <DefaultModal
@@ -38,7 +40,7 @@ const DeleteDeck = ({ deck }: { deck: Deck | null }) => {
             }}
           >
             <Text>
-              <AntDesign name="warning" size={24} color="red" />
+              <AntDesign name="warning" size={24} color={danger} />
             </Text>
             <CustomText text={`Delete ${deck?.title}`} />
           </View>
@@ -51,7 +53,7 @@ const DeleteDeck = ({ deck }: { deck: Deck | null }) => {
               marginBottom: 50,
               fontSize: 18,
               textAlign: "center",
-              color: primaryTextColor,
+              color: primary,
             }}
           >
             Are you sure you want to delete this deck and all its cards
@@ -108,6 +110,7 @@ export const ManageDeck = () => {
   const { deckId } = useGlobalSearchParams();
   const { getDeckById, resetScore } = useFlash();
   const deck = getDeckById(deckId as string);
+  const { background, link } = useAppTheme();
 
   const [isEdit, setIsEdit] = useState(false);
 
@@ -160,11 +163,11 @@ export const ManageDeck = () => {
       />
 
       <DefaultButton
-        title={<MaterialIcons name="share" size={30} color="blue" />}
+        title={<MaterialIcons name="share" size={30} color={link} />}
         onPress={onShare}
         moreContainerStyle={{
           marginRight: 10,
-          backgroundColor: primaryBgColor,
+          backgroundColor: background,
         }}
       />
       <DeleteDeck deck={deck} />

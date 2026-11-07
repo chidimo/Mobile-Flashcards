@@ -1,3 +1,4 @@
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { default as ExpoCheckBox } from "expo-checkbox";
 
 import {
@@ -29,6 +30,7 @@ export const AppCheckbox = (props: Props): JSX.Element => {
     boxPosition = "left",
     onValueChange,
   } = props;
+  const { text, danger } = useAppTheme();
 
   return (
     <Pressable
@@ -53,13 +55,14 @@ export const AppCheckbox = (props: Props): JSX.Element => {
           style={{
             marginLeft: boxPosition === "left" ? 10 : 0,
             marginRight: boxPosition === "left" ? 0 : 10,
+            color: text,
           }}
         >
           {label}
         </Text>
       </View>
 
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {error ? <Text style={{ color: danger }}>{error}</Text> : null}
     </Pressable>
   );
 };
@@ -70,8 +73,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 5,
-  },
-  errorText: {
-    color: "red",
   },
 });

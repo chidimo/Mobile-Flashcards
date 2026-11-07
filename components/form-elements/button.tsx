@@ -1,3 +1,4 @@
+import { useAppTheme } from "@/hooks/use-app-theme";
 import React, { ReactNode } from "react";
 import {
   ActivityIndicator,
@@ -37,6 +38,7 @@ export const DefaultButton = (props: Props) => {
     moreContainerStyle = {},
     btnVariant = "DANGER",
   } = props;
+  const { cancelButton, mutedIcon } = useAppTheme();
 
   return (
     <Pressable
@@ -60,7 +62,7 @@ export const DefaultButton = (props: Props) => {
           btnVariant === "DANGER" && containerStyle.danger,
           btnVariant === "SUCCESS" && containerStyle.success,
           btnVariant === "SECONDARY" && containerStyle.secondary,
-          btnVariant === "CANCEL" && containerStyle.cancel,
+          btnVariant === "CANCEL" && { backgroundColor: cancelButton },
           moreContainerStyle,
         ];
       }}
@@ -75,7 +77,7 @@ export const DefaultButton = (props: Props) => {
         {isLoading && (
           <ActivityIndicator
             size={22}
-            color={btnVariant === "CANCEL" ? "rgba(0,0,0, 0.7)" : "#fff"}
+            color={btnVariant === "CANCEL" ? mutedIcon : "#fff"}
             style={[{ marginRight: 3 }]}
           />
         )}
@@ -90,7 +92,7 @@ export const DefaultButton = (props: Props) => {
               btnVariant === "DANGER" && titleStyle.danger,
               btnVariant === "SUCCESS" && titleStyle.success,
               btnVariant === "SECONDARY" && titleStyle.secondary,
-              btnVariant === "CANCEL" && titleStyle.cancel,
+              btnVariant === "CANCEL" && { color: mutedIcon },
               moreTextStyle,
             ]}
           >
@@ -108,12 +110,10 @@ const containerStyle = StyleSheet.create({
   danger: { backgroundColor: "#C31818" },
   success: { backgroundColor: "green" },
   secondary: { backgroundColor: "grey" },
-  cancel: { backgroundColor: "#ccc" },
 });
 
 const titleStyle = StyleSheet.create({
   danger: { color: "#fff" },
   success: { color: "#fff" },
   secondary: { color: "#fff" },
-  cancel: { color: "rgba(0, 0, 0, 0.7)" },
 });

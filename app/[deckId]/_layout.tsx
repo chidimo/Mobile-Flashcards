@@ -1,5 +1,5 @@
 import { useFlash } from "@/context/app-context";
-import { primaryBgColor, primaryTextColor } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Stack, useGlobalSearchParams } from "expo-router";
 import React from "react";
 
@@ -7,14 +7,15 @@ export default function TabLayout() {
   const { getDeckById } = useFlash();
   const { deckId } = useGlobalSearchParams();
   const deck = getDeckById(deckId as string);
+  const { background, primary } = useAppTheme();
 
   return (
     <Stack
       screenOptions={{
-        contentStyle: { backgroundColor: primaryBgColor },
+        contentStyle: { backgroundColor: background },
         headerTransparent: false,
-        headerStyle: { backgroundColor: primaryBgColor },
-        headerTintColor: primaryTextColor,
+        headerStyle: { backgroundColor: background },
+        headerTintColor: primary,
         headerTitle: `MFC <> ${deck?.title}`,
       }}
     >
