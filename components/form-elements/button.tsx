@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import {
   ActivityIndicator,
-  GestureResponderEvent,
   Text,
   View,
   Pressable,
@@ -25,7 +24,7 @@ type Props = {
   btnVariant?: BtnVariant;
   moreTextStyle?: StyleProp<TextStyle>;
   moreContainerStyle?: StyleProp<ViewStyle>;
-  onPress?: (event: GestureResponderEvent) => void;
+  onPress?: (event: any) => void | Promise<void>;
 };
 
 export const DefaultButton = (props: Props) => {

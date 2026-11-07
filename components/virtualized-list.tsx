@@ -15,7 +15,7 @@ export const VirtualizedList = (props: React.PropsWithChildren<Props>) => {
       showsVerticalScrollIndicator={false}
       style={{ width: "100%" }}
       keyExtractor={() => "key"}
-      renderItem={null}
+      renderItem={() => null}
       refreshControl={
         <RefreshControl
           onRefresh={onRefresh}

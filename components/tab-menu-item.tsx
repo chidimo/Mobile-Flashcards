@@ -1,7 +1,7 @@
 import { primaryTextColor } from "@/styles";
 import { TabTriggerSlotProps } from "expo-router/ui";
 import React from "react";
-import { Pressable, View, Text } from "react-native";
+import { Pressable, PressableProps, View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Prop = TabTriggerSlotProps & {
@@ -12,7 +12,7 @@ type Prop = TabTriggerSlotProps & {
 
 export const TabMenuItem = ({ name, icon, isFocused, ...rest }: Prop) => {
   return (
-    <Pressable {...rest}>
+    <Pressable {...(rest as PressableProps)}>
       <View style={{ alignItems: "center" }}>
         {icon(isFocused ?? false)}
         <Text
