@@ -12,6 +12,8 @@ export default function TabLayout() {
     <Stack
       screenOptions={{
         contentStyle: { backgroundColor: primaryBgColor },
+        headerTransparent: false,
+        headerStyle: { backgroundColor: primaryBgColor },
         headerTintColor: primaryTextColor,
         headerTitle: `MFC <> ${deck?.title}`,
       }}

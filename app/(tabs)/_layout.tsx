@@ -31,6 +31,18 @@ export default function TabLayout() {
         />
       ),
     },
+    {
+      name: "settings",
+      displayName: "Settings",
+      href: "/settings",
+      icon: (isFocused: boolean) => (
+        <AntDesign
+          name="setting"
+          size={24}
+          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+        />
+      ),
+    },
   ];
   return (
     <Tabs>

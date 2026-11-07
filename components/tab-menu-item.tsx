@@ -1,8 +1,8 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { primaryTextColor } from "@/styles";
 import { TabTriggerSlotProps } from "expo-router/ui";
 import React from "react";
 import { Pressable, PressableProps, View, Text } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Prop = TabTriggerSlotProps & {
   name: string;
@@ -37,18 +37,17 @@ export const TabMenuContainer = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { bottom } = useSafeAreaInsets();
+  const backgroundColor = useThemeColor({}, "background");
 
   return (
     <View
       style={{
         flexDirection: "row",
-        marginBottom: bottom,
         justifyContent: "space-evenly",
         borderTopColor: "lightgray",
         borderTopWidth: 0.5,
         paddingTop: 4,
-        backgroundColor: "#fff",
+        backgroundColor,
       }}
     >
       {children}
