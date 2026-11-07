@@ -1,5 +1,5 @@
 import { primaryBgColor } from "@/styles";
-import { Ref, forwardRef } from "react";
+import { ComponentRef, Ref, forwardRef } from "react";
 import {
   KeyboardTypeOptions,
   StyleProp,
@@ -47,7 +47,7 @@ type Props = {
   onSubmitEditing?: (...args: any[]) => any;
 };
 
-export const Input = forwardRef((props: Props, ref: Ref<TextInput>) => {
+export const Input = forwardRef((props: Props, ref: Ref<ComponentRef<typeof TextInput>>) => {
   const {
     label,
     value,

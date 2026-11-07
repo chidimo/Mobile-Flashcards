@@ -8,16 +8,19 @@ import { useState } from "react";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { DeckFormFields } from "./deck-form-fields";
 import { CustomText } from "../custom-text";
+import * as Crypto from "expo-crypto";
+import { isValidV4UUID } from "@/utils/validate-uuid";
 
 interface Props {
-  onSuccess: () => void;
   onCancel: () => void;
+  onSuccess: () => void;
 }
 export const ImportDeck = (props: Props) => {
   const { importDeck } = useFlash();
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const { fetchCopiedText } = useClipboard();
+  const [error, setError] = useState<string | null>(null);
+  const [qId, setQId] = useState<string | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
 
   const {
     reset,
@@ -34,7 +37,7 @@ export const ImportDeck = (props: Props) => {
 
   const saveDeck = async (data: TCreateDeck) => {
     setError(null);
-    importDeck(data.title, data.passMark, questions);
+    importDeck(qId, data.title, data.passMark, questions);
   };
 
   const onSubmit: SubmitHandler<TCreateDeck> = async (data) => {
@@ -89,18 +92,26 @@ export const ImportDeck = (props: Props) => {
               const data = JSON.parse(val);
               ImportSchema.parseAsync(data)
                 .then((res) => {
+                  setQId(res.id);
                   setValue("title", res.title);
                   setValue("passMark", Number(res.passMark));
-                  setQuestions(res.questions);
+                  setQuestions(
+                    res.questions.map((q) => ({
+                      ...q,
+                      id: isValidV4UUID(q.id) ? q.id : Crypto.randomUUID(),
+                    }))
+                  );
                   setError(null);
                 })
-                .catch(() => {
+                .catch((err) => {
                   setError(
-                    "Something went wrong. Please copy the text again and retry."
+                    `Something went wrong. Please copy the text again and retry\n${String(
+                      err
+                    )}`
                   );
                 });
             } catch (e) {
-              setError("Nothing to paste");
+              setError(`Nothing to paste\n${String(e)}`);
             }
           });
         }}

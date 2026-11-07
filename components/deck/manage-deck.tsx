@@ -11,13 +11,7 @@ import { CustomText } from "../custom-text";
 import { useState } from "react";
 import { Deck } from "@/types/generic";
 
-const Parent = ({
-  children,
-  deck,
-}: {
-  children: React.ReactNode;
-  deck: Deck | null;
-}) => {
+const DeleteDeck = ({ deck }: { deck: Deck | null }) => {
   const {
     isOn: deleteOpen,
     setOn: onDeleteOpen,
@@ -25,53 +19,13 @@ const Parent = ({
   } = useOnOffSwitch();
   const { deleteDeck } = useFlash();
 
-  const onShare = async () => {
-    try {
-      await Share.share({
-        message: JSON.stringify(deck),
-        title: `Deck ${deck?.title}`,
-      });
-    } catch (error: any) {
-      Alert.alert(error.message);
-    }
-  };
-
   return (
-    <View
-      style={[
-        pageContainerStyle.mainPageView,
-        { justifyContent: "flex-start" },
-      ]}
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <CustomText
-          text={`Manage ${deck?.title} deck`}
-          isHeader
-          moreContainerStyle={{ width: "80%", alignItems: "flex-start" }}
-        />
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <DefaultButton
-            title={<MaterialIcons name="share" size={30} color="blue" />}
-            onPress={onShare}
-            moreContainerStyle={{
-              marginRight: 10,
-              backgroundColor: primaryBgColor,
-            }}
-          />
-          <DefaultButton
-            moreContainerStyle={{ backgroundColor: primaryBgColor }}
-            onPress={onDeleteOpen}
-            title={<AntDesign name="delete" size={30} color="red" />}
-          />
-        </View>
-      </View>
-
-      <ScrollView style={{ width: "100%" }}>{children}</ScrollView>
+    <>
+      <DefaultButton
+        moreContainerStyle={{ backgroundColor: primaryBgColor }}
+        onPress={onDeleteOpen}
+        title={<AntDesign name="delete" size={30} color="red" />}
+      />
 
       <DefaultModal
         visible={deleteOpen}
@@ -113,6 +67,39 @@ const Parent = ({
           />
         </View>
       </DefaultModal>
+    </>
+  );
+};
+
+const Parent = ({
+  children,
+  deck,
+}: {
+  children: React.ReactNode;
+  deck: Deck | null;
+}) => {
+  return (
+    <View
+      style={[
+        pageContainerStyle.mainPageView,
+        { justifyContent: "flex-start" },
+      ]}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <CustomText
+          text={`Manage ${deck?.title} deck`}
+          isHeader
+          moreContainerStyle={{ width: "80%", alignItems: "flex-start" }}
+        />
+        <View style={{ flexDirection: "row", alignItems: "center" }}></View>
+      </View>
+
+      <ScrollView style={{ width: "100%" }}>{children}</ScrollView>
     </View>
   );
 };
@@ -123,6 +110,17 @@ export const ManageDeck = () => {
   const deck = getDeckById(deckId as string);
 
   const [isEdit, setIsEdit] = useState(false);
+
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message: JSON.stringify(deck),
+        title: `Deck ${deck?.title}`,
+      });
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
 
   if (isEdit) {
     return (
@@ -160,6 +158,16 @@ export const ManageDeck = () => {
           resetScore(deckId as string);
         }}
       />
+
+      <DefaultButton
+        title={<MaterialIcons name="share" size={30} color="blue" />}
+        onPress={onShare}
+        moreContainerStyle={{
+          marginRight: 10,
+          backgroundColor: primaryBgColor,
+        }}
+      />
+      <DeleteDeck deck={deck} />
     </Parent>
   );
 };
