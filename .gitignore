@@ -23,3 +23,4 @@ ios/
 .DS_Store
 mobile-flashcards-426021-58b967efd5c7.json
 .env
+coverage/

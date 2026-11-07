@@ -1,10 +1,5 @@
 import { Question } from "@/types/generic";
 
-// Define __DEV__ for non-React Native environments
-declare global {
-  const __DEV__: boolean;
-}
-
 // Provide fallback for environments where __DEV__ is not defined
 if (typeof (globalThis as any).__DEV__ === 'undefined') {
   try {
