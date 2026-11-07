@@ -1,0 +1,15 @@
+name: Create Preview Builds
+
+# Installable APKs (internal distribution), for testing on real phones.
+jobs:
+  build_android_preview:
+    type: build
+    params:
+      platform: android
+      profile: preview
+
+  # build_ios_preview:
+  #   type: build
+  #   params:
+  #     platform: ios
+  #     profile: preview

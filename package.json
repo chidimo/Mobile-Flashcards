@@ -11,12 +11,14 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "dev-client": "expo start --dev-client",
+    "prebuild": "npx expo prebuild",
+    "build:prod": "npx expo prebuild --clean && npx eas-cli@latest workflow:run create-production-builds.yml",
     "build:android": "eas build --profile development --platform android",
     "build:android:production": "eas build --profile production --platform android",
     "submit:android": "eas submit --platform android --profile production",
     "build:ios": "eas build --profile development --platform ios",
     "build:ios:production": "eas build --profile development --platform ios",
-    "submit:ios": "eas submit --platform android --profile production"
+    "submit:ios": "eas submit --platform ios --profile production"
   },
   "jest": {
     "preset": "jest-expo"
