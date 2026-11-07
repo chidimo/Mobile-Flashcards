@@ -2,10 +2,13 @@ name: Create Production Builds
 
 jobs:
   build_android:
-    type: build # This job type creates a production build for Android
+    type: build # An app bundle (.aab) for the Play Store
     params:
       platform: android
+      profile: production
+
   # build_ios:
-  #   type: build # This job type creates a production build for iOS
+  #   type: build
   #   params:
   #     platform: ios
+  #     profile: production

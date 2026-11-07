@@ -108,3 +108,5 @@ export const Input = forwardRef((props: Props, ref: Ref<ComponentRef<typeof Text
     </View>
   );
 });
+
+Input.displayName = "Input";

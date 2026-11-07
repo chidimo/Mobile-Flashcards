@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   StyleSheet,
   Alert,
   ActivityIndicator,
-  TouchableOpacity,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { DocumentParser, type ParsedDocument } from '@/lib/document-parser';
@@ -81,12 +79,12 @@ export const ImportFromDocScreen = () => {
       setState(prev => ({
         ...prev,
         step: 'analyzing',
-        document: result.document,
-        deckTitle: result.document.name.replace(/\.[^/.]+$/, ''), // Remove file extension
+        document: result.document!,
+        deckTitle: result.document!.name.replace(/\.[^/.]+$/, ''), // Remove file extension
       }));
 
       // Analyze the document
-      await analyzeDocument(result.document);
+      await analyzeDocument(result.document!);
     } catch (error) {
       setState(prev => ({
         ...prev,
@@ -192,6 +190,7 @@ export const ImportFromDocScreen = () => {
 
       // TODO: Implement actual database save logic
       // This would integrate with your existing flashcard storage system
+      // For now, we'll simulate the save operation
       
       // Simulate save operation
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -308,7 +307,7 @@ export const ImportFromDocScreen = () => {
               label="Number of Flashcards"
               value={state.cardCount.toString()}
               onChangeText={(text) => {
-                const count = parseInt(text) || 1;
+                const count = Number.parseInt(text) || 1;
                 setState(prev => ({ ...prev, cardCount: Math.min(Math.max(count, 1), 50) }));
               }}
               placeholder="Number of flashcards"
@@ -319,7 +318,7 @@ export const ImportFromDocScreen = () => {
               label="Pass Mark (%)"
               value={state.deckPassMark.toString()}
               onChangeText={(text) => {
-                const passMark = parseInt(text) || 70;
+                const passMark = Number.parseInt(text) || 70;
                 setState(prev => ({ ...prev, deckPassMark: Math.min(Math.max(passMark, 1), 100) }));
               }}
               placeholder="Pass mark percentage"
@@ -378,7 +377,7 @@ export const ImportFromDocScreen = () => {
               value={flashcard.question}
               onChangeText={(text) => updateFlashcard(flashcard.id, 'question', text)}
               multiline
-              style={styles.flashcardInput}
+              containerStyle={styles.flashcardInput}
             />
             
             <Input
@@ -386,7 +385,7 @@ export const ImportFromDocScreen = () => {
               value={flashcard.answer}
               onChangeText={(text) => updateFlashcard(flashcard.id, 'answer', text)}
               multiline
-              style={styles.flashcardInput}
+              containerStyle={styles.flashcardInput}
             />
             
             <Input
@@ -394,7 +393,7 @@ export const ImportFromDocScreen = () => {
               value={flashcard.hint || ''}
               onChangeText={(text) => updateFlashcard(flashcard.id, 'hint', text)}
               placeholder="Add a hint for this card"
-              style={styles.flashcardInput}
+              containerStyle={styles.flashcardInput}
             />
           </View>
         ))}
