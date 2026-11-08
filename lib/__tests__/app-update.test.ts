@@ -28,7 +28,7 @@ describe("checkForUpdate", () => {
   const options = {
     platform: "ios",
     installedVersion: "1.1.0",
-    bundleId: "com.example.app",
+    appId: "com.example.app",
   };
 
   it("returns the store version when it is newer", async () => {

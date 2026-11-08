@@ -29,7 +29,11 @@ interface UpdateContext {
 const UpdateCtx = createContext<UpdateContext | undefined>(undefined);
 
 const installedVersion = Constants.expoConfig?.version ?? "0.0.0";
-const bundleId = Constants.expoConfig?.ios?.bundleIdentifier;
+// The id the platform's store knows this app by.
+const appId = Platform.select({
+  ios: Constants.expoConfig?.ios?.bundleIdentifier,
+  android: Constants.expoConfig?.android?.package,
+});
 
 export const UpdateProvider = ({ children }: { children: React.ReactNode }) => {
   const [status, setStatus] = useState<Status>("idle");
@@ -42,7 +46,7 @@ export const UpdateProvider = ({ children }: { children: React.ReactNode }) => {
       const found = await checkForUpdate({
         platform: Platform.OS,
         installedVersion,
-        bundleId,
+        appId,
       });
       setUpdate(found);
       setStatus(found ? "available" : "current");
