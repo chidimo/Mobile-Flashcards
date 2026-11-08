@@ -40,9 +40,37 @@ const DeleteDeck = ({ deck }: { deck: Deck | null }) => {
   );
 };
 
+const ResetScoreboard = ({ deck }: { deck: Deck | null }) => {
+  const { isOn, setOn, setOff } = useOnOffSwitch();
+  const { resetScore } = useFlash();
+
+  return (
+    <>
+      <ActionRow
+        icon="rotate-ccw"
+        label="Reset scoreboard"
+        description="Clear all saved scores"
+        onPress={setOn}
+      />
+
+      <ConfirmDialog
+        visible={isOn}
+        title={`Reset ${deck?.title} scores?`}
+        message="This clears every saved score for this deck. You can't undo this."
+        confirmTitle="Reset"
+        onCancel={setOff}
+        onConfirm={() => {
+          resetScore(deck?.id as string);
+          setOff();
+        }}
+      />
+    </>
+  );
+};
+
 export const ManageDeck = () => {
   const { deckId } = useGlobalSearchParams();
-  const { getDeckById, resetScore } = useFlash();
+  const { getDeckById } = useFlash();
   const deck = getDeckById(deckId as string);
 
   const [isEdit, setIsEdit] = useState(false);
@@ -78,12 +106,7 @@ export const ManageDeck = () => {
           description="Change the name or pass mark"
           onPress={() => setIsEdit(true)}
         />
-        <ActionRow
-          icon="rotate-ccw"
-          label="Reset scoreboard"
-          description="Clear all saved scores"
-          onPress={() => resetScore(deckId as string)}
-        />
+        <ResetScoreboard deck={deck} />
         <ActionRow
           icon="share"
           label="Share deck"
