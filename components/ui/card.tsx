@@ -6,6 +6,8 @@ type Props = PropsWithChildren<{
   className?: string;
   /** Makes the whole card tappable. */
   onPress?: () => void;
+  /** Press and hold; used to start dragging a card. */
+  onLongPress?: () => void;
   accessibilityLabel?: string;
 }>;
 
@@ -16,6 +18,7 @@ export const Card = ({
   children,
   className,
   onPress,
+  onLongPress,
   accessibilityLabel,
 }: Props) => {
   if (!onPress) return <View className={cn(base, className)}>{children}</View>;
@@ -24,6 +27,7 @@ export const Card = ({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       onPress={onPress}
+      onLongPress={onLongPress}
       className={cn(base, "active:opacity-80", className)}
     >
       {children}

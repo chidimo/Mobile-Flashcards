@@ -5,6 +5,7 @@ import {
   getItemFromStorage,
   setItemToStorage,
 } from "@/lib/work-with-storage";
+import { orderDecks } from "@/lib/deck-order";
 import { createContext, useMemo, useState, useContext, useEffect } from "react";
 import { Deck, Question, ScoreSaver, StoreValue } from "@/types/generic";
 import { router } from "expo-router";
@@ -30,6 +31,8 @@ interface FlashContext {
     questions: Question[],
   ) => void;
   deleteDeck: (deckId: string) => void;
+  /** Saves the decks in this order (all deck ids, first to last). */
+  reorderDecks: (deckIds: string[]) => void;
   deleteCard: (deckId: string, qId: string) => void;
   getDeckById: (id: string) => Deck | null;
   getScoresById: (id: string) => ScoreSaver[] | null;
@@ -66,7 +69,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
 
   const memoizedCtxValue = useMemo(() => {
     return {
-      deckOfCards: flashes ? Object.values(flashes) : [],
+      deckOfCards: orderDecks(flashes, state.deckOrder),
       deckNames: flashes ? Object.values(flashes).map((e) => e.title) : [],
       deleteDeck(deckId: string) {
         if (!state.flashcards) return;
@@ -78,6 +81,12 @@ export function FlashProvider({ children }: Readonly<Props>) {
           },
         };
         delete updated.flashcards[deckId];
+        updated.deckOrder = state.deckOrder?.filter((id) => id !== deckId);
+        setItemToStorage(updated, flashCardKey);
+        setState(updated);
+      },
+      reorderDecks(deckIds: string[]) {
+        const updated = { ...state, deckOrder: deckIds };
         setItemToStorage(updated, flashCardKey);
         setState(updated);
       },
