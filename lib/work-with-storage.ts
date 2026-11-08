@@ -12,7 +12,7 @@ export const setItemToStorage = async (value: Value, key: string) => {
 
 export const getItemFromStorage = async <T>(
   key: string,
-  onSuccess: (value: T) => void
+  onSuccess: (value: T) => void,
 ) => {
   try {
     const data = await AsyncStorage.getItem(key);
@@ -22,10 +22,4 @@ export const getItemFromStorage = async <T>(
   } catch (e) {
     console.error("Error reading", e);
   }
-};
-
-export const clearAll = async () => {
-  try {
-    await AsyncStorage.clear();
-  } catch (e) {}
 };

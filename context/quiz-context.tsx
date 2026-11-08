@@ -80,7 +80,7 @@ interface QuizCtx extends QuizState {
   onPreviousQuestion: () => void;
 }
 
-export const QuizCtx = createContext<QuizCtx | null>(null);
+const QuizCtx = createContext<QuizCtx | null>(null);
 
 interface Props {
   children: React.ReactNode;

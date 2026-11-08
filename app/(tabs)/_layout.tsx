@@ -25,9 +25,7 @@ export default function TabLayout() {
       name: "import-deck",
       displayName: "Import deck",
       href: "/import-deck",
-      icon: (color: string) => (
-        <Feather name="file" size={22} color={color} />
-      ),
+      icon: (color: string) => <Feather name="file" size={22} color={color} />,
     },
     {
       name: "settings",

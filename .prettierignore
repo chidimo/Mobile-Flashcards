@@ -1,0 +1,12 @@
+node_modules
+ios
+android
+.expo
+.kilo
+coverage
+dist
+web-build
+assets
+yarn.lock
+package-lock.json
+privacy-policy.html

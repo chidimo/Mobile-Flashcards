@@ -3,7 +3,7 @@ import { getFieldError } from "../get-error-message";
 describe("getFieldError", () => {
   it("returns the message", () => {
     expect(getFieldError({ type: "required", message: "Required" })).toBe(
-      "Required"
+      "Required",
     );
   });
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import renderer, { act } from "react-test-renderer";
 
-import { ThemedText } from "../ThemedText";
+import { ThemedText } from "@/components/themed-text";
 
 it("renders its children", async () => {
   let tree!: renderer.ReactTestRenderer;
