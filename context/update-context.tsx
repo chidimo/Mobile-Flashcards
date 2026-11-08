@@ -103,6 +103,8 @@ export const UpdateProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useUpdate = () => {
   const ctx = useContext(UpdateCtx);
-  if (!ctx) throw new Error("useUpdate must be used within UpdateProvider");
+  if (!ctx) {
+    throw new Error("useUpdate must be used within UpdateProvider");
+  }
   return ctx;
 };

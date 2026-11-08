@@ -29,8 +29,9 @@ const latestOnAppStore = async (
   // The timestamp keeps Apple's CDN from handing back a stale answer.
   const url = `https://itunes.apple.com/lookup?bundleId=${encodeURIComponent(bundleId)}&_=${Date.now()}`;
   const response = await fetch(url);
-  if (!response.ok)
+  if (!response.ok) {
     throw new Error(`App Store lookup failed (${response.status})`);
+  }
   const { results } = (await response.json()) as LookupResponse;
   const app = results?.[0];
   if (!app?.version || !app.trackViewUrl) return null;
@@ -53,10 +54,13 @@ const latestOnPlayStore = async (
 ): Promise<StoreUpdate | null> => {
   const response = await fetch(`${playListing(packageName)}&hl=en&gl=US`);
   if (response.status === 404) return null;
-  if (!response.ok)
+  if (!response.ok) {
     throw new Error(`Play Store lookup failed (${response.status})`);
+  }
   const version = parsePlayVersion(await response.text());
-  if (!version) throw new Error("No version found on the Play Store page");
+  if (!version) {
+    throw new Error("No version found on the Play Store page");
+  }
   return { version, storeUrl: playListing(packageName) };
 };
 
