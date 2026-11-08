@@ -5,7 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { View } from "react-native";
 import "react-native-reanimated";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { FlashProvider } from "@/context/app-context";
 import { NotifierWrapper } from "react-native-notifier";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -23,21 +23,19 @@ SplashScreen.preventAutoHideAsync();
 // Inside ThemeProvider so the chosen palette reaches classNames (via CSS variables) and headers.
 const AppShell = () => {
   const palette = usePalette();
-  const { text, bar, background } = useAppTheme();
+  const { text, background } = useAppTheme();
 
   return (
     <View
       style={[{ flex: 1, backgroundColor: background }, paletteVars(palette)]}
     >
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: bar }}
-        edges={["bottom"]}
-      >
+      <View style={{ flex: 1 }}>
         <Drawer
           drawerContent={(props) => <AppDrawer {...props} />}
           screenOptions={{
             drawerType: "front",
             drawerStyle: { width: 300 },
+            overlayColor: "rgba(0,0,0,0.6)",
             headerShadowVisible: false,
             headerTitleStyle: { color: text, fontWeight: "700" },
             sceneStyle: { backgroundColor: background },
@@ -58,7 +56,7 @@ const AppShell = () => {
           <Drawer.Screen name="+not-found" options={{ headerShown: false }} />
         </Drawer>
         <UpdatePrompt />
-      </SafeAreaView>
+      </View>
     </View>
   );
 };
