@@ -133,4 +133,73 @@ describe("quiz context", () => {
     expect(quiz().allowBack).toBe(true);
     expect(quiz().answers).toEqual([]);
   });
+
+  it("has no deadline unless the quiz is timed", () => {
+    const quiz = setup();
+    act(() => quiz().onStartQuiz());
+
+    expect(quiz().endsAt).toBeNull();
+  });
+
+  it("sets one deadline for the whole quiz", () => {
+    const quiz = setup();
+    act(() => quiz().onUpdateTimed());
+    act(() => quiz().onSetSecondsPerQuestion(15));
+    const before = Date.now();
+    act(() => quiz().onStartQuiz());
+
+    // two questions at 15s each
+    expect(quiz().endsAt).toBeGreaterThanOrEqual(before + 30_000);
+    expect(quiz().endsAt).toBeLessThanOrEqual(Date.now() + 30_000);
+  });
+
+  it("ends the quiz when time runs out, counting what was answered", () => {
+    const quiz = setup();
+    act(() => quiz().onUpdateTimed());
+    act(() => quiz().onStartQuiz());
+    act(() => quiz().onAnswerQuestion("right"));
+
+    act(() => quiz().onTimeUp());
+
+    expect(quiz().ended).toBe(true);
+    expect(quiz().timedOut).toBe(true);
+    expect(quiz().endsAt).toBeNull();
+    expect(quiz().currentScore).toBe(1);
+  });
+
+  it("stops the clock when every question is answered in time", () => {
+    const quiz = setup();
+    act(() => quiz().onUpdateTimed());
+    act(() => quiz().onStartQuiz());
+    act(() => quiz().onAnswerQuestion("right"));
+    act(() => quiz().onAnswerQuestion("right"));
+
+    expect(quiz().ended).toBe(true);
+    expect(quiz().timedOut).toBe(false);
+    expect(quiz().endsAt).toBeNull();
+  });
+
+  it("ignores time running out after the quiz already ended", () => {
+    const quiz = setup();
+    act(() => quiz().onUpdateTimed());
+    act(() => quiz().onStartQuiz());
+    act(() => quiz().onAnswerQuestion("right"));
+    act(() => quiz().onAnswerQuestion("left"));
+
+    act(() => quiz().onTimeUp());
+
+    expect(quiz().timedOut).toBe(false);
+  });
+
+  it("keeps the timer options when the quiz is retaken", () => {
+    const quiz = setup();
+    act(() => quiz().onUpdateTimed());
+    act(() => quiz().onSetSecondsPerQuestion(60));
+    act(() => quiz().onStartQuiz());
+    act(() => quiz().onRetakeQuiz());
+
+    expect(quiz().timed).toBe(true);
+    expect(quiz().secondsPerQuestion).toBe(60);
+    expect(quiz().endsAt).not.toBeNull();
+  });
 });

@@ -16,6 +16,12 @@ interface QuizState {
   currentPosition: number | null;
   randomizeQuestions: boolean;
   allowBack: boolean;
+  timed: boolean;
+  secondsPerQuestion: number;
+  /** When the clock runs out, as a timestamp; null when the quiz is untimed or over. */
+  endsAt: number | null;
+  /** The quiz ended because time ran out, not because every question was answered. */
+  timedOut: boolean;
   /** The answer given to each question so far, by position; changing one replaces it. */
   answers: (SelectedAnswer | undefined)[];
 }
@@ -30,6 +36,10 @@ const initState: QuizState = {
   currentPosition: null,
   randomizeQuestions: false,
   allowBack: false,
+  timed: false,
+  secondsPerQuestion: 30,
+  endsAt: null,
+  timedOut: false,
   answers: [],
 };
 
@@ -39,7 +49,13 @@ const keepOptions = (prev: QuizState) => ({
   peekAnswer: prev.peekAnswer,
   randomizeQuestions: prev.randomizeQuestions,
   allowBack: prev.allowBack,
+  timed: prev.timed,
+  secondsPerQuestion: prev.secondsPerQuestion,
 });
+
+// The whole quiz shares one clock: every question gets the same share of it.
+const deadline = (state: QuizState, questions: number) =>
+  state.timed ? Date.now() + questions * state.secondsPerQuestion * 1000 : null;
 
 const scoreOf = (answers: QuizState["answers"]) =>
   answers.filter((answer) => answer === "right").length;
@@ -55,6 +71,10 @@ interface QuizCtx extends QuizState {
   onUpdatePeek: () => void;
   onUpdateRandomizeQuestions: () => void;
   onUpdateAllowBack: () => void;
+  onUpdateTimed: () => void;
+  onSetSecondsPerQuestion: (seconds: number) => void;
+  /** The clock ran out: unanswered questions count as missed. */
+  onTimeUp: () => void;
   onAnswerQuestion: (selected: SelectedAnswer) => void;
   // Only when allowBack is on. Going forward again is just answering the question.
   onPreviousQuestion: () => void;
@@ -104,6 +124,7 @@ export function QuizProvider({ children }: Readonly<Props>) {
           ...initState,
           ...keepOptions(prev),
           started: true,
+          endsAt: deadline(prev, order.length),
           currentPosition: 0,
           currentQuestion: order[0],
         }));
@@ -119,6 +140,7 @@ export function QuizProvider({ children }: Readonly<Props>) {
           ...initState,
           ...keepOptions(prev),
           started: true,
+          endsAt: deadline(prev, order.length),
           currentPosition: 0,
           currentQuestion: order[0],
         }));
@@ -138,6 +160,7 @@ export function QuizProvider({ children }: Readonly<Props>) {
           ...prev,
           ended,
           answers,
+          endsAt: ended ? null : prev.endsAt,
           currentPosition: ended ? null : position + 1,
           currentScore: scoreOf(answers),
           currentQuestion: ended ? null : quizzes[position + 1],
@@ -151,6 +174,27 @@ export function QuizProvider({ children }: Readonly<Props>) {
       },
       onUpdateAllowBack() {
         setState((prev) => ({ ...prev, allowBack: !prev.allowBack }));
+      },
+      onUpdateTimed() {
+        setState((prev) => ({ ...prev, timed: !prev.timed }));
+      },
+      onSetSecondsPerQuestion(seconds: number) {
+        setState((prev) => ({ ...prev, secondsPerQuestion: seconds }));
+      },
+      onTimeUp() {
+        setState((prev) =>
+          prev.ended
+            ? prev
+            : {
+                ...prev,
+                ended: true,
+                timedOut: true,
+                endsAt: null,
+                currentPosition: null,
+                currentQuestion: null,
+                currentScore: scoreOf(prev.answers),
+              },
+        );
       },
       onPreviousQuestion() {
         if (!state.allowBack || !state.currentPosition) {
