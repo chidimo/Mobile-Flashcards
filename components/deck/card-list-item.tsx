@@ -1,5 +1,6 @@
 import { useFlash } from "@/context/app-context";
 import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { Question } from "@/types/generic";
 import { useAppTheme } from "@/hooks/use-app-theme";
@@ -13,7 +14,7 @@ interface Props {
 
 export const CardListItem = ({ index, deckId, question }: Props) => {
   const { deleteCard } = useFlash();
-  const { danger } = useAppTheme();
+  const { danger, primary } = useAppTheme();
 
   return (
     <Card className="gap-3">
@@ -23,15 +24,28 @@ export const CardListItem = ({ index, deckId, question }: Props) => {
             Card {index + 1}
           </Text>
         </View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Delete card ${index + 1}`}
-          hitSlop={10}
-          onPress={() => deleteCard(deckId, question.id)}
-          className="active:opacity-60"
-        >
-          <Feather name="trash-2" size={20} color={danger} />
-        </Pressable>
+        <View className="flex-row items-center gap-5">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Edit card ${index + 1}`}
+            hitSlop={10}
+            onPress={() =>
+              router.push(`/${deckId}/edit-card?cardId=${question.id}`)
+            }
+            className="active:opacity-60"
+          >
+            <Feather name="edit-2" size={20} color={primary} />
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Delete card ${index + 1}`}
+            hitSlop={10}
+            onPress={() => deleteCard(deckId, question.id)}
+            className="active:opacity-60"
+          >
+            <Feather name="trash-2" size={20} color={danger} />
+          </Pressable>
+        </View>
       </View>
 
       <Text className="text-lg font-bold text-neutral-900 dark:text-white">

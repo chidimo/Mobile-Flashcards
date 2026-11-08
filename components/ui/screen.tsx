@@ -16,6 +16,8 @@ export const Screen = ({ children, scroll = false, className }: Props) => {
         className="flex-1 bg-canvas dark:bg-ink-950"
         contentContainerClassName={cn("gap-4 px-5 pb-8 pt-4", className)}
         keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
+        keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
       >
         {children}
