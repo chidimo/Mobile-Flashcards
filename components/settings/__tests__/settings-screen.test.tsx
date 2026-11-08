@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/context/theme-context";
 import { SettingsScreen } from "../settings-screen";
 
 jest.mock("@react-native-async-storage/async-storage", () =>
-  require("@react-native-async-storage/async-storage/jest/async-storage-mock")
+  require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
 
 const render = async () => {
@@ -16,7 +16,7 @@ const render = async () => {
     tree = renderer.create(
       <ThemeProvider>
         <SettingsScreen />
-      </ThemeProvider>
+      </ThemeProvider>,
     );
   });
   return tree;
@@ -40,7 +40,9 @@ describe("SettingsScreen", () => {
     const tree = await render();
 
     await act(async () => {
-      tree.root.findByProps({ accessibilityLabel: "Dark mode" }).props.onValueChange(true);
+      tree.root
+        .findByProps({ accessibilityLabel: "Dark mode" })
+        .props.onValueChange(true);
     });
 
     expect(Appearance.setColorScheme).toHaveBeenCalledWith("dark");
@@ -51,7 +53,9 @@ describe("SettingsScreen", () => {
     const tree = await render();
 
     await act(async () => {
-      tree.root.findByProps({ accessibilityLabel: "Dark mode" }).props.onValueChange(false);
+      tree.root
+        .findByProps({ accessibilityLabel: "Dark mode" })
+        .props.onValueChange(false);
     });
 
     expect(Appearance.setColorScheme).toHaveBeenCalledWith("light");

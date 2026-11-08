@@ -1,7 +1,7 @@
 import { Href } from "expo-router";
 import React from "react";
 import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
-import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { TabMenuContainer, TabMenuItem } from "@/components/tab-menu-item";
 
 export default function TabLayout() {
@@ -11,11 +11,7 @@ export default function TabLayout() {
       displayName: "Home",
       href: "/index",
       icon: (color: string) => (
-        <MaterialCommunityIcons
-          name="cards-outline"
-          size={28}
-          color={color}
-        />
+        <Feather name="layers" size={22} color={color} />
       ),
     },
     {
@@ -23,11 +19,7 @@ export default function TabLayout() {
       displayName: "Add deck",
       href: "/add-deck",
       icon: (color: string) => (
-        <AntDesign
-          name="plus"
-          size={24}
-          color={color}
-        />
+        <Feather name="plus-circle" size={22} color={color} />
       ),
     },
     {
@@ -35,14 +27,11 @@ export default function TabLayout() {
       displayName: "Settings",
       href: "/settings",
       icon: (color: string) => (
-        <AntDesign
-          name="setting"
-          size={24}
-          color={color}
-        />
+        <Feather name="settings" size={22} color={color} />
       ),
     },
   ];
+
   return (
     <Tabs>
       <TabSlot />

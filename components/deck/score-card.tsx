@@ -1,7 +1,9 @@
 import { formatDate } from "@/utils/format-datetime";
 import { Text, View } from "react-native";
 import { ScoreSaver } from "@/types/generic";
-import { useAppTheme } from "@/hooks/use-app-theme";
+import { Card } from "../ui/card";
+import { Pill } from "../ui/pill";
+import { ProgressBar } from "../ui/progress-bar";
 
 interface Props {
   index: number;
@@ -9,38 +11,31 @@ interface Props {
   passMark: number;
 }
 
-export const ScoreCard = (props: Props) => {
-  const { index, score, passMark } = props;
+export const ScoreCard = ({ index, score, passMark }: Props) => {
   const percent = (score.actualScore / score.numberOfQuestions) * 100;
   const isPass = percent >= passMark;
-  const { primary, success, danger } = useAppTheme();
+  const tone = isPass ? "success" : "danger";
 
   return (
-    <View
-      style={{
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: primary,
-        borderRadius: 5,
-        padding: 10,
-      }}
-    >
-      <Text style={{ fontSize: 18, color: primary }}>
-        Attempt {index}
-      </Text>
-      <Text style={{ fontSize: 16, color: primary }}>
-        Date: {formatDate(score.date, true)}
-      </Text>
-      <View
-        style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
-      >
-        <Text style={{ fontSize: 16, color: primary }}>
-          Score: {score.actualScore}/{score.numberOfQuestions} |
-          <Text style={{ color: isPass ? success : danger }}>
-            {percent.toFixed(2)}%
-          </Text>
+    <Card className="gap-3">
+      <View className="flex-row items-center justify-between">
+        <Text className="text-base font-bold text-neutral-900 dark:text-white">
+          Attempt {index}
+        </Text>
+        <Pill text={isPass ? "Passed" : "Failed"} tone={tone} />
+      </View>
+      <View className="flex-row items-end justify-between">
+        <Text className="text-3xl font-extrabold text-neutral-900 dark:text-white">
+          {percent.toFixed(0)}%
+        </Text>
+        <Text className="pb-1 text-sm text-neutral-500 dark:text-neutral-400">
+          {score.actualScore}/{score.numberOfQuestions} correct
         </Text>
       </View>
-    </View>
+      <ProgressBar percent={percent} tone={tone} />
+      <Text className="text-xs text-neutral-500 dark:text-neutral-400">
+        {formatDate(score.date, true)}
+      </Text>
+    </Card>
   );
 };

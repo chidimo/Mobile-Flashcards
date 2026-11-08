@@ -9,8 +9,8 @@ import {
 import { useRouter } from 'expo-router';
 import { DocumentParser, type ParsedDocument } from '@/lib/document-parser';
 import { aiDocumentProcessor, type GeneratedFlashcard } from '@/lib/ai-document-processor';
-import { DefaultButton } from '../form-elements/button';
-import { Input } from '../form-elements/input';
+import { Button } from '../ui/button';
+import { TextField } from '../ui/text-field';
 import { Question } from '@/types/generic';
 import { ThemedText } from '../themed-text';
 import { ThemedView } from '../themed-view';
@@ -225,10 +225,10 @@ export const ImportFromDocScreen = () => {
       </ThemedText>
 
       <View style={styles.uploadArea}>
-        <DefaultButton
+        <Button
           title="Choose Document"
           onPress={handleDocumentPick}
-          btnVariant="PRIMARY"
+          variant="primary"
         />
       </View>
 
@@ -303,14 +303,15 @@ export const ImportFromDocScreen = () => {
           <View style={[styles.section, { backgroundColor: theme.surface }]}>
             <ThemedText style={styles.sectionTitle}>Flashcard Settings</ThemedText>
             
-            <Input
+            <TextField
               label="Deck Title"
               value={state.deckTitle}
               onChangeText={(text) => setState(prev => ({ ...prev, deckTitle: text }))}
               placeholder="Enter deck title"
+              className="mb-3"
             />
 
-            <Input
+            <TextField
               label="Number of Flashcards"
               value={state.cardCount.toString()}
               onChangeText={(text) => {
@@ -319,9 +320,10 @@ export const ImportFromDocScreen = () => {
               }}
               placeholder="Number of flashcards"
               keyboardType="numeric"
+              className="mb-3"
             />
 
-            <Input
+            <TextField
               label="Pass Mark (%)"
               value={state.deckPassMark.toString()}
               onChangeText={(text) => {
@@ -335,15 +337,17 @@ export const ImportFromDocScreen = () => {
 
           {/* Action Buttons */}
           <View style={styles.buttonContainer}>
-            <DefaultButton
+            <Button
               title="Back"
+              className="flex-1"
               onPress={() => setState(prev => ({ ...prev, step: 'upload' }))}
-              btnVariant="CANCEL"
+              variant="outline"
             />
-            <DefaultButton
+            <Button
               title="Generate Flashcards"
+              className="flex-1"
               onPress={generateFlashcards}
-              btnVariant="PRIMARY"
+              variant="primary"
             />
           </View>
         </ScrollView>
@@ -367,11 +371,11 @@ export const ImportFromDocScreen = () => {
         <ThemedText style={styles.title}>Review Generated Flashcards</ThemedText>
         
         <View style={styles.actionButtons}>
-          <DefaultButton
+          <Button
             title="Improve with AI"
             onPress={improveFlashcards}
-            isLoading={state.isGenerating}
-            btnVariant="SECONDARY"
+            loading={state.isGenerating}
+            variant="secondary"
           />
         </View>
 
@@ -379,43 +383,45 @@ export const ImportFromDocScreen = () => {
           <View key={flashcard.id} style={[styles.flashcardContainer, { backgroundColor: theme.surface }]}>
             <ThemedText style={[styles.flashcardNumber, { color: theme.link }]}>Card {index + 1}</ThemedText>
             
-            <Input
+            <TextField
               label="Question"
               value={flashcard.question}
               onChangeText={(text) => updateFlashcard(flashcard.id, 'question', text)}
               multiline
-              containerStyle={styles.flashcardInput}
+              className="mb-3"
             />
             
-            <Input
+            <TextField
               label="Answer"
               value={flashcard.answer}
               onChangeText={(text) => updateFlashcard(flashcard.id, 'answer', text)}
               multiline
-              containerStyle={styles.flashcardInput}
+              className="mb-3"
             />
             
-            <Input
+            <TextField
               label="Hint (optional)"
               value={flashcard.hint || ''}
               onChangeText={(text) => updateFlashcard(flashcard.id, 'hint', text)}
               placeholder="Add a hint for this card"
-              containerStyle={styles.flashcardInput}
+              className="mb-3"
             />
           </View>
         ))}
 
         <View style={styles.buttonContainer}>
-          <DefaultButton
+          <Button
             title="Back"
+              className="flex-1"
             onPress={() => setState(prev => ({ ...prev, step: 'configuring' }))}
-            btnVariant="CANCEL"
+            variant="outline"
           />
-          <DefaultButton
+          <Button
             title="Save Flashcards"
+              className="flex-1"
             onPress={saveFlashcards}
-            isLoading={state.isSaving}
-            btnVariant="SUCCESS"
+            loading={state.isSaving}
+            variant="success"
           />
         </View>
       </ScrollView>
@@ -436,10 +442,10 @@ export const ImportFromDocScreen = () => {
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Error</ThemedText>
       <ThemedText style={[styles.errorText, { color: theme.danger }]}>{state.error}</ThemedText>
-      <DefaultButton
+      <Button
         title="Try Again"
         onPress={() => setState(prev => ({ ...prev, step: 'upload', error: undefined }))}
-        btnVariant="PRIMARY"
+        variant="primary"
       />
     </ThemedView>
   );

@@ -1,13 +1,12 @@
-import { Text, View } from "react-native";
-import { DefaultButton } from "../form-elements/button";
-import { AppCheckbox } from "../form-elements/check-box";
+import { View } from "react-native";
 import { useQuiz } from "@/context/quiz-context";
-import { pageContainerStyle } from "@/styles";
-import { useAppTheme } from "@/hooks/use-app-theme";
-import { CustomText } from "../custom-text";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { PageTitle } from "../ui/page-title";
+import { Screen } from "../ui/screen";
+import { ToggleRow } from "../ui/toggle-row";
 
 export const QuizStarter = () => {
-  const { primary } = useAppTheme();
   const {
     deckName,
     showHint,
@@ -19,104 +18,50 @@ export const QuizStarter = () => {
     onStartQuiz,
   } = useQuiz();
 
-  const options = [
-    {
-      label: "Show hint during quiz",
-      value: showHint,
-      onChange: () => {
-        onUpdateHint();
-      },
-    },
-    {
-      label: "Allow peek answer",
-      value: peekAnswer,
-      onChange: () => {
-        onUpdatePeek();
-      },
-    },
-    {
-      label: "Randomize questions",
-      value: randomizeQuestions,
-      onChange: () => {
-        onUpdateRandomizeQuestions();
-      },
-    },
-    {
-      label: "Time quiz (coming soon)",
-      value: false,
-      onChange: () => {},
-      disabled: true,
-    },
-    {
-      label: "Allow back and forth (coming soon)",
-      value: false,
-      onChange: () => {},
-      disabled: true,
-    },
-  ];
-
   return (
-    <View
-      style={[
-        pageContainerStyle.minorPageView,
-        { justifyContent: "space-evenly" },
-      ]}
-    >
-      <View style={{ width: "100%" }}>
-        <CustomText
-          isHeader
-          moreContainerStyle={{ marginBottom: 30 }}
-          text={deckName ?? ""}
-        />
-        <CustomText
-          moreTextStyle={{ fontSize: 18 }}
-          moreContainerStyle={{ marginBottom: 30 }}
-          text={`You are about to start the quiz. Use the below options to customize your experience`}
-        />
-
-        <View style={{ width: "100%", marginBottom: 30 }}>
-          {options.map((option) => {
-            return (
-              <View
-                key={option.label}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  width: "100%",
-                  justifyContent: "flex-start",
-                }}
-              >
-                <AppCheckbox
-                  checked={option.value}
-                  disabled={option.disabled}
-                  onValueChange={() => {
-                    option.onChange();
-                  }}
-                />
-                <Text
-                  style={{
-                    color: primary,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    fontSize: 20,
-                  }}
-                >
-                  {option.label}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-      </View>
-
-      <DefaultButton
-        title="Start quiz"
-        moreContainerStyle={{ width: "100%" }}
-        btnVariant="PRIMARY"
-        onPress={() => {
-          onStartQuiz();
-        }}
+    <Screen scroll>
+      <PageTitle
+        title={deckName ?? "Quiz"}
+        subtitle="Choose how you want to be quizzed."
       />
-    </View>
+
+      <Card className="py-1">
+        <View className="divide-y divide-neutral-100 dark:divide-ink-700">
+          <ToggleRow
+            label="Show hints"
+            description="Reveal a card's hint during the quiz"
+            value={showHint}
+            onValueChange={onUpdateHint}
+          />
+          <ToggleRow
+            label="Allow peeking"
+            description="Tap a card to check its answer"
+            value={peekAnswer}
+            onValueChange={onUpdatePeek}
+          />
+          <ToggleRow
+            label="Shuffle questions"
+            value={randomizeQuestions}
+            onValueChange={onUpdateRandomizeQuestions}
+          />
+          <ToggleRow
+            label="Timed quiz"
+            description="Coming soon"
+            value={false}
+            onValueChange={() => {}}
+            disabled
+          />
+          <ToggleRow
+            label="Go back and forth"
+            description="Coming soon"
+            value={false}
+            onValueChange={() => {}}
+            disabled
+          />
+        </View>
+      </Card>
+
+      <Button title="Start quiz" onPress={onStartQuiz} />
+    </Screen>
   );
 };

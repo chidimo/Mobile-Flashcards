@@ -5,9 +5,9 @@ import { useMemo } from "react";
 import { useFlash } from "@/context/app-context";
 import { TCreateDeck } from "@/types/generic";
 import { DeckFormFields } from "./deck-form-fields";
-import { DefaultButton } from "../form-elements/button";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 import { showNotification } from "../notifier";
-import { buttonStyles, pageContainerStyle } from "@/styles";
 
 interface Props {
   onCancel: () => void;
@@ -25,7 +25,7 @@ export const EditDeck = ({ onCancel, onSuccess }: Props) => {
       title: deck?.title ?? "",
       passMark: deck?.passMark ?? 50,
     }),
-    [deck]
+    [deck],
   );
 
   const {
@@ -49,19 +49,20 @@ export const EditDeck = ({ onCancel, onSuccess }: Props) => {
   };
 
   return (
-    <View style={[pageContainerStyle.mainPageView, { paddingHorizontal: 0 }]}>
-      <DeckFormFields errors={errors} control={control} />
-      <View style={buttonStyles.twoColumnBtns}>
-        <DefaultButton
-          moreContainerStyle={{ width: "47%" }}
-          btnVariant="DANGER"
+    <View className="gap-4">
+      <Card>
+        <DeckFormFields errors={errors} control={control} />
+      </Card>
+      <View className="flex-row gap-3">
+        <Button
           title="Cancel"
+          variant="outline"
+          className="flex-1"
           onPress={onCancel}
         />
-        <DefaultButton
-          moreContainerStyle={{ width: "47%" }}
-          btnVariant="SUCCESS"
+        <Button
           title="Save changes"
+          className="flex-1"
           onPress={handleSubmit(onSubmit)}
         />
       </View>
