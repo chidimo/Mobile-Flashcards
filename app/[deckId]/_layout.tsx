@@ -1,7 +1,7 @@
 import { useFlash } from "@/context/app-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { Stack, useGlobalSearchParams } from "expo-router";
-import React from "react";
+import { MenuButton } from "@/components/menu-button";
 
 export default function TabLayout() {
   const { getDeckById } = useFlash();
@@ -19,6 +19,15 @@ export default function TabLayout() {
         headerStyle: { backgroundColor: background },
         headerTintColor: primary,
         headerTitle: deck?.title ?? "Deck",
+        headerLeft: () => <MenuButton />,
+        // iOS 26 wraps header buttons in a glass bubble; hide it.
+        unstable_headerLeftItems: () => [
+          {
+            type: "custom",
+            element: <MenuButton />,
+            hidesSharedBackground: true,
+          },
+        ],
       }}
     >
       <Stack.Screen name="(tabs)" options={{}} />
