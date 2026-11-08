@@ -1,3 +1,4 @@
+import "../global.css";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -21,7 +22,7 @@ export default function RootLayout() {
   });
 
   const backgroundColor = useThemeColor({}, "background");
-  const { primary } = useAppTheme();
+  const { primary, text, bar } = useAppTheme();
 
   useEffect(() => {
     if (loaded) {
@@ -38,10 +39,15 @@ export default function RootLayout() {
           <ThemeProvider>
             <FlashProvider>
               <ThemedView style={{ flex: 1 }}>
-                <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+                <SafeAreaView
+                  style={{ flex: 1, backgroundColor: bar }}
+                  edges={["bottom"]}
+                >
                   <Stack
                     screenOptions={{
                       headerTransparent: false,
+                      headerShadowVisible: false,
+                      headerTitleStyle: { color: text, fontWeight: "700" },
                       contentStyle: { backgroundColor },
                       headerStyle: { backgroundColor },
                     }}
@@ -49,7 +55,7 @@ export default function RootLayout() {
                     <Stack.Screen
                       name="(tabs)"
                       options={{
-                        headerTitle: "Home <> Mobile flashcards",
+                        headerTitle: "Flashcards",
                         headerTintColor: primary,
                       }}
                     />

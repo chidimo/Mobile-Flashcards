@@ -5,9 +5,10 @@ import { useMemo } from "react";
 import { useFlash } from "@/context/app-context";
 import { CardFormFields } from "./card-form-fields";
 import { TCreateCard } from "@/types/generic";
-import { pageContainerStyle } from "@/styles";
-import { DefaultButton } from "../form-elements/button";
-import { CustomText } from "../custom-text";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { PageTitle } from "../ui/page-title";
+import { Screen } from "../ui/screen";
 
 export const EditCard = () => {
   const { getDeckById, getQuestionById, updateCard } = useFlash();
@@ -22,7 +23,7 @@ export const EditCard = () => {
       question: question?.question ?? "",
       hint: question?.hint ?? "",
     }),
-    [deck]
+    [deck],
   );
 
   const {
@@ -40,7 +41,7 @@ export const EditCard = () => {
       cardId as string,
       data.question,
       data.answer,
-      data.hint
+      data.hint,
     );
   };
 
@@ -51,35 +52,28 @@ export const EditCard = () => {
   };
 
   return (
-    <View style={[pageContainerStyle.mainPageView]}>
-      <CustomText
-        isHeader
-        text="Edit card"
-        moreContainerStyle={{ marginBottom: 50 }}
-      />
-      <CardFormFields errors={errors} control={control} />
-      <View
-        style={{
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <DefaultButton
-          moreContainerStyle={{ width: "45%" }}
-          btnVariant="SECONDARY"
+    <Screen scroll>
+      <PageTitle title="Edit card" subtitle={deck?.title} />
+
+      <Card>
+        <CardFormFields errors={errors} control={control} />
+      </Card>
+
+      <View className="flex-row gap-3">
+        <Button
           title="Cancel"
+          variant="outline"
+          className="flex-1"
           onPress={() => {
             router.push(`/${deckId}`);
           }}
         />
-        <DefaultButton
-          moreContainerStyle={{ width: "45%" }}
-          btnVariant="SUCCESS"
+        <Button
           title="Save changes"
+          className="flex-1"
           onPress={handleSubmit(onSubmit)}
         />
       </View>
-    </View>
+    </Screen>
   );
 };

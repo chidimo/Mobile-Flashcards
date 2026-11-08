@@ -1,6 +1,7 @@
 import { themePreferenceKey } from "@/constants";
 import { getItemFromStorage, setItemToStorage } from "@/lib/work-with-storage";
 import { createContext, useContext, useEffect, useMemo } from "react";
+import { colorScheme } from "nativewind";
 import { Appearance, useColorScheme } from "react-native";
 
 type Theme = "light" | "dark";
@@ -13,7 +14,10 @@ interface ThemeContext {
 
 const ThemeCtx = createContext<ThemeContext | undefined>(undefined);
 
-const applyTheme = (theme: Theme) => Appearance.setColorScheme(theme);
+const applyTheme = (theme: Theme) => {
+  Appearance.setColorScheme(theme);
+  colorScheme.set(theme);
+};
 
 // Overrides the system scheme app-wide, so useColorScheme() follows the choice.
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {

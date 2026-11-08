@@ -1,81 +1,50 @@
 import { useFlash } from "@/context/app-context";
-import { router } from "expo-router";
-import { Text, View, StyleSheet } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { Pressable, Text, View } from "react-native";
 import { Question } from "@/types/generic";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { Card } from "../ui/card";
 
 interface Props {
   index: number;
   deckId: string;
   question: Question;
-  isLast?: boolean;
 }
 
-export const CardListItem = (props: Props) => {
-  const { index, deckId, question, isLast } = props;
+export const CardListItem = ({ index, deckId, question }: Props) => {
   const { deleteCard } = useFlash();
-  const { primary, danger } = useAppTheme();
+  const { danger } = useAppTheme();
 
   return (
-    <View
-      style={{
-        paddingVertical: 15,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: primary,
-        marginBottom: isLast ? 0 : 10,
-      }}
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginBottom: 10,
-        }}
-      >
-        <Text
-          style={[
-            styles.text,
-            { color: primary, fontWeight: "bold", marginRight: 5 },
-          ]}
-        >
-          Question {index + 1}
-        </Text>
-        <View style={{ flexDirection: "row" }}>
-          <AntDesign
-            name="delete"
-            size={22}
-            color={danger}
-            onPress={() => {
-              deleteCard(deckId, question.id);
-            }}
-          />
-        </View>
-      </View>
-      <View>
-        <Text
-          style={[
-            styles.text,
-            { color: primary, marginBottom: 5, fontWeight: "bold" },
-          ]}
-        >
-          {question.question}
-        </Text>
-        <Text style={[styles.text, { color: primary }]}>{question.answer}</Text>
-        {question.hint && (
-          <Text style={[styles.text, { color: primary }]}>
-            Hint: {question.hint}
+    <Card className="gap-3">
+      <View className="flex-row items-center justify-between">
+        <View className="rounded-full bg-primary-100 px-3 py-1 dark:bg-ink-700">
+          <Text className="text-xs font-bold text-primary-700 dark:text-primary-200">
+            Card {index + 1}
           </Text>
-        )}
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Delete card ${index + 1}`}
+          hitSlop={10}
+          onPress={() => deleteCard(deckId, question.id)}
+          className="active:opacity-60"
+        >
+          <Feather name="trash-2" size={20} color={danger} />
+        </Pressable>
       </View>
-    </View>
+
+      <Text className="text-lg font-bold text-neutral-900 dark:text-white">
+        {question.question}
+      </Text>
+      <Text className="text-base text-neutral-600 dark:text-neutral-300">
+        {question.answer}
+      </Text>
+      {question.hint ? (
+        <Text className="text-sm italic text-neutral-500 dark:text-neutral-400">
+          Hint: {question.hint}
+        </Text>
+      ) : null}
+    </Card>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 18,
-  },
-});

@@ -1,14 +1,11 @@
 import { useFlash } from "@/context/app-context";
-import { buttonStyles } from "@/styles";
-import { useAppTheme } from "@/hooks/use-app-theme";
 import { ImportSchema, Question, TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { View } from "react-native";
-import { DefaultButton } from "../form-elements/button";
+import { Text, View } from "react-native";
+import { Button } from "../ui/button";
 import { useState } from "react";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { DeckFormFields } from "./deck-form-fields";
-import { CustomText } from "../custom-text";
 import * as Crypto from "expo-crypto";
 import { isValidV4UUID } from "@/utils/validate-uuid";
 
@@ -19,7 +16,6 @@ interface Props {
 export const ImportDeck = (props: Props) => {
   const { importDeck } = useFlash();
   const { fetchCopiedText } = useClipboard();
-  const { primary, danger } = useAppTheme();
   const [error, setError] = useState<string | null>(null);
   const [qId, setQId] = useState<string | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -50,44 +46,23 @@ export const ImportDeck = (props: Props) => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingHorizontal: 10,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <View style={{ marginBottom: 30 }}>
-        <CustomText
-          text={
-            questions.length
-              ? `This deck has ${questions.length} cards`
-              : "Click the button to paste import string"
-          }
-          moreTextStyle={{ color: primary, fontSize: 18 }}
-        />
-        {error && (
-          <CustomText
-            text={error}
-            moreTextStyle={{ color: danger, fontSize: 16 }}
-          />
-        )}
+    <View className="gap-4 px-1">
+      <View className="gap-1">
+        <Text className="text-base text-neutral-700 dark:text-neutral-200">
+          {questions.length
+            ? `This deck has ${questions.length} cards`
+            : "Copy a deck's import string, then paste it here."}
+        </Text>
+        {error ? (
+          <Text className="text-sm text-red-600 dark:text-red-400">
+            {error}
+          </Text>
+        ) : null}
       </View>
 
-      <DeckFormFields
-        isNew
-        control={control}
-        errors={errors}
-        moreContainerStyle={{ marginBottom: 10 }}
-      />
-
-      <DefaultButton
-        title={"Click to paste"}
-        btnVariant="SECONDARY"
-        moreContainerStyle={{
-          marginBottom: 20,
-        }}
+      <Button
+        title="Paste import string"
+        variant="secondary"
         onPress={() => {
           fetchCopiedText((val) => {
             try {
@@ -101,15 +76,15 @@ export const ImportDeck = (props: Props) => {
                     res.questions.map((q) => ({
                       ...q,
                       id: isValidV4UUID(q.id) ? q.id : Crypto.randomUUID(),
-                    }))
+                    })),
                   );
                   setError(null);
                 })
                 .catch((err) => {
                   setError(
                     `Something went wrong. Please copy the text again and retry\n${String(
-                      err
-                    )}`
+                      err,
+                    )}`,
                   );
                 });
             } catch (e) {
@@ -119,21 +94,22 @@ export const ImportDeck = (props: Props) => {
         }}
       />
 
-      <View style={buttonStyles.twoColumnBtns}>
-        <DefaultButton
-          moreContainerStyle={{ width: "47%" }}
-          btnVariant="SUCCESS"
-          title="Save deck"
-          onPress={handleSubmit(onSubmit)}
-        />
-        <DefaultButton
-          moreContainerStyle={{ width: "47%" }}
-          btnVariant="CANCEL"
+      <DeckFormFields isNew control={control} errors={errors} />
+
+      <View className="flex-row gap-3">
+        <Button
           title="Cancel"
+          variant="outline"
+          className="flex-1"
           onPress={() => {
             reset();
             props.onCancel();
           }}
+        />
+        <Button
+          title="Save deck"
+          className="flex-1"
+          onPress={handleSubmit(onSubmit)}
         />
       </View>
     </View>

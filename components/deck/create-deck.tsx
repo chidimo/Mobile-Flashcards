@@ -1,16 +1,17 @@
 import { useFlash } from "@/context/app-context";
-import { pageContainerStyle } from "@/styles";
 import { TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { View } from "react-native";
 import { DeckFormFields } from "./deck-form-fields";
-import { DefaultButton } from "../form-elements/button";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { PageTitle } from "../ui/page-title";
+import { Screen } from "../ui/screen";
 import { DefaultModal } from "../modal";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
 import { ImportDeck } from "./import-deck";
 import { router } from "expo-router";
 import { showNotification } from "../notifier";
-import { CustomText } from "../custom-text";
 
 export const CreateDeck = () => {
   const { addDeck } = useFlash();
@@ -39,31 +40,23 @@ export const CreateDeck = () => {
   };
 
   return (
-    <View style={[pageContainerStyle.mainPageView]}>
-      <CustomText
-        isHeader
-        text="Create deck"
-        moreContainerStyle={{ marginBottom: 50 }}
+    <Screen scroll>
+      <PageTitle
+        title="Create deck"
+        subtitle="Name your deck and set the score needed to pass."
       />
 
-      <DeckFormFields isNew={true} control={control} errors={errors} />
+      <Card>
+        <DeckFormFields isNew control={control} errors={errors} />
+      </Card>
 
-      <DefaultButton
-        moreContainerStyle={{ width: "100%" }}
-        btnVariant="SUCCESS"
-        title="Save deck"
-        onPress={handleSubmit(onSubmit)}
-      />
-
-      <DefaultButton
-        title={"Import a deck"}
-        onPress={setOn}
-        btnVariant="SECONDARY"
-        moreContainerStyle={{ marginTop: 20 }}
-      />
+      <View className="gap-3">
+        <Button title="Save deck" onPress={handleSubmit(onSubmit)} />
+        <Button title="Import a deck" variant="secondary" onPress={setOn} />
+      </View>
 
       <DefaultModal visible={isOn} onRequestClose={setOff} title="Import deck">
-        <View style={{ paddingBottom: 20 }}>
+        <View className="pb-5">
           <ImportDeck
             onSuccess={() => {
               setOff();
@@ -76,6 +69,6 @@ export const CreateDeck = () => {
           />
         </View>
       </DefaultModal>
-    </View>
+    </Screen>
   );
 };

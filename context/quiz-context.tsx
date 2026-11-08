@@ -55,13 +55,19 @@ export function QuizProvider({ children }: Readonly<Props>) {
   const deck = getDeckById(deckId as string);
 
   const [state, setState] = useState<QuizState>(initState);
+  // The order of the quiz in progress. Fixed when it starts so answering never reshuffles it.
+  const [quizOrder, setQuizOrder] = useState<Question[] | null>(null);
 
   const deckQuestions = deck?.questions ?? [];
 
-  const quizzes = state.randomizeQuestions
-    ? shuffle(deckQuestions)
-    : deckQuestions;
+  const quizzes = quizOrder ?? deckQuestions;
   const quiz_count = quizzes.length;
+
+  const prepareQuiz = (randomize: boolean) => {
+    const order = randomize ? shuffle(deckQuestions) : deckQuestions;
+    setQuizOrder(order);
+    return order;
+  };
 
   const memoizedCtxValue = useMemo(() => {
     return {
@@ -76,21 +82,7 @@ export function QuizProvider({ children }: Readonly<Props>) {
         setState((prev) => ({ ...prev, peekAnswer: !prev.peekAnswer }));
       },
       onRetakeQuiz() {
-        setState(() => ({
-          ...initState,
-          started: true,
-          currentPosition: 0,
-          currentQuestion: quizzes[0],
-        }));
-      },
-      onEndQuiz() {
-        setState(() => ({
-          ...initState,
-          ended: true,
-          currentQuestion: null,
-        }));
-      },
-      onStartQuiz() {
+        const order = prepareQuiz(state.randomizeQuestions);
         setState((prev) => ({
           ...initState,
           showHint: prev.showHint,
@@ -98,11 +90,34 @@ export function QuizProvider({ children }: Readonly<Props>) {
           randomizeQuestions: prev.randomizeQuestions,
           started: true,
           currentPosition: 0,
-          currentQuestion: quizzes[0],
+          currentQuestion: order[0],
+        }));
+      },
+      // Back to the options screen; a finished quiz has already saved its score.
+      onEndQuiz() {
+        setQuizOrder(null);
+        setState((prev) => ({
+          ...initState,
+          showHint: prev.showHint,
+          peekAnswer: prev.peekAnswer,
+          randomizeQuestions: prev.randomizeQuestions,
+        }));
+      },
+      onStartQuiz() {
+        const order = prepareQuiz(state.randomizeQuestions);
+        setState((prev) => ({
+          ...initState,
+          showHint: prev.showHint,
+          peekAnswer: prev.peekAnswer,
+          randomizeQuestions: prev.randomizeQuestions,
+          started: true,
+          currentPosition: 0,
+          currentQuestion: order[0],
         }));
       },
       onAnswerQuestion(selected: SelectedAnswer) {
-        if (!state.currentPosition) {
+        // Position 0 is the first question, so test for null, not falsy.
+        if (state.currentPosition === null) {
           return;
         }
         const position = state.currentPosition;
@@ -127,20 +142,16 @@ export function QuizProvider({ children }: Readonly<Props>) {
         if (!state.currentPosition) {
           return;
         }
-        const position = state.currentPosition;
-        const currentPosition = position - 1;
-        const atStart = position === 0;
+        const currentPosition = state.currentPosition - 1;
 
         setState((prev) => ({
           ...prev,
           currentPosition,
-          currentQuestion: atStart
-            ? prev.currentQuestion
-            : quizzes[currentPosition],
+          currentQuestion: quizzes[currentPosition],
         }));
       },
     };
-  }, [state]);
+  }, [state, quizOrder, deckQuestions]);
 
   return (
     <QuizCtx.Provider value={memoizedCtxValue}>{children}</QuizCtx.Provider>

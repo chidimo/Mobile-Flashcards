@@ -1,7 +1,7 @@
 import { getFieldError } from "@/utils/get-error-message";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import { View } from "react-native";
-import { Input } from "../form-elements/input";
+import { TextField } from "../ui/text-field";
 import { TCreateCard } from "@/types/generic";
 
 type Props = {
@@ -13,7 +13,7 @@ export const CardFormFields = (props: Props) => {
   const { control, errors } = props;
 
   return (
-    <View style={{ width: "100%", marginBottom: 40 }}>
+    <View className="gap-4">
       <Controller
         name="question"
         rules={{
@@ -21,13 +21,14 @@ export const CardFormFields = (props: Props) => {
         }}
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Enter question"
+          <TextField
+            label="Question"
+            placeholder="What do you want to remember?"
+            multiline
             value={value}
             onBlur={onBlur}
             onChangeText={onChange}
             error={getFieldError(errors.question)}
-            containerStyle={{ marginBottom: 30 }}
           />
         )}
       />
@@ -39,14 +40,14 @@ export const CardFormFields = (props: Props) => {
         }}
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
+          <TextField
+            label="Answer"
+            placeholder="The answer"
             multiline
-            placeholder="Enter answer"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             error={getFieldError(errors.answer)}
-            containerStyle={{ marginBottom: 30 }}
           />
         )}
       />
@@ -58,8 +59,9 @@ export const CardFormFields = (props: Props) => {
         }}
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Enter hint (optional)"
+          <TextField
+            label="Hint (optional)"
+            placeholder="A nudge, shown during the quiz"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

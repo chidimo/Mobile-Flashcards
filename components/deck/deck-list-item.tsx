@@ -1,34 +1,41 @@
 import { Deck } from "@/types/generic";
 import { router } from "expo-router";
+import { Feather } from "@expo/vector-icons";
+import { Text, View } from "react-native";
 import { useAppTheme } from "@/hooks/use-app-theme";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { CustomText } from "../custom-text";
+import { Card } from "../ui/card";
 
 interface Props {
   deck: Deck;
-  index: number;
 }
 
-export const DeckListItem = (props: Props) => {
-  const { deck, index } = props;
-  const { border } = useAppTheme();
+export const DeckListItem = ({ deck }: Props) => {
+  const { muted } = useAppTheme();
+  const count = deck.questions.length;
 
   return (
-    <TouchableOpacity
-      style={{
-        padding: 8,
-        width: "100%",
-        borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: border,
-      }}
-      onPress={() => {
-        router.push(`/${deck.id}`);
-      }}
+    <Card
+      accessibilityLabel={`Open ${deck.title}`}
+      onPress={() => router.push(`/${deck.id}`)}
+      className="flex-row items-center gap-4"
     >
-      <View style={{}}>
-        <CustomText isHeader text={`${index + 1}. ${deck.title}`} />
-        <CustomText text={`Cards: ${deck.questions.length}`} />
+      <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-100 dark:bg-ink-700">
+        <Text className="text-xl font-extrabold text-primary-700 dark:text-primary-200">
+          {deck.title.trim().charAt(0).toUpperCase() || "?"}
+        </Text>
       </View>
-    </TouchableOpacity>
+      <View className="flex-1 gap-0.5">
+        <Text
+          numberOfLines={1}
+          className="text-lg font-bold text-neutral-900 dark:text-white"
+        >
+          {deck.title}
+        </Text>
+        <Text className="text-sm text-neutral-500 dark:text-neutral-400">
+          {count} {count === 1 ? "card" : "cards"} · pass mark {deck.passMark}%
+        </Text>
+      </View>
+      <Feather name="chevron-right" size={20} color={muted} />
+    </Card>
   );
 };

@@ -7,16 +7,18 @@ export default function TabLayout() {
   const { getDeckById } = useFlash();
   const { deckId } = useGlobalSearchParams();
   const deck = getDeckById(deckId as string);
-  const { background, primary } = useAppTheme();
+  const { background, primary, text } = useAppTheme();
 
   return (
     <Stack
       screenOptions={{
         contentStyle: { backgroundColor: background },
         headerTransparent: false,
+        headerShadowVisible: false,
+        headerTitleStyle: { color: text, fontWeight: "700" },
         headerStyle: { backgroundColor: background },
         headerTintColor: primary,
-        headerTitle: `MFC <> ${deck?.title}`,
+        headerTitle: deck?.title ?? "Deck",
       }}
     >
       <Stack.Screen name="(tabs)" options={{}} />
