@@ -3,9 +3,6 @@ import { act, create } from "react-test-renderer";
 
 import { Markdown } from "../markdown";
 
-jest.mock("@react-native-vector-icons/material-design-icons", () => ({
-  MaterialDesignIcons: () => null,
-}));
 jest.mock("react-native/Libraries/Utilities/useColorScheme", () => ({
   __esModule: true,
   default: jest.fn(),
@@ -20,7 +17,7 @@ const codeTokenColors = (scheme: "light" | "dark") => {
     tree = create(<Markdown>{css}</Markdown>);
   });
   return tree.root
-    .findAllByType(Text)
+    .findAll((node) => (node.type as unknown) === Text)
     .filter((node) => StyleSheet.flatten(node.props.style)?.lineHeight === 19)
     .map((node) => StyleSheet.flatten(node.props.style)?.color);
 };
