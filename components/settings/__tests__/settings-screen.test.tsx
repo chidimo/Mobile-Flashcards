@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Appearance } from "react-native";
 import renderer, { act } from "react-test-renderer";
 
-import { themePreferenceKey } from "@/constants";
+import { themePaletteKey, themePreferenceKey } from "@/constants";
 import { ThemeProvider } from "@/context/theme-context";
 import { SettingsScreen } from "../settings-screen";
 
@@ -60,5 +60,17 @@ describe("SettingsScreen", () => {
 
     expect(Appearance.setColorScheme).toHaveBeenCalledWith("light");
     expect(await AsyncStorage.getItem(themePreferenceKey)).toBe('"light"');
+  });
+
+  it("persists the chosen colour theme", async () => {
+    const tree = await render();
+
+    await act(async () => {
+      tree.root
+        .findByProps({ accessibilityLabel: "Teal theme" })
+        .props.onPress();
+    });
+
+    expect(await AsyncStorage.getItem(themePaletteKey)).toBe('"teal"');
   });
 });

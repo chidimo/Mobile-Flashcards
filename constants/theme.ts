@@ -4,6 +4,7 @@
  */
 
 import { Platform } from 'react-native';
+import { Palette } from '@/constants/palettes';
 
 const tintColorLight = '#1447e6';
 const tintColorDark = '#fff';
@@ -75,3 +76,29 @@ export const Fonts = Platform.select({
     mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
 });
+
+/** The light or dark colours with a palette's brand colour applied. */
+export const buildTheme = (scheme: 'light' | 'dark', palette: Palette) => {
+  const base = Colors[scheme];
+  if (scheme === 'dark') {
+    return {
+      ...base,
+      background: palette.ink[950],
+      primary: palette.primary[400],
+      link: palette.primary[400],
+      border: palette.ink[700],
+      surface: palette.ink[800],
+      cancelButton: palette.ink[700],
+      bar: palette.ink[900],
+    };
+  }
+  return {
+    ...base,
+    background: palette.canvas,
+    primary: palette.primary[600],
+    link: palette.primary[600],
+    tint: palette.primary[600],
+    border: palette.border,
+    cancelButton: palette.border,
+  };
+};
