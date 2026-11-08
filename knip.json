@@ -1,5 +1,10 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "ignoreBinaries": ["eas"],
-  "ignoreDependencies": ["expo-updates"]
+  "ignoreDependencies": ["expo-updates", "expo-document-picker"],
+  "ignore": [
+    "components/deck/deck-from-document.tsx",
+    "lib/ai-document-processor.ts",
+    "lib/document-parser.ts"
+  ]
 }
