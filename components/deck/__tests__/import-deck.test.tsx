@@ -69,7 +69,7 @@ describe("ImportDeck", () => {
     mockClipboard = JSON.stringify(deck);
     const { button, text, onSuccess } = render();
 
-    await act(async () => button("Paste import string").props.onPress());
+    await act(async () => button("Paste from clipboard").props.onPress());
 
     expect(text()).toContain("2 cards ready to import");
     expect(text()).toContain("Hola?");
@@ -89,7 +89,7 @@ describe("ImportDeck", () => {
     mockClipboard = JSON.stringify({ ...deck, id: "not-a-uuid" });
     const { button } = render();
 
-    await act(async () => button("Paste import string").props.onPress());
+    await act(async () => button("Paste from clipboard").props.onPress());
     await act(async () => button("Import deck").props.onPress());
 
     const savedId = mockImportDeck.mock.calls[0][0];
@@ -97,13 +97,13 @@ describe("ImportDeck", () => {
     expect(mockReplace).toHaveBeenCalledWith(`/${savedId}`);
   });
 
-  it("explains when the clipboard doesn't hold a deck", async () => {
+  it("explains when the clipboard isn't JSON", async () => {
     mockClipboard = "just some text";
     const { button, text } = render();
 
-    await act(async () => button("Paste import string").props.onPress());
+    await act(async () => button("Paste from clipboard").props.onPress());
 
-    expect(text()).toContain("doesn't hold a deck");
+    expect(text()).toContain("isn't a JSON deck");
     expect(button("Import deck").props.disabled).toBe(true);
   });
 
@@ -111,9 +111,9 @@ describe("ImportDeck", () => {
     mockClipboard = JSON.stringify({ hello: "world" });
     const { button, text } = render();
 
-    await act(async () => button("Paste import string").props.onPress());
+    await act(async () => button("Paste from clipboard").props.onPress());
 
-    expect(text()).toContain("isn't a valid deck");
+    expect(text()).toContain("isn't a flashcard deck");
   });
 
   it("cancels without importing", () => {

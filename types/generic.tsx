@@ -14,6 +14,7 @@ export const ImportSchema = z.object({
       id: z.string(),
       question: z.string(),
       answer: z.string(),
+      hint: z.string().optional(),
     }),
   ),
 });

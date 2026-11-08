@@ -1,6 +1,7 @@
 import { useFlash } from "@/context/app-context";
+import { shareDeckFile } from "@/lib/share-deck";
 import { router, useGlobalSearchParams } from "expo-router";
-import { Alert, Share } from "react-native";
+import { Alert } from "react-native";
 import { EditDeck } from "./edit-deck";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
 import { useState } from "react";
@@ -48,10 +49,7 @@ export const ManageDeck = () => {
 
   const onShare = async () => {
     try {
-      await Share.share({
-        message: JSON.stringify(deck),
-        title: `Deck ${deck?.title}`,
-      });
+      if (deck) await shareDeckFile(deck);
     } catch (error: any) {
       Alert.alert(error.message);
     }
@@ -89,7 +87,7 @@ export const ManageDeck = () => {
         <ActionRow
           icon="share"
           label="Share deck"
-          description="Send a copy others can import"
+          description="Send a .json file others can import"
           onPress={onShare}
         />
         <DeleteDeck deck={deck} />
