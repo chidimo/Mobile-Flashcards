@@ -31,6 +31,22 @@ export const palettes: Palette[] = [
     border: "#e7e4f3",
   },
   {
+    id: "blue",
+    name: "Blue",
+    primary: {
+      50: "#eff6ff",
+      100: "#dbeafe",
+      200: "#bfdbfe",
+      400: "#60a5fa",
+      500: "#3b82f6",
+      600: "#2563eb",
+      700: "#1d4ed8",
+    },
+    ink: { 700: "#1e2d4d", 800: "#121c33", 900: "#0a1224", 950: "#060b17" },
+    canvas: "#f5f8fe",
+    border: "#dfe7f5",
+  },
+  {
     id: "indigo",
     name: "Indigo",
     primary: {
