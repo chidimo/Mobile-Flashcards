@@ -4,12 +4,14 @@ import { DefaultButton } from "@/components/form-elements/button";
 import { VirtualizedList } from "@/components/virtualized-list";
 import { useFlash } from "@/context/app-context";
 import { pageContainerStyle } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { router } from "expo-router";
 import { View } from "react-native";
 import { CustomText } from "../custom-text";
 
 export const DeckList = () => {
   const { deckOfCards } = useFlash();
+  const { success } = useAppTheme();
 
   return (
     <View style={[pageContainerStyle.mainPageView]}>
@@ -27,7 +29,7 @@ export const DeckList = () => {
               moreTextStyle={{
                 textAlign: "center",
                 fontSize: 26,
-                color: "green",
+                color: success,
                 fontWeight: "bold",
               }}
             />
@@ -36,7 +38,7 @@ export const DeckList = () => {
               moreTextStyle={{
                 textAlign: "center",
                 fontSize: 34,
-                color: "green",
+                color: success,
                 fontWeight: "900",
               }}
             />

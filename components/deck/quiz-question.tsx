@@ -3,7 +3,8 @@ import { useState } from "react";
 import { DefaultButton } from "../form-elements/button";
 import { Question } from "@/types/generic";
 import { useQuiz } from "@/context/quiz-context";
-import { buttonStyles, primaryBgColor, primaryTextColor } from "@/styles";
+import { buttonStyles } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { CustomText } from "../custom-text";
 
 interface Props {
@@ -14,6 +15,7 @@ export const QuizQuestion = (props: Props) => {
   const { qs } = props;
   const [showAnswer, setShowAnswer] = useState(false);
   const { showHint, peekAnswer, onAnswerQuestion, onEndQuiz } = useQuiz();
+  const { background, primary, success } = useAppTheme();
 
   if (!qs) return null;
 
@@ -24,6 +26,7 @@ export const QuizQuestion = (props: Props) => {
           style={[
             styles.text,
             {
+              color: primary,
               flex: 1,
               fontSize: 24,
             },
@@ -38,7 +41,7 @@ export const QuizQuestion = (props: Props) => {
           style={{
             paddingVertical: 4,
             borderRadius: 4,
-            backgroundColor: showAnswer ? primaryBgColor : "green",
+            backgroundColor: showAnswer ? background : success,
             flexDirection: "row",
           }}
           onPress={() => {
@@ -51,10 +54,10 @@ export const QuizQuestion = (props: Props) => {
             style={{
               flex: 1,
               textAlign: "center",
-              color: "green",
+              color: success,
               fontSize: 22,
               borderWidth: 1,
-              borderColor: "green",
+              borderColor: success,
               borderRadius: 4,
               padding: 4,
             }}
@@ -106,7 +109,6 @@ export const QuizQuestion = (props: Props) => {
 
 const styles = StyleSheet.create({
   text: {
-    color: primaryTextColor,
     fontWeight: "bold",
     textAlign: "center",
   },

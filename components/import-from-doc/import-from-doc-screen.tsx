@@ -14,6 +14,7 @@ import { Input } from '../form-elements/input';
 import { Question } from '@/types/generic';
 import { ThemedText } from '../themed-text';
 import { ThemedView } from '../themed-view';
+import { useAppTheme } from '@/hooks/use-app-theme';
 
 interface ImportState {
   step: 'upload' | 'analyzing' | 'configuring' | 'generating' | 'review' | 'saving';
@@ -37,6 +38,7 @@ interface ImportState {
 }
 
 export const ImportFromDocScreen = () => {
+  const theme = useAppTheme();
   const router = useRouter();
   const [state, setState] = useState<ImportState>({
     step: 'upload',
@@ -231,12 +233,12 @@ export const ImportFromDocScreen = () => {
       </View>
 
       {state.error && (
-        <View style={styles.errorContainer}>
-          <ThemedText style={styles.errorText}>{state.error}</ThemedText>
+        <View style={[styles.errorContainer, { backgroundColor: theme.surface }]}>
+          <ThemedText style={[styles.errorText, { color: theme.danger }]}>{state.error}</ThemedText>
         </View>
       )}
 
-      <View style={styles.supportedFormats}>
+      <View style={[styles.supportedFormats, { backgroundColor: theme.surface }]}>
         <ThemedText style={styles.formatsTitle}>Supported formats:</ThemedText>
         <ThemedText style={styles.formatsList}>• PDF files</ThemedText>
         <ThemedText style={styles.formatsList}>• Microsoft Word documents (.docx)</ThemedText>
@@ -248,7 +250,7 @@ export const ImportFromDocScreen = () => {
   const renderAnalyzingStep = () => (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Analyzing Document</ThemedText>
-      <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+      <ActivityIndicator size="large" color={theme.link} style={styles.loader} />
       <ThemedText style={styles.subtitle}>
         AI is analyzing your document to identify key topics and suggest optimal flashcard settings...
       </ThemedText>
@@ -267,19 +269,24 @@ export const ImportFromDocScreen = () => {
           <ThemedText style={styles.title}>Configure Flashcard Generation</ThemedText>
           
           {/* Document Preview */}
-          <View style={styles.section}>
+          <View style={[styles.section, { backgroundColor: theme.surface }]}>
             <ThemedText style={styles.sectionTitle}>Document Preview</ThemedText>
             <ThemedText style={styles.documentName}>{state.document.name}</ThemedText>
             <ThemedText style={styles.documentStats}>
               {stats.wordCount} words • {stats.estimatedReadingTime} min read
             </ThemedText>
-            <View style={styles.previewBox}>
+            <View
+              style={[
+                styles.previewBox,
+                { backgroundColor: theme.background, borderLeftColor: theme.link },
+              ]}
+            >
               <ThemedText style={styles.previewText}>{preview}</ThemedText>
             </View>
           </View>
 
           {/* AI Analysis Results */}
-          <View style={styles.section}>
+          <View style={[styles.section, { backgroundColor: theme.surface }]}>
             <ThemedText style={styles.sectionTitle}>AI Analysis</ThemedText>
             <ThemedText style={styles.analysisText}>
               <ThemedText style={styles.label}>Topics:</ThemedText> {state.analysis.topics.join(', ')}
@@ -293,7 +300,7 @@ export const ImportFromDocScreen = () => {
           </View>
 
           {/* Configuration Options */}
-          <View style={styles.section}>
+          <View style={[styles.section, { backgroundColor: theme.surface }]}>
             <ThemedText style={styles.sectionTitle}>Flashcard Settings</ThemedText>
             
             <Input
@@ -347,7 +354,7 @@ export const ImportFromDocScreen = () => {
   const renderGeneratingStep = () => (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Generating Flashcards</ThemedText>
-      <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+      <ActivityIndicator size="large" color={theme.link} style={styles.loader} />
       <ThemedText style={styles.subtitle}>
         AI is creating {state.cardCount} flashcards from your document...
       </ThemedText>
@@ -369,8 +376,8 @@ export const ImportFromDocScreen = () => {
         </View>
 
         {state.editedFlashcards.map((flashcard, index) => (
-          <View key={flashcard.id} style={styles.flashcardContainer}>
-            <ThemedText style={styles.flashcardNumber}>Card {index + 1}</ThemedText>
+          <View key={flashcard.id} style={[styles.flashcardContainer, { backgroundColor: theme.surface }]}>
+            <ThemedText style={[styles.flashcardNumber, { color: theme.link }]}>Card {index + 1}</ThemedText>
             
             <Input
               label="Question"
@@ -418,7 +425,7 @@ export const ImportFromDocScreen = () => {
   const renderSavingStep = () => (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Saving Flashcards</ThemedText>
-      <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+      <ActivityIndicator size="large" color={theme.link} style={styles.loader} />
       <ThemedText style={styles.subtitle}>
         Saving {state.editedFlashcards.length} flashcards to your collection...
       </ThemedText>
@@ -428,7 +435,7 @@ export const ImportFromDocScreen = () => {
   const renderError = () => (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Error</ThemedText>
-      <ThemedText style={styles.errorText}>{state.error}</ThemedText>
+      <ThemedText style={[styles.errorText, { color: theme.danger }]}>{state.error}</ThemedText>
       <DefaultButton
         title="Try Again"
         onPress={() => setState(prev => ({ ...prev, step: 'upload', error: undefined }))}
@@ -483,7 +490,6 @@ const styles = StyleSheet.create({
   supportedFormats: {
     marginTop: 40,
     padding: 20,
-    backgroundColor: '#f5f5f5',
     borderRadius: 10,
   },
   formatsTitle: {
@@ -496,13 +502,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   errorContainer: {
-    backgroundColor: '#ffebee',
     padding: 15,
     borderRadius: 10,
     marginVertical: 20,
   },
   errorText: {
-    color: '#c62828',
     textAlign: 'center',
   },
   loader: {
@@ -511,7 +515,6 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: 25,
     padding: 15,
-    backgroundColor: '#f8f9fa',
     borderRadius: 10,
   },
   sectionTitle: {
@@ -530,11 +533,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   previewBox: {
-    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 5,
     borderLeftWidth: 3,
-    borderLeftColor: '#007AFF',
   },
   previewText: {
     fontSize: 14,
@@ -557,7 +558,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   flashcardContainer: {
-    backgroundColor: '#f8f9fa',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
@@ -566,7 +566,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#007AFF',
   },
   flashcardInput: {
     marginBottom: 10,

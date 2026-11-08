@@ -6,7 +6,6 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { primaryTextColor } from "@/styles";
 import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
 import { TabMenuContainer, TabMenuItem } from "@/components/tab-menu-item";
 
@@ -18,11 +17,11 @@ export default function TabLayout() {
       name: "deck-index",
       displayName: "View",
       href: "/index",
-      icon: (isFocused: boolean) => (
+      icon: (color: string) => (
         <MaterialIcons
           name="subject"
           size={24}
-          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+          color={color}
         />
       ),
     },
@@ -30,11 +29,11 @@ export default function TabLayout() {
       name: "add-card",
       displayName: "Add card",
       href: `/${deckId}/add-card`,
-      icon: (isFocused: boolean) => (
+      icon: (color: string) => (
         <AntDesign
           name="plus"
           size={24}
-          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+          color={color}
         />
       ),
     },
@@ -42,11 +41,11 @@ export default function TabLayout() {
       name: "take-quiz",
       displayName: "Take quiz",
       href: `/${deckId}/take-quiz`,
-      icon: (isFocused: boolean) => (
+      icon: (color: string) => (
         <MaterialIcons
           name="quiz"
           size={24}
-          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+          color={color}
         />
       ),
     },
@@ -54,11 +53,11 @@ export default function TabLayout() {
       name: "my-scores",
       displayName: "Scoreboard",
       href: `/${deckId}/my-scores`,
-      icon: (isFocused: boolean) => (
+      icon: (color: string) => (
         <MaterialCommunityIcons
           name="scoreboard"
           size={24}
-          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+          color={color}
         />
       ),
     },
@@ -66,11 +65,11 @@ export default function TabLayout() {
       name: "manage",
       displayName: "Manage",
       href: `/${deckId}/manage`,
-      icon: (isFocused: boolean) => (
+      icon: (color: string) => (
         <Feather
           name="settings"
           size={24}
-          color={isFocused ? primaryTextColor : "rgba(0,0,0,0.7)"}
+          color={color}
         />
       ),
     },

@@ -1,8 +1,4 @@
-import { StyleProp, StyleSheet, TextStyle } from "react-native";
-
-const tabBarInactiveTint = "gray";
-export const primaryBgColor = "#fff";
-export const primaryTextColor = "purple";
+import { StyleSheet } from "react-native";
 
 export const pageContainerStyle = StyleSheet.create({
   mainPageView: {
@@ -20,13 +16,6 @@ export const pageContainerStyle = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-export const tabBarProps = {
-  tabBarStyle: { height: 55 },
-  tabBarActiveTintColor: primaryTextColor,
-  tabBarInactiveTintColor: tabBarInactiveTint,
-  tabBarLabelStyle: { fontWeight: "900", fontSize: 11 } as StyleProp<TextStyle>,
-};
 
 export const buttonStyles = StyleSheet.create({
   twoColumnBtns: {

@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { primaryBgColor } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Props = {
@@ -27,6 +27,7 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
     modalBehavior = "slide-from-bottom",
   } = props;
   const { bottom } = useSafeAreaInsets();
+  const { background, mutedIcon, border } = useAppTheme();
 
   const modalViewStyle =
     modalBehavior === "slide-from-bottom"
@@ -54,11 +55,19 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
             },
           ]}
         >
-          <View style={[styles.modalView, modalViewStyle]}>
-            <View style={styles.titleContainer}>
+          <View
+            style={[
+              styles.modalView,
+              { backgroundColor: background },
+              modalViewStyle,
+            ]}
+          >
+            <View
+              style={[styles.titleContainer, { borderBottomColor: border }]}
+            >
               <View style={{ width: "89%" }}>
                 {typeof title === "string" ? (
-                  <Text style={[styles.title]}>{title}</Text>
+                  <Text style={[styles.title, { color: mutedIcon }]}>{title}</Text>
                 ) : (
                   title
                 )}
@@ -67,7 +76,7 @@ export const DefaultModal = (props: React.PropsWithChildren<Props>) => {
                 <MaterialIcons
                   name="close"
                   size={48}
-                  color="rgba(0,0,0, 0.7)"
+                  color={mutedIcon}
                 />
               </Pressable>
             </View>
@@ -83,7 +92,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "rgba(0,0,0, 0.7)",
   },
   titleContainer: {
     display: "flex",
@@ -99,7 +107,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.7)",
   },
   modalView: {
-    backgroundColor: primaryBgColor,
     paddingHorizontal: 10,
     shadowColor: "#000",
     shadowOffset: {

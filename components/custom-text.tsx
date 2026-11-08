@@ -1,4 +1,4 @@
-import { primaryTextColor } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Text, View, StyleProp, TextStyle, ViewStyle } from "react-native";
 
 type Props = {
@@ -14,6 +14,7 @@ export const CustomText = ({
   moreTextStyle = {},
   moreContainerStyle = {},
 }: Props) => {
+  const { primary } = useAppTheme();
   return (
     <View style={[{ flexDirection: "row", width: "100%" }, moreContainerStyle]}>
       <Text
@@ -21,7 +22,7 @@ export const CustomText = ({
           isHeader
             ? { fontSize: 24, fontWeight: "bold" }
             : { fontSize: 16, fontWeight: "normal" },
-          { flex: 1, color: primaryTextColor, width: '50%' },
+          { flex: 1, color: primary, width: '50%' },
           moreTextStyle,
         ]}
       >

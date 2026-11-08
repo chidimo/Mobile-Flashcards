@@ -38,6 +38,10 @@
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?(react-native|@react-native|@react-native-community|expo|@expo|expo-.*|@expo-google-fonts|react-navigation|@react-navigation|uuid)/)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/.kilo/"
     ]
   },
   "dependencies": {

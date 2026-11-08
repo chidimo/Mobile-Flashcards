@@ -4,13 +4,15 @@ import { router, useGlobalSearchParams, useRouter } from "expo-router";
 import { useFlash } from "@/context/app-context";
 import { DefaultButton } from "../form-elements/button";
 import { NoCardComponent } from "./no-card-component";
-import { primaryTextColor, pageContainerStyle, buttonStyles } from "@/styles";
+import { pageContainerStyle, buttonStyles } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { QuizQuestion } from "./quiz-question";
 import { QuizStarter } from "./quiz-starter";
 import { useQuiz } from "@/context/quiz-context";
 
 export const QuizMaster = () => {
   const router = useRouter();
+  const { primary } = useAppTheme();
   const { saveMyScore } = useFlash();
   const { deckId } = useGlobalSearchParams();
 
@@ -47,8 +49,8 @@ export const QuizMaster = () => {
     <View style={[pageContainerStyle.mainPageView]}>
       {ended && currentQuestion && (
         <View style={[styles.sectionContainer]}>
-          <Text style={[styles.text, { fontSize: 30 }]}>End of quiz</Text>
-          <Text style={[styles.text, { fontSize: 28 }]}>
+          <Text style={[styles.text, { color: primary, fontSize: 30 }]}>End of quiz</Text>
+          <Text style={[styles.text, { color: primary, fontSize: 28 }]}>
             Your score: {currentScore}/{quizzes.length}
           </Text>
 
@@ -77,6 +79,7 @@ export const QuizMaster = () => {
           <Text
             style={[
               styles.text,
+              { color: primary },
               {
                 fontSize: 18,
               },
@@ -94,7 +97,6 @@ export const QuizMaster = () => {
 
 const styles = StyleSheet.create({
   text: {
-    color: primaryTextColor,
     fontWeight: "bold",
     textAlign: "center",
   },

@@ -3,11 +3,14 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { ThemedView } from "@/components/ThemedView";
 import { FlashProvider } from "@/context/app-context";
 import { NotifierWrapper } from "react-native-notifier";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { primaryTextColor } from "@/styles";
+import { useThemeColor } from "@/hooks/use-theme-color";
+import { useAppTheme } from "@/hooks/use-app-theme";
+import { ThemeProvider } from "@/context/theme-context";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -16,6 +19,9 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  const backgroundColor = useThemeColor({}, "background");
+  const { primary } = useAppTheme();
 
   useEffect(() => {
     if (loaded) {
@@ -29,19 +35,34 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <NotifierWrapper>
-          <FlashProvider>
-            <Stack>
-              <Stack.Screen
-                name="(tabs)"
-                options={{
-                  headerTitle: "Home <> Mobile flashcards",
-                  headerTintColor: primaryTextColor,
-                }}
-              />
-              <Stack.Screen name="[deckId]" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-          </FlashProvider>
+          <ThemeProvider>
+            <FlashProvider>
+              <ThemedView style={{ flex: 1 }}>
+                <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+                  <Stack
+                    screenOptions={{
+                      headerTransparent: false,
+                      contentStyle: { backgroundColor },
+                      headerStyle: { backgroundColor },
+                    }}
+                  >
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{
+                        headerTitle: "Home <> Mobile flashcards",
+                        headerTintColor: primary,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="[deckId]"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+                </SafeAreaView>
+              </ThemedView>
+            </FlashProvider>
+          </ThemeProvider>
         </NotifierWrapper>
       </SafeAreaProvider>
     </GestureHandlerRootView>
