@@ -7,7 +7,9 @@ import * as Crypto from "expo-crypto";
 import { useFlash } from "@/context/app-context";
 import { Question, TCreateDeck } from "@/types/generic";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { deckPrompt } from "@/lib/ai-prompt";
 import { parseDeckFile } from "@/lib/deck-file";
+import { useClipboard } from "@/hooks/use-clipboard";
 import { markdownToPlain } from "@/utils/markdown-plain";
 import { DeckFormFields } from "./deck-form-fields";
 import { isValidV4UUID } from "@/utils/validate-uuid";
@@ -34,7 +36,8 @@ const PREVIEW_COUNT = 3;
 /** Gets a deck's JSON from somewhere (clipboard, a file), previews it and imports it. */
 export const DeckImport = (props: DeckImportProps) => {
   const { importDeck } = useFlash();
-  const { primary } = useAppTheme();
+  const { primary, text } = useAppTheme();
+  const { copyToClipboard } = useClipboard();
   const [error, setError] = useState<string | null>(null);
   const [qId, setQId] = useState<string | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -51,6 +54,11 @@ export const DeckImport = (props: DeckImportProps) => {
       passMark: 50,
     },
   });
+
+  const copyPrompt = async () => {
+    await copyToClipboard(deckPrompt);
+    showNotification("Prompt copied", "Paste it into your AI chat.");
+  };
 
   const load = async () => {
     try {
@@ -108,6 +116,32 @@ export const DeckImport = (props: DeckImportProps) => {
           onPress={() => void load()}
         />
       </Card>
+
+      {questions.length ? null : (
+        <Card className="gap-4">
+          <View className="flex-row items-start gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-primary-100 dark:bg-ink-700">
+              <Feather name="cpu" size={20} color={primary} />
+            </View>
+            <View className="flex-1 gap-1">
+              <Text className="text-base font-semibold text-neutral-900 dark:text-white">
+                Make a deck with AI
+              </Text>
+              <Text className="text-sm text-neutral-600 dark:text-neutral-300">
+                Copy this prompt into Claude, ChatGPT or any AI after
+                you&apos;ve talked through a topic. It sends back a deck file,
+                and the same deck as text, to import here.
+              </Text>
+            </View>
+          </View>
+          <Button
+            title="Copy AI prompt"
+            variant="outline"
+            icon={<Feather name="copy" size={18} color={text} />}
+            onPress={() => void copyPrompt()}
+          />
+        </Card>
+      )}
 
       {questions.length ? (
         <>

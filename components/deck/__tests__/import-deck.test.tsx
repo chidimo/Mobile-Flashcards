@@ -1,9 +1,12 @@
 import { act, create } from "react-test-renderer";
 
+import { deckPrompt } from "@/lib/ai-prompt";
 import { DeckFromClipboard } from "../deck-from-clipboard";
 
 const mockImportDeck = jest.fn();
 const mockReplace = jest.fn();
+const mockCopy = jest.fn();
+const mockNotify = jest.fn();
 let mockClipboard = "";
 
 jest.mock("@/context/app-context", () => ({
@@ -11,6 +14,7 @@ jest.mock("@/context/app-context", () => ({
 }));
 jest.mock("@/hooks/use-clipboard", () => ({
   useClipboard: () => ({
+    copyToClipboard: async (text: string) => mockCopy(text),
     fetchCopiedText: async (onCopy: (text: string) => void) =>
       onCopy(mockClipboard),
   }),
@@ -19,7 +23,9 @@ jest.mock("expo-crypto", () => ({ randomUUID: () => "generated-id" }));
 jest.mock("expo-router", () => ({
   router: { replace: (path: string) => mockReplace(path) },
 }));
-jest.mock("../../notifier", () => ({ showNotification: jest.fn() }));
+jest.mock("../../notifier", () => ({
+  showNotification: (...args: unknown[]) => mockNotify(...args),
+}));
 
 const deck = {
   id: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
@@ -55,6 +61,8 @@ const render = () => {
 beforeEach(() => {
   mockImportDeck.mockReset();
   mockReplace.mockReset();
+  mockCopy.mockReset();
+  mockNotify.mockReset();
   mockClipboard = "";
 });
 
@@ -123,5 +131,27 @@ describe("ImportDeck", () => {
 
     expect(onCancel).toHaveBeenCalledTimes(1);
     expect(mockImportDeck).not.toHaveBeenCalled();
+  });
+
+  it("copies the AI prompt and says so", async () => {
+    const { button } = render();
+
+    await act(async () => button("Copy AI prompt").props.onPress());
+
+    expect(mockCopy).toHaveBeenCalledWith(deckPrompt);
+    expect(mockNotify).toHaveBeenCalledWith(
+      "Prompt copied",
+      expect.stringContaining("Paste"),
+    );
+  });
+
+  it("hides the AI prompt once a deck is loaded", async () => {
+    mockClipboard = JSON.stringify(deck);
+    const { button, text } = render();
+    expect(text()).toContain("Make a deck with AI");
+
+    await act(async () => button("Paste from clipboard").props.onPress());
+
+    expect(text()).not.toContain("Make a deck with AI");
   });
 });
