@@ -1,8 +1,9 @@
 import { act, create } from "react-test-renderer";
 
-import { ImportDeck } from "../import-deck";
+import { DeckFromClipboard } from "../deck-from-clipboard";
 
 const mockImportDeck = jest.fn();
+const mockReplace = jest.fn();
 let mockClipboard = "";
 
 jest.mock("@/context/app-context", () => ({
@@ -15,6 +16,10 @@ jest.mock("@/hooks/use-clipboard", () => ({
   }),
 }));
 jest.mock("expo-crypto", () => ({ randomUUID: () => "generated-id" }));
+jest.mock("expo-router", () => ({
+  router: { replace: (path: string) => mockReplace(path) },
+}));
+jest.mock("../../notifier", () => ({ showNotification: jest.fn() }));
 
 const deck = {
   id: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
@@ -31,7 +36,9 @@ const render = () => {
   const onCancel = jest.fn();
   let tree!: ReturnType<typeof create>;
   act(() => {
-    tree = create(<ImportDeck onSuccess={onSuccess} onCancel={onCancel} />);
+    tree = create(
+      <DeckFromClipboard onSuccess={onSuccess} onCancel={onCancel} />,
+    );
   });
   // nativewind wraps the components, so find by role/label like a user would
   const button = (label: string) =>
@@ -47,6 +54,7 @@ const render = () => {
 
 beforeEach(() => {
   mockImportDeck.mockReset();
+  mockReplace.mockReset();
   mockClipboard = "";
 });
 
@@ -74,6 +82,19 @@ describe("ImportDeck", () => {
       { id: "generated-id", question: "Adios?", answer: "Goodbye" },
     ]);
     expect(onSuccess).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledWith(`/${deck.id}`);
+  });
+
+  it("opens the imported deck under the id it was saved with", async () => {
+    mockClipboard = JSON.stringify({ ...deck, id: "not-a-uuid" });
+    const { button } = render();
+
+    await act(async () => button("Paste import string").props.onPress());
+    await act(async () => button("Import deck").props.onPress());
+
+    const savedId = mockImportDeck.mock.calls[0][0];
+    expect(savedId).toBe("generated-id");
+    expect(mockReplace).toHaveBeenCalledWith(`/${savedId}`);
   });
 
   it("explains when the clipboard doesn't hold a deck", async () => {

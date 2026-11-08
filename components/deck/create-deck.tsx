@@ -1,13 +1,11 @@
 import { useFlash } from "@/context/app-context";
 import { TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { View } from "react-native";
 import { DeckFormFields } from "./deck-form-fields";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { PageTitle } from "../ui/page-title";
 import { Screen } from "../ui/screen";
-import { router } from "expo-router";
 
 export const CreateDeck = () => {
   const { addDeck } = useFlash();
@@ -29,9 +27,13 @@ export const CreateDeck = () => {
   };
 
   const onSubmit: SubmitHandler<TCreateDeck> = async (data) => {
-    saveDeck(data).then(() => {
-      reset();
-    });
+    saveDeck(data)
+      .then(() => {
+        reset();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
@@ -43,16 +45,12 @@ export const CreateDeck = () => {
 
       <Card>
         <DeckFormFields isNew control={control} errors={errors} />
-      </Card>
-
-      <View className="gap-3">
-        <Button title="Save deck" onPress={handleSubmit(onSubmit)} />
         <Button
-          title="Import a deck"
-          variant="secondary"
-          onPress={() => router.push("/import-deck")}
+          title="Save and continue"
+          onPress={handleSubmit(onSubmit)}
+          className="mt-3"
         />
-      </View>
+      </Card>
     </Screen>
   );
 };

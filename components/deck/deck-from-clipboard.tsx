@@ -1,27 +1,29 @@
-import { useFlash } from "@/context/app-context";
-import { ImportSchema, Question, TCreateDeck } from "@/types/generic";
+import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 import { useState } from "react";
+import * as Crypto from "expo-crypto";
+import { useFlash } from "@/context/app-context";
+import { ImportSchema, Question, TCreateDeck } from "@/types/generic";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { DeckFormFields } from "./deck-form-fields";
-import * as Crypto from "expo-crypto";
 import { isValidV4UUID } from "@/utils/validate-uuid";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { PageTitle } from "../ui/page-title";
 import { Screen } from "../ui/screen";
+import { showNotification } from "../notifier";
 
 interface Props {
   onCancel: () => void;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 const PREVIEW_COUNT = 3;
 
-export const ImportDeck = (props: Props) => {
+export const DeckFromClipboard = (props: Props) => {
   const { importDeck } = useFlash();
   const { fetchCopiedText } = useClipboard();
   const { primary } = useAppTheme();
@@ -75,9 +77,13 @@ export const ImportDeck = (props: Props) => {
   };
 
   const onSubmit: SubmitHandler<TCreateDeck> = (data) => {
-    importDeck(qId, data.title, data.passMark, questions);
+    // importDeck mints a new id when the pasted one isn't a valid UUID, so decide it here to know where to go.
+    const deckId = qId && isValidV4UUID(qId) ? qId : Crypto.randomUUID();
+    importDeck(deckId, data.title, data.passMark, questions);
     reset();
-    props.onSuccess();
+    props.onSuccess?.();
+    showNotification("Success", "Deck imported successfully!");
+    router.replace(`/${deckId}`);
   };
 
   return (
