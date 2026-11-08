@@ -2,10 +2,12 @@ import { Text, View } from "react-native";
 import { DefaultButton } from "../form-elements/button";
 import { AppCheckbox } from "../form-elements/check-box";
 import { useQuiz } from "@/context/quiz-context";
-import { primaryTextColor, pageContainerStyle } from "@/styles";
+import { pageContainerStyle } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { CustomText } from "../custom-text";
 
 export const QuizStarter = () => {
+  const { primary } = useAppTheme();
   const {
     deckName,
     showHint,
@@ -93,7 +95,7 @@ export const QuizStarter = () => {
                 />
                 <Text
                   style={{
-                    color: primaryTextColor,
+                    color: primary,
                     fontWeight: "bold",
                     textAlign: "center",
                     fontSize: 20,

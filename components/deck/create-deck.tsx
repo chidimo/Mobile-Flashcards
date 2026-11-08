@@ -1,5 +1,5 @@
 import { useFlash } from "@/context/app-context";
-import { primaryTextColor, pageContainerStyle, primaryBgColor } from "@/styles";
+import { pageContainerStyle } from "@/styles";
 import { TCreateDeck } from "@/types/generic";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { View } from "react-native";

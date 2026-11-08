@@ -1,4 +1,4 @@
-import { primaryBgColor } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { ComponentRef, Ref, forwardRef } from "react";
 import {
   KeyboardTypeOptions,
@@ -64,6 +64,8 @@ export const Input = forwardRef((props: Props, ref: Ref<ComponentRef<typeof Text
     selectTextOnFocus,
     autoComplete = "off",
   } = props;
+  const { background, text, placeholder: placeholderColor, danger, inputBorder } =
+    useAppTheme();
 
   return (
     <View
@@ -75,7 +77,7 @@ export const Input = forwardRef((props: Props, ref: Ref<ComponentRef<typeof Text
         containerStyle,
       ]}
     >
-      {label ? <Text>{label}</Text> : null}
+      {label ? <Text style={{ color: text }}>{label}</Text> : null}
       <TextInput
         ref={ref}
         value={value}
@@ -89,7 +91,7 @@ export const Input = forwardRef((props: Props, ref: Ref<ComponentRef<typeof Text
         onBlur={onBlur}
         onChangeText={onChangeText}
         onSubmitEditing={onSubmitEditing}
-        placeholderTextColor="gray"
+        placeholderTextColor={placeholderColor}
         style={[
           {
             width: "100%",
@@ -98,13 +100,14 @@ export const Input = forwardRef((props: Props, ref: Ref<ComponentRef<typeof Text
             fontSize: 18,
             height: 50,
             paddingHorizontal: 10,
-            backgroundColor: primaryBgColor,
-            borderColor: error ? "red" : "rgba(0,0,0,0.3)",
+            backgroundColor: background,
+            color: text,
+            borderColor: error ? danger : inputBorder,
           },
         ]}
       />
 
-      {error && <Text style={{ color: "red" }}>{error}</Text>}
+      {error && <Text style={{ color: danger }}>{error}</Text>}
     </View>
   );
 });

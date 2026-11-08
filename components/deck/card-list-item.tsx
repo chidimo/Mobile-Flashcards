@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Question } from "@/types/generic";
-import { primaryTextColor } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
 
 interface Props {
   index: number;
@@ -15,6 +15,7 @@ interface Props {
 export const CardListItem = (props: Props) => {
   const { index, deckId, question, isLast } = props;
   const { deleteCard } = useFlash();
+  const { primary, danger } = useAppTheme();
 
   return (
     <View
@@ -23,7 +24,7 @@ export const CardListItem = (props: Props) => {
         paddingHorizontal: 10,
         borderWidth: 1,
         borderRadius: 5,
-        borderColor: "purple",
+        borderColor: primary,
         marginBottom: isLast ? 0 : 10,
       }}
     >
@@ -34,14 +35,19 @@ export const CardListItem = (props: Props) => {
           marginBottom: 10,
         }}
       >
-        <Text style={[styles.text, { fontWeight: "bold", marginRight: 5 }]}>
+        <Text
+          style={[
+            styles.text,
+            { color: primary, fontWeight: "bold", marginRight: 5 },
+          ]}
+        >
           Question {index + 1}
         </Text>
         <View style={{ flexDirection: "row" }}>
           <AntDesign
             name="delete"
             size={22}
-            color={"red"}
+            color={danger}
             onPress={() => {
               deleteCard(deckId, question.id);
             }}
@@ -49,12 +55,19 @@ export const CardListItem = (props: Props) => {
         </View>
       </View>
       <View>
-        <Text style={[styles.text, { marginBottom: 5, fontWeight: "bold" }]}>
+        <Text
+          style={[
+            styles.text,
+            { color: primary, marginBottom: 5, fontWeight: "bold" },
+          ]}
+        >
           {question.question}
         </Text>
-        <Text style={styles.text}>{question.answer}</Text>
+        <Text style={[styles.text, { color: primary }]}>{question.answer}</Text>
         {question.hint && (
-          <Text style={styles.text}>Hint: {question.hint}</Text>
+          <Text style={[styles.text, { color: primary }]}>
+            Hint: {question.hint}
+          </Text>
         )}
       </View>
     </View>
@@ -64,6 +77,5 @@ export const CardListItem = (props: Props) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: 18,
-    color: primaryTextColor,
   },
 });
