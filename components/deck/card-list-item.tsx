@@ -6,6 +6,8 @@ import { Pressable, Text, View } from "react-native";
 import { Question } from "@/types/generic";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { Card } from "../ui/card";
+import { markdownToPlain } from "@/utils/markdown-plain";
+import { Markdown } from "../ui/markdown";
 import { ConfirmDialog } from "../ui/confirm-dialog";
 
 interface Props {
@@ -51,22 +53,20 @@ export const CardListItem = ({ index, deckId, question }: Props) => {
         </View>
       </View>
 
-      <Text className="text-lg font-bold text-neutral-900 dark:text-white">
+      <Markdown size={17} bold>
         {question.question}
-      </Text>
-      <Text className="text-base text-neutral-600 dark:text-neutral-300">
-        {question.answer}
-      </Text>
+      </Markdown>
+      <Markdown size={16}>{question.answer}</Markdown>
       {question.hint ? (
-        <Text className="text-sm italic text-neutral-500 dark:text-neutral-400">
-          Hint: {question.hint}
-        </Text>
+        <View className="opacity-70">
+          <Markdown size={14}>{`*Hint:* ${question.hint}`}</Markdown>
+        </View>
       ) : null}
 
       <ConfirmDialog
         visible={confirmingDelete}
         title="Delete this card?"
-        message={`This deletes "${question.question}". You can't undo this.`}
+        message={`This deletes "${markdownToPlain(question.question, 60)}". You can't undo this.`}
         onCancel={() => setConfirmingDelete(false)}
         onConfirm={() => {
           setConfirmingDelete(false);

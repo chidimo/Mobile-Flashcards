@@ -42,7 +42,7 @@ export const QuizStarter = () => {
           />
           <ToggleRow
             label="Allow peeking"
-            description="Tap a card to check its answer"
+            description="A Show answer button on each card"
             value={peekAnswer}
             onValueChange={onUpdatePeek}
           />
