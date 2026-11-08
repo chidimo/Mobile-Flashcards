@@ -1,0 +1,85 @@
+{
+  "id": "70b1f42a-22cb-440b-9ab0-f7f60e6d5802",
+  "title": "CSS Flexbox",
+  "passMark": 70,
+  "questions": [
+    {
+      "id": "e2b972f5-b6f8-496d-90cc-6292c3811a11",
+      "question": "How do you turn an element into a flex container?\n```css\n.row {\n  /* ??? */\n}\n```",
+      "answer": "Set `display: flex` (or `inline-flex`). Its **direct children** become flex items.\n```css\n.row {\n  display: flex;\n}\n```",
+      "hint": "One property"
+    },
+    {
+      "id": "c8787352-c4d6-40aa-b039-0ecfb1b5cd1b",
+      "question": "What are the two axes in flexbox?",
+      "answer": "- **Main axis**: the direction items are laid out (set by `flex-direction`)\n- **Cross axis**: perpendicular to the main axis\n\nWith `flex-direction: row`, main is horizontal and cross is vertical."
+    },
+    {
+      "id": "42e008c8-a439-4f2c-86f5-a7d4f074c07c",
+      "question": "What does `flex-direction: column` change?",
+      "answer": "It makes the **main axis vertical**, so items stack top to bottom. `justify-content` then works vertically and `align-items` horizontally.\n```css\n.stack {\n  display: flex;\n  flex-direction: column;\n}\n```",
+      "hint": "Axes swap"
+    },
+    {
+      "id": "127068c6-a4ef-4e21-a78f-56756fe3bbac",
+      "question": "Which property spaces items along the **main axis**?\n```css\n.row {\n  display: flex;\n  /* ??? */: space-between;\n}\n```",
+      "answer": "`justify-content`\n```css\n.row {\n  display: flex;\n  justify-content: space-between;\n}\n```\nOther values: `flex-start`, `center`, `flex-end`, `space-around`, `space-evenly`."
+    },
+    {
+      "id": "937a91ac-efe9-4f97-b903-729957dbf44a",
+      "question": "Which property aligns items along the **cross axis**?",
+      "answer": "`align-items`\n```css\n.row {\n  display: flex;\n  align-items: center;\n}\n```\nValues: `stretch` (default), `flex-start`, `center`, `flex-end`, `baseline`.",
+      "hint": "Not justify"
+    },
+    {
+      "id": "9c5c9cde-0b97-4b56-aad1-ebb1caa8d70f",
+      "question": "How do you perfectly centre a child, horizontally and vertically, using flex?",
+      "answer": "```css\n.parent {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n```\nOr `place-content: center` with `display: flex` on the parent."
+    },
+    {
+      "id": "07a2ce2a-770b-4f26-b594-8fd39f94cb8c",
+      "question": "What does `flex-wrap: wrap` do?",
+      "answer": "Lets items **wrap onto new lines** instead of shrinking to fit on one line (the default is `nowrap`).\n```css\n.tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n}\n```"
+    },
+    {
+      "id": "b6bf2ee1-db98-433d-ab17-925f66c7717e",
+      "question": "What does `gap` do, and what did people use before it?",
+      "answer": "`gap` sets the space **between** items, not around the edges.\n```css\n.row {\n  display: flex;\n  gap: 16px;\n}\n```\nBefore it, you needed margins on the items, which also add space at the ends."
+    },
+    {
+      "id": "ea7210d1-ca23-4309-b20d-c0e146b06402",
+      "question": "What does this declaration mean?\n```css\n.item {\n  flex: 1;\n}\n```",
+      "answer": "`flex: 1` is shorthand for `flex: 1 1 0%`:\n- `flex-grow: 1`: take a share of free space\n- `flex-shrink: 1`: can shrink\n- `flex-basis: 0%`: start from zero\n\nSo items with `flex: 1` share the space **equally**."
+    },
+    {
+      "id": "7f852fb6-1416-44f2-bc9b-3f91052a8206",
+      "question": "What is the difference between `flex-grow` and `flex-shrink`?",
+      "answer": "- `flex-grow`: how much an item **expands** to fill leftover space (default `0`)\n- `flex-shrink`: how much it **contracts** when there isn't enough space (default `1`)\n\nBoth are ratios relative to the other items."
+    },
+    {
+      "id": "737f014b-5ddc-41dc-ba88-985ecebaadf3",
+      "question": "What is `flex-basis`?",
+      "answer": "The item's **starting size along the main axis**, before growing or shrinking. It overrides `width` (in a row) or `height` (in a column).\n```css\n.item {\n  flex: 0 0 200px; /* grow shrink basis */\n}\n```"
+    },
+    {
+      "id": "a9b7659a-a14c-4887-98e4-60a116740437",
+      "question": "How can one item sit on a different cross-axis position from the rest?",
+      "answer": "Use `align-self` on that item. It overrides the container's `align-items` for just that child.\n```css\n.row {\n  display: flex;\n  align-items: flex-start;\n}\n.special {\n  align-self: flex-end;\n}\n```"
+    },
+    {
+      "id": "e80351db-e25a-44d7-979f-4fe1fef10f66",
+      "question": "What does `order` do?",
+      "answer": "It changes the **visual order** of flex items without changing the HTML. Items sort by `order` (default `0`), lowest first.\n```css\n.third { order: -1; } /* now first */\n```\nBeware: screen readers still follow the HTML order."
+    },
+    {
+      "id": "0f1866e4-f611-4da8-adac-0564f775d12e",
+      "question": "`align-items` vs `align-content`: what is the difference?",
+      "answer": "- `align-items` aligns items **within each line**\n- `align-content` aligns the **lines themselves** and only has an effect when there is more than one line (with `flex-wrap: wrap`)"
+    },
+    {
+      "id": "f3649aaf-a106-4c8e-9e26-d2eb55d6b84c",
+      "question": "Push one item to the far end of a row, leaving the others at the start. How?",
+      "answer": "Give it `margin-left: auto`: auto margins absorb the free space.\n```css\n.nav {\n  display: flex;\n}\n.nav .login {\n  margin-left: auto;\n}\n```"
+    }
+  ]
+}

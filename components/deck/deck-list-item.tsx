@@ -1,8 +1,9 @@
 import { Deck } from "@/types/generic";
 import { router } from "expo-router";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@react-native-vector-icons/feather";
 import { Text, View } from "react-native";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { useReorderableDrag } from "react-native-reorderable-list";
 import { Card } from "../ui/card";
 
 interface Props {
@@ -11,12 +12,14 @@ interface Props {
 
 export const DeckListItem = ({ deck }: Props) => {
   const { muted } = useAppTheme();
+  const drag = useReorderableDrag();
   const count = deck.questions.length;
 
   return (
     <Card
       accessibilityLabel={`Open ${deck.title}`}
       onPress={() => router.push(`/${deck.id}`)}
+      onLongPress={drag}
       className="flex-row items-center gap-4"
     >
       <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-100 dark:bg-ink-700">

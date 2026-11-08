@@ -49,4 +49,6 @@ export interface ScoreSaver {
 export type StoreValue = {
   flashcards: Record<string, Deck> | null;
   myScores: Record<string, ScoreSaver[]> | null;
+  /** Deck ids in the order the person arranged them; absent until they first reorder. */
+  deckOrder?: string[];
 };

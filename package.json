@@ -19,6 +19,7 @@
     "prebuild": "npx expo prebuild",
     "build:prod": "npx expo prebuild --clean && npx eas-cli@latest workflow:run create-production-builds.yml",
     "build:android": "eas build --profile development --platform android",
+    "build:preview:local": "eas build --local --profile preview --platform android",
     "build:android:production": "eas build --profile production --platform android",
     "submit:android": "eas submit --platform android --profile production",
     "build:ios": "eas build --profile development --platform ios",
@@ -39,7 +40,7 @@
       "!**/__tests__/**"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?(react-native|@react-native|@react-native-community|expo|@expo|expo-.*|@expo-google-fonts|react-navigation|@react-navigation|uuid|nativewind|react-native-css-interop)/)"
+      "node_modules/(?!(jest-)?(react-native|@react-native|@react-native-community|expo|@expo|expo-.*|@expo-google-fonts|react-navigation|@react-navigation|uuid|nativewind|@ronradtke|@react-native-vector-icons|react-native-fit-image|react-native-css-interop)/)"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
@@ -50,8 +51,9 @@
     ]
   },
   "dependencies": {
-    "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-vector-icons/feather": "^13.1.5",
+    "@ronradtke/react-native-markdown-display": "^9.0.3",
     "dayjs": "^1.11.11",
     "es-toolkit": "^1.40.0",
     "expo": "^58",
@@ -77,6 +79,7 @@
     "react-native-gesture-handler": "~3.3.0",
     "react-native-notifier": "^1.9.0",
     "react-native-reanimated": "4.7.1",
+    "react-native-reorderable-list": "^0.18.3",
     "react-native-safe-area-context": "~5.11.1",
     "react-native-screens": "~4.30.1",
     "react-native-web": "^0.21.4",

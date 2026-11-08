@@ -1,6 +1,6 @@
 import { Href, useGlobalSearchParams } from "expo-router";
 import React from "react";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@react-native-vector-icons/feather";
 import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
 import { TabMenuContainer, TabMenuItem } from "@/components/tab-menu-item";
 

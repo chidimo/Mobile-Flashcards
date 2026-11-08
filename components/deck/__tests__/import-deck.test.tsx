@@ -1,9 +1,15 @@
+import { Share } from "react-native";
 import { act, create } from "react-test-renderer";
 
+import { deckPrompt } from "@/lib/ai-prompt";
 import { DeckFromClipboard } from "../deck-from-clipboard";
 
 const mockImportDeck = jest.fn();
 const mockReplace = jest.fn();
+const mockCopy = jest.fn();
+let mockCopyWorks = true;
+const mockShare = jest.fn();
+const mockNotify = jest.fn();
 let mockClipboard = "";
 
 jest.mock("@/context/app-context", () => ({
@@ -11,6 +17,10 @@ jest.mock("@/context/app-context", () => ({
 }));
 jest.mock("@/hooks/use-clipboard", () => ({
   useClipboard: () => ({
+    copyToClipboard: async (text: string) => {
+      mockCopy(text);
+      return mockCopyWorks;
+    },
     fetchCopiedText: async (onCopy: (text: string) => void) =>
       onCopy(mockClipboard),
   }),
@@ -19,7 +29,9 @@ jest.mock("expo-crypto", () => ({ randomUUID: () => "generated-id" }));
 jest.mock("expo-router", () => ({
   router: { replace: (path: string) => mockReplace(path) },
 }));
-jest.mock("../../notifier", () => ({ showNotification: jest.fn() }));
+jest.mock("../../notifier", () => ({
+  showNotification: (...args: unknown[]) => mockNotify(...args),
+}));
 
 const deck = {
   id: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
@@ -55,6 +67,14 @@ const render = () => {
 beforeEach(() => {
   mockImportDeck.mockReset();
   mockReplace.mockReset();
+  mockCopy.mockReset();
+  mockShare.mockReset();
+  mockCopyWorks = true;
+  jest.spyOn(Share, "share").mockImplementation((content) => {
+    mockShare(content);
+    return Promise.resolve({ action: "dismissedAction" } as never);
+  });
+  mockNotify.mockReset();
   mockClipboard = "";
 });
 
@@ -103,7 +123,7 @@ describe("ImportDeck", () => {
 
     await act(async () => button("Paste from clipboard").props.onPress());
 
-    expect(text()).toContain("isn't a JSON deck");
+    expect(text()).toContain("isn't valid JSON");
     expect(button("Import deck").props.disabled).toBe(true);
   });
 
@@ -123,5 +143,48 @@ describe("ImportDeck", () => {
 
     expect(onCancel).toHaveBeenCalledTimes(1);
     expect(mockImportDeck).not.toHaveBeenCalled();
+  });
+
+  it("copies the AI prompt and says so", async () => {
+    const { button } = render();
+
+    await act(async () => button("Copy AI prompt").props.onPress());
+
+    expect(mockCopy).toHaveBeenCalledWith(deckPrompt);
+    expect(mockNotify).toHaveBeenCalledWith(
+      "Prompt copied",
+      expect.stringContaining("Paste"),
+    );
+  });
+
+  it("hides the AI prompt once a deck is loaded", async () => {
+    mockClipboard = JSON.stringify(deck);
+    const { button, text } = render();
+    expect(text()).toContain("Make a deck with AI");
+
+    await act(async () => button("Paste from clipboard").props.onPress());
+
+    expect(text()).not.toContain("Make a deck with AI");
+  });
+
+  it("falls back to the share sheet when the clipboard didn't take the prompt", async () => {
+    mockCopyWorks = false;
+    const { button } = render();
+
+    await act(async () => button("Copy AI prompt").props.onPress());
+
+    expect(mockNotify).toHaveBeenCalledWith(
+      "Couldn't copy",
+      expect.stringContaining("share sheet"),
+    );
+    expect(mockShare).toHaveBeenCalledWith({ message: deckPrompt });
+  });
+
+  it("does not open the share sheet when the copy worked", async () => {
+    const { button } = render();
+
+    await act(async () => button("Copy AI prompt").props.onPress());
+
+    expect(mockShare).not.toHaveBeenCalled();
   });
 });
