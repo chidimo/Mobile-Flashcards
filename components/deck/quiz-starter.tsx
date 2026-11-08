@@ -12,9 +12,11 @@ export const QuizStarter = () => {
     showHint,
     peekAnswer,
     randomizeQuestions,
+    allowBack,
     onUpdateHint,
     onUpdatePeek,
     onUpdateRandomizeQuestions,
+    onUpdateAllowBack,
     onStartQuiz,
   } = useQuiz();
 
@@ -53,10 +55,9 @@ export const QuizStarter = () => {
           />
           <ToggleRow
             label="Go back and forth"
-            description="Coming soon"
-            value={false}
-            onValueChange={() => {}}
-            disabled
+            description="Revisit and change earlier answers"
+            value={allowBack}
+            onValueChange={onUpdateAllowBack}
           />
         </View>
       </Card>
