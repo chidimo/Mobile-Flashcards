@@ -1,22 +1,23 @@
 import { getFieldError } from "@/utils/get-error-message";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { StyleProp, View, ViewStyle } from "react-native";
-import { Input } from "../form-elements/input";
+import { View } from "react-native";
+import { TextField } from "../ui/text-field";
 import { TCreateDeck } from "@/types/generic";
 import { useFlash } from "@/context/app-context";
+import { cn } from "@/utils/cn";
 
 type Props = {
   isNew?: boolean;
   control: Control<TCreateDeck>;
   errors: FieldErrors<TCreateDeck>;
-  moreContainerStyle?: StyleProp<ViewStyle>;
+  className?: string;
 };
 
 export const DeckFormFields = (props: Props) => {
-  const { isNew = false, control, errors, moreContainerStyle = {} } = props;
+  const { isNew = false, control, errors, className } = props;
   const { deckNames } = useFlash();
   return (
-    <View style={[{ width: "100%", marginBottom: 40 }, moreContainerStyle]}>
+    <View className={cn("gap-4", className)}>
       <Controller
         name="title"
         rules={{
@@ -29,13 +30,13 @@ export const DeckFormFields = (props: Props) => {
         }}
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Enter deck name"
+          <TextField
+            label="Deck name"
+            placeholder="e.g. Spanish verbs"
             value={value}
             onBlur={onBlur}
             onChangeText={onChange}
             error={getFieldError(errors.title)}
-            containerStyle={{ marginBottom: 25 }}
           />
         )}
       />
@@ -52,8 +53,9 @@ export const DeckFormFields = (props: Props) => {
         }}
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Set pass mark (percentage)"
+          <TextField
+            label="Pass mark (%)"
+            placeholder="50"
             value={String(value)}
             keyboardType="numeric"
             selectTextOnFocus

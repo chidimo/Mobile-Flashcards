@@ -1,108 +1,61 @@
 import { useFlash } from "@/context/app-context";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { router, useGlobalSearchParams } from "expo-router";
-import { Text, View, Share, Alert, ScrollView } from "react-native";
+import { Alert, Share, Text, View } from "react-native";
 import { EditDeck } from "./edit-deck";
 import { DefaultModal } from "../modal";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
-import { DefaultButton } from "../form-elements/button";
-import { pageContainerStyle } from "@/styles";
-import { useAppTheme } from "@/hooks/use-app-theme";
-import { CustomText } from "../custom-text";
 import { useState } from "react";
 import { Deck } from "@/types/generic";
+import { ActionRow } from "../ui/action-row";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { PageTitle } from "../ui/page-title";
+import { Screen } from "../ui/screen";
 
 const DeleteDeck = ({ deck }: { deck: Deck | null }) => {
-  const {
-    isOn: deleteOpen,
-    setOn: onDeleteOpen,
-    setOff: onDeleteClose,
-  } = useOnOffSwitch();
+  const { isOn, setOn, setOff } = useOnOffSwitch();
   const { deleteDeck } = useFlash();
-  const { background, primary, danger } = useAppTheme();
 
   return (
     <>
-      <DefaultButton
-        moreContainerStyle={{ backgroundColor: background }}
-        onPress={onDeleteOpen}
-        title={<AntDesign name="delete" size={30} color={danger} />}
+      <ActionRow
+        icon="trash-2"
+        label="Delete deck"
+        description="Remove the deck and all its cards"
+        destructive
+        onPress={setOn}
       />
 
       <DefaultModal
-        visible={deleteOpen}
-        title={
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "flex-start",
-            }}
-          >
-            <Text>
-              <AntDesign name="warning" size={24} color={danger} />
-            </Text>
-            <CustomText text={`Delete ${deck?.title}`} />
-          </View>
-        }
-        onRequestClose={onDeleteClose}
+        visible={isOn}
+        title={`Delete ${deck?.title}?`}
+        onRequestClose={setOff}
       >
-        <View style={{ flex: 1, alignItems: "center", paddingBottom: 50 }}>
-          <Text
-            style={{
-              marginBottom: 50,
-              fontSize: 18,
-              textAlign: "center",
-              color: primary,
-            }}
-          >
-            Are you sure you want to delete this deck and all its cards
+        <View className="gap-6 pb-10">
+          <Text className="text-base text-neutral-700 dark:text-neutral-200">
+            This deletes the deck and all of its cards. You can&apos;t undo
+            this.
           </Text>
-          <DefaultButton
-            moreContainerStyle={{ width: "50%" }}
-            btnVariant="DANGER"
-            title="Delete"
-            onPress={() => {
-              deleteDeck(deck?.id as string);
-              router.replace(`/(tabs)`);
-            }}
-          />
+          <View className="flex-row gap-3">
+            <Button
+              title="Cancel"
+              variant="outline"
+              className="flex-1"
+              onPress={setOff}
+            />
+            <Button
+              title="Delete"
+              variant="danger"
+              className="flex-1"
+              onPress={() => {
+                deleteDeck(deck?.id as string);
+                router.replace(`/(tabs)`);
+              }}
+            />
+          </View>
         </View>
       </DefaultModal>
     </>
-  );
-};
-
-const Parent = ({
-  children,
-  deck,
-}: {
-  children: React.ReactNode;
-  deck: Deck | null;
-}) => {
-  return (
-    <View
-      style={[
-        pageContainerStyle.mainPageView,
-        { justifyContent: "flex-start" },
-      ]}
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <CustomText
-          text={`Manage ${deck?.title} deck`}
-          isHeader
-          moreContainerStyle={{ width: "80%", alignItems: "flex-start" }}
-        />
-        <View style={{ flexDirection: "row", alignItems: "center" }}></View>
-      </View>
-
-      <ScrollView style={{ width: "100%" }}>{children}</ScrollView>
-    </View>
   );
 };
 
@@ -110,7 +63,6 @@ export const ManageDeck = () => {
   const { deckId } = useGlobalSearchParams();
   const { getDeckById, resetScore } = useFlash();
   const deck = getDeckById(deckId as string);
-  const { background, link } = useAppTheme();
 
   const [isEdit, setIsEdit] = useState(false);
 
@@ -127,50 +79,41 @@ export const ManageDeck = () => {
 
   if (isEdit) {
     return (
-      <Parent deck={deck}>
+      <Screen scroll>
+        <PageTitle title="Edit deck" subtitle={deck?.title} />
         <EditDeck
           onCancel={() => setIsEdit(false)}
           onSuccess={() => setIsEdit(false)}
         />
-      </Parent>
+      </Screen>
     );
   }
 
   return (
-    <Parent deck={deck}>
-      <DefaultButton
-        moreContainerStyle={{
-          width: "100%",
-          marginTop: 20,
-        }}
-        btnVariant="SUCCESS"
-        title="Edit deck"
-        onPress={() => {
-          setIsEdit(true);
-        }}
-      />
+    <Screen scroll>
+      <PageTitle title="Manage" subtitle={deck?.title} />
 
-      <DefaultButton
-        moreContainerStyle={{
-          width: "100%",
-          marginTop: 20,
-        }}
-        btnVariant="SUCCESS"
-        title="Reset scoreboard"
-        onPress={() => {
-          resetScore(deckId as string);
-        }}
-      />
-
-      <DefaultButton
-        title={<MaterialIcons name="share" size={30} color={link} />}
-        onPress={onShare}
-        moreContainerStyle={{
-          marginRight: 10,
-          backgroundColor: background,
-        }}
-      />
-      <DeleteDeck deck={deck} />
-    </Parent>
+      <Card className="gap-1 p-2">
+        <ActionRow
+          icon="edit-2"
+          label="Edit deck"
+          description="Change the name or pass mark"
+          onPress={() => setIsEdit(true)}
+        />
+        <ActionRow
+          icon="rotate-ccw"
+          label="Reset scoreboard"
+          description="Clear all saved scores"
+          onPress={() => resetScore(deckId as string)}
+        />
+        <ActionRow
+          icon="share"
+          label="Share deck"
+          description="Send a copy others can import"
+          onPress={onShare}
+        />
+        <DeleteDeck deck={deck} />
+      </Card>
+    </Screen>
   );
 };

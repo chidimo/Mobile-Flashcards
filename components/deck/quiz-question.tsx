@@ -1,103 +1,87 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useState } from "react";
-import { DefaultButton } from "../form-elements/button";
 import { Question } from "@/types/generic";
 import { useQuiz } from "@/context/quiz-context";
-import { buttonStyles } from "@/styles";
-import { useAppTheme } from "@/hooks/use-app-theme";
-import { CustomText } from "../custom-text";
+import { cn } from "@/utils/cn";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 
 interface Props {
   qs: Question | null;
 }
 
-export const QuizQuestion = (props: Props) => {
-  const { qs } = props;
+export const QuizQuestion = ({ qs }: Props) => {
   const [showAnswer, setShowAnswer] = useState(false);
   const { showHint, peekAnswer, onAnswerQuestion, onEndQuiz } = useQuiz();
-  const { background, primary, success } = useAppTheme();
 
   if (!qs) return null;
 
+  const answer = (side: "left" | "right") => {
+    onAnswerQuestion(side);
+    setShowAnswer(false);
+  };
+
   return (
-    <View style={[styles.sectionContainer]}>
-      <View style={styles.questionContainer}>
-        <Text
-          style={[
-            styles.text,
-            {
-              color: primary,
-              flex: 1,
-              fontSize: 24,
-            },
-          ]}
-        >
+    <View className="flex-1 gap-4">
+      <Card className="flex-1 justify-center gap-5 p-6">
+        <Text className="text-center text-2xl font-bold text-neutral-900 dark:text-white">
           {qs.question}
         </Text>
-      </View>
 
-      <View style={{ width: "100%", alignItems: "center" }}>
-        <Pressable
-          style={{
-            paddingVertical: 4,
-            borderRadius: 4,
-            backgroundColor: showAnswer ? background : success,
-            flexDirection: "row",
-          }}
-          onPress={() => {
-            if (peekAnswer) {
-              setShowAnswer((prev) => !prev);
-            }
-          }}
-        >
-          <Text
-            style={{
-              flex: 1,
-              textAlign: "center",
-              color: success,
-              fontSize: 22,
-              borderWidth: 1,
-              borderColor: success,
-              borderRadius: 4,
-              padding: 4,
-            }}
-          >
-            {qs.answer}
-          </Text>
-        </Pressable>
-        {peekAnswer ? <CustomText text="Tap to peek answer" /> : null}
         {showHint ? (
-          <CustomText text={`Hint: ${qs?.hint ? qs.hint : "N/A"}`} />
+          <Text className="text-center text-base italic text-neutral-500 dark:text-neutral-400">
+            Hint: {qs.hint ? qs.hint : "N/A"}
+          </Text>
         ) : null}
+
+        {peekAnswer ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={showAnswer ? "Hide answer" : "Show answer"}
+            onPress={() => setShowAnswer((prev) => !prev)}
+            className={cn(
+              "min-h-20 items-center justify-center rounded-xl border px-4 py-4",
+              showAnswer
+                ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950"
+                : "border-dashed border-neutral-300 dark:border-ink-700",
+            )}
+          >
+            <Text
+              className={cn(
+                "text-center text-xl",
+                showAnswer
+                  ? "font-semibold text-emerald-700 dark:text-emerald-300"
+                  : "text-neutral-500 dark:text-neutral-400",
+              )}
+            >
+              {showAnswer ? qs.answer : "Tap to peek at the answer"}
+            </Text>
+          </Pressable>
+        ) : null}
+      </Card>
+
+      <View className="flex-row gap-3">
+        <Button
+          title="Missed it"
+          icon={<Text className="text-2xl">😕</Text>}
+          variant="danger"
+          size="lg"
+          className="flex-1"
+          onPress={() => answer("left")}
+        />
+        <Button
+          title="Got it!"
+          icon={<Text className="text-2xl">😎</Text>}
+          variant="success"
+          size="lg"
+          className="flex-1"
+          onPress={() => answer("right")}
+        />
       </View>
 
-      <View style={buttonStyles.twoColumnBtns}>
-        <DefaultButton
-          moreContainerStyle={{ width: "45%" }}
-          title="I missed 😏"
-          btnVariant="DANGER"
-          onPress={() => {
-            onAnswerQuestion("left");
-            setShowAnswer(false);
-          }}
-        />
-
-        <DefaultButton
-          moreContainerStyle={{ width: "45%" }}
-          title="I got it! 😎"
-          btnVariant="SUCCESS"
-          onPress={() => {
-            onAnswerQuestion("right");
-            setShowAnswer(false);
-          }}
-        />
-      </View>
-
-      <DefaultButton
+      <Button
         title="Exit quiz"
-        moreContainerStyle={{ paddingHorizontal: 10, height: 40 }}
-        moreTextStyle={{ fontSize: 16 }}
-        btnVariant="SECONDARY"
+        variant="ghost"
         onPress={() => {
           onEndQuiz();
           setShowAnswer(false);
@@ -106,22 +90,3 @@ export const QuizQuestion = (props: Props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  questionContainer: {
-    padding: 8,
-    fontSize: 22,
-    borderRadius: 4,
-    flexDirection: "row",
-  },
-  sectionContainer: {
-    flex: 1,
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    width: "100%",
-  },
-});

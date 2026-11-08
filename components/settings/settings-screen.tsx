@@ -1,30 +1,23 @@
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { useTheme } from "@/context/theme-context";
-import { StyleSheet, Switch } from "react-native";
+import { Card } from "../ui/card";
+import { PageTitle } from "../ui/page-title";
+import { Screen } from "../ui/screen";
+import { ToggleRow } from "../ui/toggle-row";
 
 export const SettingsScreen = () => {
   const { isDark, enableDarkMode, disableDarkMode } = useTheme();
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.row}>
-        <ThemedText type="defaultSemiBold">Dark mode</ThemedText>
-        <Switch
-          accessibilityLabel="Dark mode"
+    <Screen>
+      <PageTitle title="Settings" />
+      <Card className="py-1">
+        <ToggleRow
+          label="Dark mode"
+          description="Use a dark colour scheme"
           value={isDark}
           onValueChange={(on) => (on ? enableDarkMode() : disableDarkMode())}
         />
-      </ThemedView>
-    </ThemedView>
+      </Card>
+    </Screen>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, width: "100%", padding: 20 },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-});

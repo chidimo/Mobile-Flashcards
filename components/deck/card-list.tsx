@@ -1,51 +1,77 @@
-import { VirtualizedList } from "@/components/virtualized-list";
 import { useFlash } from "@/context/app-context";
+import { Feather } from "@expo/vector-icons";
 import { router, useGlobalSearchParams } from "expo-router";
-import { View } from "react-native";
-import { NoCardComponent } from "@/components/deck/no-card-component";
-import { pageContainerStyle } from "@/styles";
+import { useAppTheme } from "@/hooks/use-app-theme";
+import { Text, View } from "react-native";
 import { CardListItem } from "@/components/deck/card-list-item";
 import { formatDate } from "@/utils/format-datetime";
-import { CustomText } from "../custom-text";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { EmptyState } from "../ui/empty-state";
+import { Screen } from "../ui/screen";
+import { Stat } from "../ui/stat";
 
 export const CardList = () => {
   const { deckId } = useGlobalSearchParams();
   const { getDeckById } = useFlash();
+  const { primary } = useAppTheme();
 
   const deck = getDeckById(deckId as string);
   const questionList = deck?.questions ?? [];
 
-  return (
-    <View style={[pageContainerStyle.mainPageView]}>
-      <View style={{ marginBottom: 10 }}>
-        <View style={{ width: "100%" }}>
-          <CustomText isHeader text={deck?.title ?? ""} />
-          <CustomText text={`Pass mark: ${deck?.passMark ?? ""}`} />
-          <CustomText text={`Created on: ${formatDate(deck?.addedOn, true)}`} />
-        </View>
-      </View>
-
-      {questionList.length === 0 ? (
-        <NoCardComponent
-          onPress={() => {
-            router.push(`/${deck?.id!}/add-card`);
-          }}
+  if (questionList.length === 0) {
+    return (
+      <Screen>
+        <EmptyState
+          icon="file-plus"
+          title="No cards yet"
+          message={`Add the first card to ${deck?.title ?? "this deck"}.`}
+          actionTitle="Add your first card"
+          onAction={() => router.push(`/${deck?.id}/add-card`)}
         />
-      ) : (
-        <VirtualizedList>
-          {questionList.map((qs, idx) => {
-            return (
-              <CardListItem
-                key={qs.id}
-                index={idx}
-                question={qs}
-                deckId={deckId as string}
-                isLast={idx === (deck?.questions.length ?? 0) + 1}
-              />
-            );
-          })}
-        </VirtualizedList>
-      )}
-    </View>
+      </Screen>
+    );
+  }
+
+  return (
+    <Screen scroll>
+      <Card className="gap-4">
+        <View className="gap-1">
+          <Text className="text-2xl font-extrabold text-neutral-900 dark:text-white">
+            {deck?.title}
+          </Text>
+          <Text className="text-sm text-neutral-500 dark:text-neutral-400">
+            Created {formatDate(deck?.addedOn)}
+          </Text>
+        </View>
+        <View className="flex-row">
+          <Stat value={String(questionList.length)} label="Cards" />
+          <Stat value={`${deck?.passMark}%`} label="Pass mark" />
+        </View>
+        <View className="flex-row gap-3">
+          <Button
+            title="Start quiz"
+            className="flex-1"
+            onPress={() => router.push(`/${deck?.id}/take-quiz`)}
+          />
+          <Button
+            title="Add card"
+            variant="secondary"
+            className="flex-1"
+            icon={<Feather name="plus" size={18} color={primary} />}
+            onPress={() => router.push(`/${deck?.id}/add-card`)}
+          />
+        </View>
+      </Card>
+
+      {questionList.map((qs, idx) => (
+        <CardListItem
+          key={qs.id}
+          index={idx}
+          question={qs}
+          deckId={deckId as string}
+        />
+      ))}
+    </Screen>
   );
 };
