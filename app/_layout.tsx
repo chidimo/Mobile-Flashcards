@@ -1,6 +1,6 @@
 import "../global.css";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Drawer } from "expo-router/drawer";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { View } from "react-native";
@@ -12,6 +12,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { ThemeProvider, usePalette } from "@/context/theme-context";
 import { UpdateProvider } from "@/context/update-context";
+import { AppDrawer } from "@/components/app-drawer";
+import { MenuButton } from "@/components/menu-button";
 import { UpdatePrompt } from "@/components/update-prompt";
 import { paletteVars } from "@/utils/palette-vars";
 
@@ -21,7 +23,7 @@ SplashScreen.preventAutoHideAsync();
 // Inside ThemeProvider so the chosen palette reaches classNames (via CSS variables) and headers.
 const AppShell = () => {
   const palette = usePalette();
-  const { primary, text, bar, background } = useAppTheme();
+  const { text, bar, background } = useAppTheme();
 
   return (
     <View
@@ -31,22 +33,30 @@ const AppShell = () => {
         style={{ flex: 1, backgroundColor: bar }}
         edges={["bottom"]}
       >
-        <Stack
+        <Drawer
+          drawerContent={(props) => <AppDrawer {...props} />}
           screenOptions={{
-            headerTransparent: false,
+            drawerType: "front",
+            drawerStyle: { width: 300 },
             headerShadowVisible: false,
             headerTitleStyle: { color: text, fontWeight: "700" },
-            contentStyle: { backgroundColor: background },
+            sceneStyle: { backgroundColor: background },
             headerStyle: { backgroundColor: background },
+            headerLeft: () => <MenuButton />,
           }}
         >
-          <Stack.Screen
+          <Drawer.Screen
             name="(tabs)"
-            options={{ headerTitle: "Flashcards", headerTintColor: primary }}
+            options={{ headerTitle: "Flashcards" }}
           />
-          <Stack.Screen name="[deckId]" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
+          {/* One stack per deck, so opening another deck never inherits the last one's screen state. */}
+          <Drawer.Screen
+            name="[deckId]"
+            options={{ headerShown: false }}
+            dangerouslySingular={(_, params) => String(params?.deckId)}
+          />
+          <Drawer.Screen name="+not-found" options={{ headerShown: false }} />
+        </Drawer>
         <UpdatePrompt />
       </SafeAreaView>
     </View>
