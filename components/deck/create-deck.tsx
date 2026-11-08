@@ -7,15 +7,10 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { PageTitle } from "../ui/page-title";
 import { Screen } from "../ui/screen";
-import { DefaultModal } from "../modal";
-import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
-import { ImportDeck } from "./import-deck";
 import { router } from "expo-router";
-import { showNotification } from "../notifier";
 
 export const CreateDeck = () => {
   const { addDeck } = useFlash();
-  const { isOn, setOff, setOn } = useOnOffSwitch();
 
   const {
     reset,
@@ -52,23 +47,12 @@ export const CreateDeck = () => {
 
       <View className="gap-3">
         <Button title="Save deck" onPress={handleSubmit(onSubmit)} />
-        <Button title="Import a deck" variant="secondary" onPress={setOn} />
+        <Button
+          title="Import a deck"
+          variant="secondary"
+          onPress={() => router.push("/import-deck")}
+        />
       </View>
-
-      <DefaultModal visible={isOn} onRequestClose={setOff} title="Import deck">
-        <View className="pb-5">
-          <ImportDeck
-            onSuccess={() => {
-              setOff();
-              showNotification("Success", "Deck imported successfully!");
-              router.push("/(tabs)");
-            }}
-            onCancel={() => {
-              setOff();
-            }}
-          />
-        </View>
-      </DefaultModal>
     </Screen>
   );
 };

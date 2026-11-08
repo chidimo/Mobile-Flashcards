@@ -44,6 +44,10 @@ const AppShell = () => {
             name="(tabs)"
             options={{ headerTitle: "Flashcards", headerTintColor: primary }}
           />
+          <Stack.Screen
+            name="import-deck"
+            options={{ headerTitle: "Import deck", headerTintColor: primary }}
+          />
           <Stack.Screen name="[deckId]" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
