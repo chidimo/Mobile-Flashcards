@@ -11,6 +11,8 @@ import { NotifierWrapper } from "react-native-notifier";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { ThemeProvider, usePalette } from "@/context/theme-context";
+import { UpdateProvider } from "@/context/update-context";
+import { UpdatePrompt } from "@/components/update-prompt";
 import { paletteVars } from "@/utils/palette-vars";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -45,6 +47,7 @@ const AppShell = () => {
           <Stack.Screen name="[deckId]" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
+        <UpdatePrompt />
       </SafeAreaView>
     </View>
   );
@@ -69,7 +72,9 @@ export default function RootLayout() {
         <NotifierWrapper>
           <ThemeProvider>
             <FlashProvider>
-              <AppShell />
+              <UpdateProvider>
+                <AppShell />
+              </UpdateProvider>
             </FlashProvider>
           </ThemeProvider>
         </NotifierWrapper>
