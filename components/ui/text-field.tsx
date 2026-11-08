@@ -40,7 +40,7 @@ export const TextField = ({
         }}
         className={cn(
           "rounded-xl border bg-white px-4 text-base text-neutral-900 dark:bg-ink-800 dark:text-white",
-          multiline ? "min-h-28 py-3" : "h-12",
+          multiline ? "max-h-40 min-h-20 py-2.5" : "h-12",
           error && "border-red-500",
           !error && focused && "border-primary-500",
           !error && !focused && "border-neutral-300 dark:border-ink-700",
