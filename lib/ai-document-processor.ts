@@ -1,15 +1,15 @@
 import { Question } from "@/types/generic";
 
 // Provide fallback for environments where __DEV__ is not defined
-if (typeof (globalThis as any).__DEV__ === 'undefined') {
+if (typeof (globalThis as any).__DEV__ === "undefined") {
   try {
-    (globalThis as any).__DEV__ = process?.env?.NODE_ENV !== 'production';
+    (globalThis as any).__DEV__ = process?.env?.NODE_ENV !== "production";
   } catch {
     (globalThis as any).__DEV__ = true;
   }
 }
 
-export interface AIPromptTemplate {
+interface AIPromptTemplate {
   context: string;
   count: number;
   additionalInstructions?: string;
@@ -22,7 +22,7 @@ export interface GeneratedFlashcard {
   confidence?: number;
 }
 
-export interface DocumentAnalysisResult {
+interface DocumentAnalysisResult {
   topics: string[];
   difficulty: "beginner" | "intermediate" | "advanced";
   suggestedCardCount: number;
@@ -30,7 +30,7 @@ export interface DocumentAnalysisResult {
 }
 
 // AI-powered flashcard generation engine
-export class AIDocumentProcessor {
+class AIDocumentProcessor {
   private readonly model: string;
   private readonly baseUrl: string;
   private readonly apiKey?: string;
@@ -39,15 +39,21 @@ export class AIDocumentProcessor {
 
   constructor(
     apiKey?: string,
-    baseUrl: string = (typeof process !== 'undefined' ? process.env?.EXPO_PUBLIC_AI_BASE_URL : undefined) || "",
-    model: string = (typeof process !== 'undefined' ? process.env?.EXPO_PUBLIC_AI_MODEL : undefined) || "gemma2:2b",
+    baseUrl: string = (typeof process !== "undefined"
+      ? process.env?.EXPO_PUBLIC_AI_BASE_URL
+      : undefined) || "",
+    model: string = (typeof process !== "undefined"
+      ? process.env?.EXPO_PUBLIC_AI_MODEL
+      : undefined) || "gemma2:2b",
   ) {
     this.model = model;
     this.baseUrl = baseUrl;
     this.apiKey =
       apiKey ||
-      (typeof process !== 'undefined' ? process.env?.EXPO_PUBLIC_GROQ_API_KEY : undefined) ||
-      (typeof process !== 'undefined' ? process.env?.GROQ_API_KEY : undefined);
+      (typeof process !== "undefined"
+        ? process.env?.EXPO_PUBLIC_GROQ_API_KEY
+        : undefined) ||
+      (typeof process !== "undefined" ? process.env?.GROQ_API_KEY : undefined);
 
     // Detect provider based on URL
     if (baseUrl.includes("groq.com")) {
@@ -88,7 +94,9 @@ export class AIDocumentProcessor {
   }
 
   // Analyze document content to determine optimal flashcard parameters
-  public async analyzeDocument(documentText: string): Promise<DocumentAnalysisResult> {
+  public async analyzeDocument(
+    documentText: string,
+  ): Promise<DocumentAnalysisResult> {
     try {
       const prompt = this.buildDocumentAnalysisPrompt(documentText);
       const response = await this.callAI(prompt);
@@ -106,10 +114,15 @@ export class AIDocumentProcessor {
     documentText: string,
     count: number,
     difficulty?: "beginner" | "intermediate" | "advanced",
-    topics?: string[]
+    topics?: string[],
   ): Promise<GeneratedFlashcard[]> {
     try {
-      const prompt = this.buildFlashcardGenerationPrompt(documentText, count, difficulty, topics);
+      const prompt = this.buildFlashcardGenerationPrompt(
+        documentText,
+        count,
+        difficulty,
+        topics,
+      );
       const response = await this.callAI(prompt);
       return this.parseFlashcards(response, count);
     } catch (error) {
@@ -149,7 +162,8 @@ Please analyze and respond with a JSON object containing:
 
 Focus on identifying the most important concepts that would benefit from memorization.`,
       count: 1,
-      additionalInstructions: "Respond only with valid JSON, no additional text."
+      additionalInstructions:
+        "Respond only with valid JSON, no additional text.",
     };
 
     return this.generateAIPrompt(promptTemplate);
@@ -159,15 +173,16 @@ Focus on identifying the most important concepts that would benefit from memoriz
     documentText: string,
     count: number,
     difficulty?: "beginner" | "intermediate" | "advanced",
-    topics?: string[]
+    topics?: string[],
   ): string {
-    const difficultyInstruction = difficulty 
+    const difficultyInstruction = difficulty
       ? `Create ${difficulty} level flashcards.`
       : "Create appropriately challenging flashcards.";
-    
-    const topicsInstruction = topics && topics.length > 0
-      ? `Focus on these topics: ${topics.join(", ")}.`
-      : "";
+
+    const topicsInstruction =
+      topics && topics.length > 0
+        ? `Focus on these topics: ${topics.join(", ")}.`
+        : "";
 
     const promptTemplate: AIPromptTemplate = {
       context: `Generate ${count} flashcards from this document text:
@@ -186,16 +201,19 @@ Create flashcards that test understanding of the most important concepts.`,
 - hint: Optional hint for difficult questions
 - confidence: Number from 0.1 to 1.0 indicating confidence in quality
 
-Make questions varied and test different aspects of the material.`
+Make questions varied and test different aspects of the material.`,
     };
 
     return this.generateAIPrompt(promptTemplate);
   }
 
   private buildFlashcardImprovementPrompt(flashcards: Question[]): string {
-    const flashcardsText = flashcards.map((fc, index) => 
-      `${index + 1}. Q: ${fc.question}\n   A: ${fc.answer}${fc.hint ? `\n   Hint: ${fc.hint}` : ''}`
-    ).join('\n\n');
+    const flashcardsText = flashcards
+      .map(
+        (fc, index) =>
+          `${index + 1}. Q: ${fc.question}\n   A: ${fc.answer}${fc.hint ? `\n   Hint: ${fc.hint}` : ""}`,
+      )
+      .join("\n\n");
 
     const promptTemplate: AIPromptTemplate = {
       context: `Improve these flashcards to make them more effective for learning:
@@ -213,7 +231,7 @@ Please improve them by:
 - answer: Improved answer text
 - hint: Optional hint
 
-Maintain the original intent but improve clarity and effectiveness.`
+Maintain the original intent but improve clarity and effectiveness.`,
     };
 
     return this.generateAIPrompt(promptTemplate);
@@ -221,7 +239,7 @@ Maintain the original intent but improve clarity and effectiveness.`
 
   private generateAIPrompt(template: AIPromptTemplate): string {
     let prompt = template.context;
-    
+
     if (template.additionalInstructions) {
       prompt += `\n\nAdditional instructions: ${template.additionalInstructions}`;
     }
@@ -249,7 +267,9 @@ Maintain the original intent but improve clarity and effectiveness.`
       });
 
       if (!response.ok) {
-        throw new Error(`AI service error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `AI service error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
@@ -260,7 +280,10 @@ Maintain the original intent but improve clarity and effectiveness.`
       }
 
       if (__DEV__) {
-        console.log("🤖 AI Document Response:", responseText.substring(0, 200) + "...");
+        console.log(
+          "🤖 AI Document Response:",
+          responseText.substring(0, 200) + "...",
+        );
       }
 
       return responseText;
@@ -272,7 +295,10 @@ Maintain the original intent but improve clarity and effectiveness.`
     }
   }
 
-  private buildRequestBody(prompt: string): { requestBody: any; endpoint: string } {
+  private buildRequestBody(prompt: string): {
+    requestBody: any;
+    endpoint: string;
+  } {
     if (this.provider === "groq" || this.provider === "openai") {
       return {
         requestBody: {
@@ -331,12 +357,17 @@ Maintain the original intent but improve clarity and effectiveness.`
       }
 
       const parsed = JSON.parse(jsonMatch[0]);
-      
+
       return {
         topics: Array.isArray(parsed.topics) ? parsed.topics : ["General"],
         difficulty: parsed.difficulty || "intermediate",
-        suggestedCardCount: Math.min(Math.max(parsed.suggestedCardCount || 10, 5), 50),
-        keyConcepts: Array.isArray(parsed.keyConcepts) ? parsed.keyConcepts : [],
+        suggestedCardCount: Math.min(
+          Math.max(parsed.suggestedCardCount || 10, 5),
+          50,
+        ),
+        keyConcepts: Array.isArray(parsed.keyConcepts)
+          ? parsed.keyConcepts
+          : [],
       };
     } catch (error) {
       if (__DEV__) {
@@ -346,7 +377,10 @@ Maintain the original intent but improve clarity and effectiveness.`
     }
   }
 
-  private parseFlashcards(response: string, maxCount: number): GeneratedFlashcard[] {
+  private parseFlashcards(
+    response: string,
+    maxCount: number,
+  ): GeneratedFlashcard[] {
     try {
       const jsonMatch = new RegExp(/\[[\s\S]*\]/).exec(response);
       if (!jsonMatch) {
@@ -360,7 +394,7 @@ Maintain the original intent but improve clarity and effectiveness.`
         question: item.question || `Question ${index + 1}`,
         answer: item.answer || `Answer ${index + 1}`,
         hint: item.hint,
-        confidence: typeof item.confidence === 'number' ? item.confidence : 0.8,
+        confidence: typeof item.confidence === "number" ? item.confidence : 0.8,
       }));
     } catch (error) {
       if (__DEV__) {
@@ -370,7 +404,10 @@ Maintain the original intent but improve clarity and effectiveness.`
     }
   }
 
-  private parseImprovedFlashcards(response: string, originalFlashcards: Question[]): Question[] {
+  private parseImprovedFlashcards(
+    response: string,
+    originalFlashcards: Question[],
+  ): Question[] {
     try {
       const jsonMatch = new RegExp(/\[[\s\S]*\]/).exec(response);
       if (!jsonMatch) {
@@ -382,8 +419,14 @@ Maintain the original intent but improve clarity and effectiveness.`
 
       return limitedFlashcards.map((item: any, index: number) => ({
         id: originalFlashcards[index]?.id || `improved-${index}`,
-        question: item.question || originalFlashcards[index]?.question || `Question ${index + 1}`,
-        answer: item.answer || originalFlashcards[index]?.answer || `Answer ${index + 1}`,
+        question:
+          item.question ||
+          originalFlashcards[index]?.question ||
+          `Question ${index + 1}`,
+        answer:
+          item.answer ||
+          originalFlashcards[index]?.answer ||
+          `Answer ${index + 1}`,
         hint: item.hint,
       }));
     } catch (error) {

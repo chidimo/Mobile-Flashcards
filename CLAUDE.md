@@ -18,6 +18,6 @@
   ```
   git checkout dev && git reset --hard origin/master && git push --force-with-lease origin dev
   ```
-  A plain `git merge --ff-only` will *not* work if GitHub's squash-merge gave the same content a different commit SHA on each branch.
+  A plain `git merge --ff-only` will _not_ work if GitHub's squash-merge gave the same content a different commit SHA on each branch.
 - After any PR merges, delete its branch both locally and on `origin`.
 - Commit subjects and PR titles are both prefixed with a matching [gitmoji.dev](https://gitmoji.dev) emoji (✨ feature, 🐛 fix, 💥 breaking change, ✏️ copy/rename, etc.) — one prefix per commit/PR, matching the change type.

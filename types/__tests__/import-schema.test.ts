@@ -14,7 +14,7 @@ describe("ImportSchema", () => {
 
   it("accepts passMark as a string", () => {
     expect(ImportSchema.safeParse({ ...deck, passMark: "70" }).success).toBe(
-      true
+      true,
     );
   });
 

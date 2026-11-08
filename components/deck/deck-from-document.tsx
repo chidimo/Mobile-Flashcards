@@ -21,12 +21,7 @@ import { useAppTheme } from "@/hooks/use-app-theme";
 
 interface ImportState {
   step:
-    | "upload"
-    | "analyzing"
-    | "configuring"
-    | "generating"
-    | "review"
-    | "saving";
+    "upload" | "analyzing" | "configuring" | "generating" | "review" | "saving";
   document?: ParsedDocument;
   analysis?: {
     topics: string[];
