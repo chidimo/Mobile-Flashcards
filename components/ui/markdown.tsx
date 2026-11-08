@@ -3,6 +3,9 @@ import { useColorScheme } from "react-native";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { aliasFenceLanguages } from "@/utils/markdown-languages";
 
+// Prism leaves plain tokens uncoloured, and Text doesn't inherit, so they'd render black on the dark block.
+const plainCodeColor = { light: "#383a42", dark: "#abb2bf" };
+
 type Props = {
   children: string;
   /** Body text size; headings and code scale from it. */
@@ -45,7 +48,10 @@ export const Markdown = ({
           fontSize: Math.round(size * 0.9),
         },
         fence: { borderColor: border, borderRadius: 10, marginVertical: 8 },
-        fence_token: { fontSize: Math.round(size * 0.82) },
+        fence_token: {
+          color: plainCodeColor[scheme],
+          fontSize: Math.round(size * 0.82),
+        },
       }}
     >
       {aliasFenceLanguages(children)}
