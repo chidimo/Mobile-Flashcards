@@ -20,6 +20,14 @@ export default function TabLayout() {
         headerTintColor: primary,
         headerTitle: deck?.title ?? "Deck",
         headerLeft: () => <MenuButton />,
+        // iOS 26 wraps header buttons in a glass bubble; hide it.
+        unstable_headerLeftItems: () => [
+          {
+            type: "custom",
+            element: <MenuButton />,
+            hidesSharedBackground: true,
+          },
+        ],
       }}
     >
       <Stack.Screen name="(tabs)" options={{}} />
