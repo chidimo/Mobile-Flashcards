@@ -19,6 +19,7 @@
     "prebuild": "npx expo prebuild",
     "build:prod": "npx expo prebuild --clean && npx eas-cli@latest workflow:run create-production-builds.yml",
     "build:android": "eas build --profile development --platform android",
+    "build:preview:local": "eas build --local --profile preview --platform android",
     "build:android:production": "eas build --profile production --platform android",
     "submit:android": "eas submit --platform android --profile production",
     "build:ios": "eas build --profile development --platform ios",
