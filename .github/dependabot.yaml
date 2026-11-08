@@ -26,3 +26,7 @@ updates:
     target-branch: dev
     schedule:
       interval: monthly
+    ignore:
+      # Major bumps are done by hand.
+      - dependency-name: "*"
+        update-types: [version-update:semver-major]
