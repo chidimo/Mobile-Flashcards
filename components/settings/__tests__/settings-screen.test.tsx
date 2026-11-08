@@ -4,6 +4,7 @@ import renderer, { act } from "react-test-renderer";
 
 import { themePaletteKey, themePreferenceKey } from "@/constants";
 import { ThemeProvider } from "@/context/theme-context";
+import { UpdateProvider } from "@/context/update-context";
 import { SettingsScreen } from "../settings-screen";
 
 jest.mock("@react-native-async-storage/async-storage", () =>
@@ -15,7 +16,9 @@ const render = async () => {
   await act(async () => {
     tree = renderer.create(
       <ThemeProvider>
-        <SettingsScreen />
+        <UpdateProvider>
+          <SettingsScreen />
+        </UpdateProvider>
       </ThemeProvider>,
     );
   });

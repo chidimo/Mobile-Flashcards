@@ -1,15 +1,26 @@
 import { useTheme } from "@/context/theme-context";
+import { useUpdate } from "@/context/update-context";
 import { palettes } from "@/constants/palettes";
 import { cn } from "@/utils/cn";
 import { Pressable, Text, View } from "react-native";
+import { ActionRow } from "../ui/action-row";
 import { Card } from "../ui/card";
 import { PageTitle } from "../ui/page-title";
 import { Screen } from "../ui/screen";
 import { ToggleRow } from "../ui/toggle-row";
 
+const updateDescription = (status: string, version: string) => {
+  if (status === "checking") return "Checking…";
+  if (status === "current") return `You're on the latest version (${version})`;
+  if (status === "available") return "A new version is available";
+  if (status === "error") return "Couldn't check right now. Try again later.";
+  return `Version ${version}`;
+};
+
 export const SettingsScreen = () => {
   const { isDark, enableDarkMode, disableDarkMode, palette, setPaletteId } =
     useTheme();
+  const { status, installedVersion, checkNow } = useUpdate();
 
   return (
     <Screen scroll>
@@ -72,6 +83,15 @@ export const SettingsScreen = () => {
             );
           })}
         </View>
+      </Card>
+
+      <Card className="p-2">
+        <ActionRow
+          icon="refresh-cw"
+          label="Check for updates"
+          description={updateDescription(status, installedVersion)}
+          onPress={() => void checkNow()}
+        />
       </Card>
     </Screen>
   );

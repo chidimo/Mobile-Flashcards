@@ -12,7 +12,7 @@ export const setItemToStorage = async (value: Value, key: string) => {
 
 export const getItemFromStorage = async <T>(
   key: string,
-  onSuccess: (value: T) => void
+  onSuccess: (value: T) => void,
 ) => {
   try {
     const data = await AsyncStorage.getItem(key);
