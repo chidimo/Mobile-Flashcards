@@ -60,12 +60,13 @@ export const DeckScores = () => {
           <Stat value={`${passed}/${scores.length}`} label="Passed" />
         </View>
       </Card>
-      {scores.map((s, idx) => (
+      {/* Most recent first; attempts keep their original numbers. */}
+      {[...scores].reverse().map((s, idx) => (
         <ScoreCard
-          index={idx + 1}
+          index={scores.length - idx}
           key={s.date}
           score={s}
-          passMark={deck?.passMark ?? 50}
+          passMark={passMark}
         />
       ))}
     </Screen>
