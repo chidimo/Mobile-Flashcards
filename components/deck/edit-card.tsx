@@ -7,6 +7,7 @@ import { CardFormFields } from "./card-form-fields";
 import { TCreateCard } from "@/types/generic";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { EmptyState } from "../ui/empty-state";
 import { PageTitle } from "../ui/page-title";
 import { Screen } from "../ui/screen";
 
@@ -23,7 +24,7 @@ export const EditCard = () => {
       question: question?.question ?? "",
       hint: question?.hint ?? "",
     }),
-    [deck],
+    [question],
   );
 
   const {
@@ -46,10 +47,28 @@ export const EditCard = () => {
   };
 
   const onSubmit: SubmitHandler<TCreateCard> = async (data) => {
-    saveCard(data).then(() => {
-      router.push(`/${deckId}`);
-    });
+    saveCard(data)
+      .then(() => {
+        router.push(`/${deckId}`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
+
+  if (!question) {
+    return (
+      <Screen>
+        <EmptyState
+          icon="alert-circle"
+          title="Card not found"
+          message="This card no longer exists."
+          actionTitle="Back to cards"
+          onAction={() => router.push(`/${deckId}`)}
+        />
+      </Screen>
+    );
+  }
 
   return (
     <Screen scroll>

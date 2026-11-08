@@ -15,6 +15,15 @@ interface QuizState {
   currentQuestion: Question | null;
   currentPosition: number | null;
   randomizeQuestions: boolean;
+  allowBack: boolean;
+  timed: boolean;
+  secondsPerQuestion: number;
+  /** When the clock runs out, as a timestamp; null when the quiz is untimed or over. */
+  endsAt: number | null;
+  /** The quiz ended because time ran out, not because every question was answered. */
+  timedOut: boolean;
+  /** The answer given to each question so far, by position; changing one replaces it. */
+  answers: (SelectedAnswer | undefined)[];
 }
 
 const initState: QuizState = {
@@ -26,7 +35,30 @@ const initState: QuizState = {
   currentQuestion: null,
   currentPosition: null,
   randomizeQuestions: false,
+  allowBack: false,
+  timed: false,
+  secondsPerQuestion: 30,
+  endsAt: null,
+  timedOut: false,
+  answers: [],
 };
+
+// What the user chose on the options screen survives starting, retaking and leaving a quiz.
+const keepOptions = (prev: QuizState) => ({
+  showHint: prev.showHint,
+  peekAnswer: prev.peekAnswer,
+  randomizeQuestions: prev.randomizeQuestions,
+  allowBack: prev.allowBack,
+  timed: prev.timed,
+  secondsPerQuestion: prev.secondsPerQuestion,
+});
+
+// The whole quiz shares one clock: every question gets the same share of it.
+const deadline = (state: QuizState, questions: number) =>
+  state.timed ? Date.now() + questions * state.secondsPerQuestion * 1000 : null;
+
+const scoreOf = (answers: QuizState["answers"]) =>
+  answers.filter((answer) => answer === "right").length;
 
 interface QuizCtx extends QuizState {
   deckName?: string;
@@ -38,8 +70,13 @@ interface QuizCtx extends QuizState {
   onUpdateHint: () => void;
   onUpdatePeek: () => void;
   onUpdateRandomizeQuestions: () => void;
+  onUpdateAllowBack: () => void;
+  onUpdateTimed: () => void;
+  onSetSecondsPerQuestion: (seconds: number) => void;
+  /** The clock ran out: unanswered questions count as missed. */
+  onTimeUp: () => void;
   onAnswerQuestion: (selected: SelectedAnswer) => void;
-  // you may go to previous question but not next. To do that you simply answer and continue
+  // Only when allowBack is on. Going forward again is just answering the question.
   onPreviousQuestion: () => void;
 }
 
@@ -85,10 +122,9 @@ export function QuizProvider({ children }: Readonly<Props>) {
         const order = prepareQuiz(state.randomizeQuestions);
         setState((prev) => ({
           ...initState,
-          showHint: prev.showHint,
-          peekAnswer: prev.peekAnswer,
-          randomizeQuestions: prev.randomizeQuestions,
+          ...keepOptions(prev),
           started: true,
+          endsAt: deadline(prev, order.length),
           currentPosition: 0,
           currentQuestion: order[0],
         }));
@@ -96,21 +132,15 @@ export function QuizProvider({ children }: Readonly<Props>) {
       // Back to the options screen; a finished quiz has already saved its score.
       onEndQuiz() {
         setQuizOrder(null);
-        setState((prev) => ({
-          ...initState,
-          showHint: prev.showHint,
-          peekAnswer: prev.peekAnswer,
-          randomizeQuestions: prev.randomizeQuestions,
-        }));
+        setState((prev) => ({ ...initState, ...keepOptions(prev) }));
       },
       onStartQuiz() {
         const order = prepareQuiz(state.randomizeQuestions);
         setState((prev) => ({
           ...initState,
-          showHint: prev.showHint,
-          peekAnswer: prev.peekAnswer,
-          randomizeQuestions: prev.randomizeQuestions,
+          ...keepOptions(prev),
           started: true,
+          endsAt: deadline(prev, order.length),
           currentPosition: 0,
           currentQuestion: order[0],
         }));
@@ -122,13 +152,17 @@ export function QuizProvider({ children }: Readonly<Props>) {
         }
         const position = state.currentPosition;
         const ended = quiz_count === position + 1;
+        // Score from the answers, so changing an earlier one never counts twice.
+        const answers = [...state.answers];
+        answers[position] = selected;
 
         setState((prev) => ({
           ...prev,
           ended,
+          answers,
+          endsAt: ended ? null : prev.endsAt,
           currentPosition: ended ? null : position + 1,
-          currentScore:
-            selected === "right" ? prev.currentScore + 1 : prev.currentScore,
+          currentScore: scoreOf(answers),
           currentQuestion: ended ? null : quizzes[position + 1],
         }));
       },
@@ -138,8 +172,32 @@ export function QuizProvider({ children }: Readonly<Props>) {
           randomizeQuestions: !prev.randomizeQuestions,
         }));
       },
+      onUpdateAllowBack() {
+        setState((prev) => ({ ...prev, allowBack: !prev.allowBack }));
+      },
+      onUpdateTimed() {
+        setState((prev) => ({ ...prev, timed: !prev.timed }));
+      },
+      onSetSecondsPerQuestion(seconds: number) {
+        setState((prev) => ({ ...prev, secondsPerQuestion: seconds }));
+      },
+      onTimeUp() {
+        setState((prev) =>
+          prev.ended
+            ? prev
+            : {
+                ...prev,
+                ended: true,
+                timedOut: true,
+                endsAt: null,
+                currentPosition: null,
+                currentQuestion: null,
+                currentScore: scoreOf(prev.answers),
+              },
+        );
+      },
       onPreviousQuestion() {
-        if (!state.currentPosition) {
+        if (!state.allowBack || !state.currentPosition) {
           return;
         }
         const currentPosition = state.currentPosition - 1;

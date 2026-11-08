@@ -42,8 +42,11 @@ export default function TabLayout() {
     },
   ];
 
-  // Reached from the Cards screen, so it has a route but no tab.
-  const routeOnly = [{ name: "add-card", href: `/${deckId}/add-card` }];
+  // Reached from the Cards screen, so these have a route but no tab.
+  const routeOnly = [
+    { name: "add-card", href: `/${deckId}/add-card` },
+    { name: "edit-card", href: `/${deckId}/edit-card` },
+  ];
 
   return (
     <Tabs>

@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Violet defaults; the selected palette overrides these at the app root. */
+:root {
+  --primary-50: 241 237 255;
+  --primary-100: 228 220 255;
+  --primary-200: 203 188 255;
+  --primary-400: 154 127 255;
+  --primary-500: 124 92 255;
+  --primary-600: 106 69 245;
+  --primary-700: 86 50 214;
+  --ink-700: 44 40 72;
+  --ink-800: 27 24 48;
+  --ink-900: 16 14 29;
+  --ink-950: 11 9 20;
+  --canvas: 247 246 252;
+}

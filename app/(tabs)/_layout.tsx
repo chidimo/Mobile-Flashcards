@@ -1,5 +1,4 @@
 import { Href } from "expo-router";
-import React from "react";
 import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
 import { Feather } from "@expo/vector-icons";
 import { TabMenuContainer, TabMenuItem } from "@/components/tab-menu-item";
@@ -20,6 +19,14 @@ export default function TabLayout() {
       href: "/add-deck",
       icon: (color: string) => (
         <Feather name="plus-circle" size={22} color={color} />
+      ),
+    },
+    {
+      name: "import-deck",
+      displayName: "Import deck",
+      href: "/import-deck",
+      icon: (color: string) => (
+        <Feather name="file" size={22} color={color} />
       ),
     },
     {

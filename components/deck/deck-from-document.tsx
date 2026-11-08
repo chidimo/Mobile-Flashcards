@@ -1,34 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   ScrollView,
   StyleSheet,
   Alert,
   ActivityIndicator,
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import { DocumentParser, type ParsedDocument } from '@/lib/document-parser';
-import { aiDocumentProcessor, type GeneratedFlashcard } from '@/lib/ai-document-processor';
-import { Button } from '../ui/button';
-import { TextField } from '../ui/text-field';
-import { Question } from '@/types/generic';
-import { ThemedText } from '../themed-text';
-import { ThemedView } from '../themed-view';
-import { useAppTheme } from '@/hooks/use-app-theme';
+} from "react-native";
+import { useRouter } from "expo-router";
+import { DocumentParser, type ParsedDocument } from "@/lib/document-parser";
+import {
+  aiDocumentProcessor,
+  type GeneratedFlashcard,
+} from "@/lib/ai-document-processor";
+import { Button } from "../ui/button";
+import { TextField } from "../ui/text-field";
+import { Question } from "@/types/generic";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "../themed-view";
+import { useAppTheme } from "@/hooks/use-app-theme";
 
 interface ImportState {
-  step: 'upload' | 'analyzing' | 'configuring' | 'generating' | 'review' | 'saving';
+  step:
+    | "upload"
+    | "analyzing"
+    | "configuring"
+    | "generating"
+    | "review"
+    | "saving";
   document?: ParsedDocument;
   analysis?: {
     topics: string[];
-    difficulty: 'beginner' | 'intermediate' | 'advanced';
+    difficulty: "beginner" | "intermediate" | "advanced";
     suggestedCardCount: number;
     keyConcepts: string[];
   };
   generatedFlashcards: GeneratedFlashcard[];
   editedFlashcards: Question[];
   cardCount: number;
-  selectedDifficulty: 'beginner' | 'intermediate' | 'advanced';
+  selectedDifficulty: "beginner" | "intermediate" | "advanced";
   selectedTopics: string[];
   deckTitle: string;
   deckPassMark: number;
@@ -37,17 +46,17 @@ interface ImportState {
   error?: string;
 }
 
-export const ImportFromDocScreen = () => {
+export const DeckFromDocument = () => {
   const theme = useAppTheme();
   const router = useRouter();
   const [state, setState] = useState<ImportState>({
-    step: 'upload',
+    step: "upload",
     generatedFlashcards: [],
     editedFlashcards: [],
     cardCount: 10,
-    selectedDifficulty: 'intermediate',
+    selectedDifficulty: "intermediate",
     selectedTopics: [],
-    deckTitle: '',
+    deckTitle: "",
     deckPassMark: 70,
     isGenerating: false,
     isSaving: false,
@@ -55,43 +64,44 @@ export const ImportFromDocScreen = () => {
 
   const handleDocumentPick = async () => {
     try {
-      setState(prev => ({ ...prev, error: undefined }));
-      
+      setState((prev) => ({ ...prev, error: undefined }));
+
       const result = await DocumentParser.pickDocument();
-      
+
       if (!result.success || !result.document) {
-        setState(prev => ({ 
-          ...prev, 
-          error: result.error || 'Failed to pick document' 
+        setState((prev) => ({
+          ...prev,
+          error: result.error || "Failed to pick document",
         }));
         return;
       }
 
       // Validate document content
-      const validation = DocumentParser.validateDocumentContent(result.document);
+      const validation = DocumentParser.validateDocumentContent(
+        result.document,
+      );
       if (!validation.isValid) {
-        Alert.alert(
-          'Document Validation Failed',
-          validation.reason,
-          [{ text: 'OK' }]
-        );
+        Alert.alert("Document Validation Failed", validation.reason, [
+          { text: "OK" },
+        ]);
         return;
       }
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        step: 'analyzing',
+        step: "analyzing",
         document: result.document!,
-        deckTitle: result.document!.name.replace(/\.[^/.]+$/, ''), // Remove file extension
+        deckTitle: result.document!.name.replace(/\.[^/.]+$/, ""), // Remove file extension
       }));
 
       // Analyze the document
       await analyzeDocument(result.document!);
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to process document',
-        step: 'upload',
+        error:
+          error instanceof Error ? error.message : "Failed to process document",
+        step: "upload",
       }));
     }
   };
@@ -99,20 +109,21 @@ export const ImportFromDocScreen = () => {
   const analyzeDocument = async (document: ParsedDocument) => {
     try {
       const analysis = await aiDocumentProcessor.analyzeDocument(document.text);
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
-        step: 'configuring',
+        step: "configuring",
         analysis,
         cardCount: analysis.suggestedCardCount,
         selectedDifficulty: analysis.difficulty,
         selectedTopics: analysis.topics.slice(0, 3), // Limit to top 3 topics
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to analyze document',
-        step: 'upload',
+        error:
+          error instanceof Error ? error.message : "Failed to analyze document",
+        step: "upload",
       }));
     }
   };
@@ -121,13 +132,18 @@ export const ImportFromDocScreen = () => {
     if (!state.document) return;
 
     try {
-      setState(prev => ({ ...prev, step: 'generating', isGenerating: true, error: undefined }));
+      setState((prev) => ({
+        ...prev,
+        step: "generating",
+        isGenerating: true,
+        error: undefined,
+      }));
 
       const flashcards = await aiDocumentProcessor.generateFlashcards(
         state.document.text,
         state.cardCount,
         state.selectedDifficulty,
-        state.selectedTopics
+        state.selectedTopics,
       );
 
       // Convert to Question format for editing
@@ -138,18 +154,21 @@ export const ImportFromDocScreen = () => {
         hint: fc.hint,
       }));
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        step: 'review',
+        step: "review",
         generatedFlashcards: flashcards,
         editedFlashcards,
         isGenerating: false,
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to generate flashcards',
-        step: 'configuring',
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to generate flashcards",
+        step: "configuring",
         isGenerating: false,
       }));
     }
@@ -157,61 +176,79 @@ export const ImportFromDocScreen = () => {
 
   const improveFlashcards = async () => {
     try {
-      setState(prev => ({ ...prev, isGenerating: true, error: undefined }));
+      setState((prev) => ({ ...prev, isGenerating: true, error: undefined }));
 
-      const improvedFlashcards = await aiDocumentProcessor.improveFlashcards(state.editedFlashcards);
+      const improvedFlashcards = await aiDocumentProcessor.improveFlashcards(
+        state.editedFlashcards,
+      );
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         editedFlashcards: improvedFlashcards,
         isGenerating: false,
       }));
 
-      Alert.alert('Flashcards Improved', 'The AI has improved your flashcards for better learning.');
+      Alert.alert(
+        "Flashcards Improved",
+        "The AI has improved your flashcards for better learning.",
+      );
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to improve flashcards',
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to improve flashcards",
         isGenerating: false,
       }));
     }
   };
 
-  const updateFlashcard = (id: string, field: 'question' | 'answer' | 'hint', value: string) => {
-    setState(prev => ({
+  const updateFlashcard = (
+    id: string,
+    field: "question" | "answer" | "hint",
+    value: string,
+  ) => {
+    setState((prev) => ({
       ...prev,
-      editedFlashcards: prev.editedFlashcards.map(fc =>
-        fc.id === id ? { ...fc, [field]: value } : fc
+      editedFlashcards: prev.editedFlashcards.map((fc) =>
+        fc.id === id ? { ...fc, [field]: value } : fc,
       ),
     }));
   };
 
   const saveFlashcards = async () => {
     try {
-      setState(prev => ({ ...prev, step: 'saving', isSaving: true, error: undefined }));
+      setState((prev) => ({
+        ...prev,
+        step: "saving",
+        isSaving: true,
+        error: undefined,
+      }));
 
       // TODO: Implement actual database save logic
       // This would integrate with your existing flashcard storage system
       // For now, we'll simulate the save operation
-      
+
       // Simulate save operation
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       Alert.alert(
-        'Success!',
+        "Success!",
         `Successfully saved ${state.editedFlashcards.length} flashcards to "${state.deckTitle}"`,
         [
           {
-            text: 'OK',
+            text: "OK",
             onPress: () => router.back(),
           },
-        ]
+        ],
       );
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to save flashcards',
-        step: 'review',
+        error:
+          error instanceof Error ? error.message : "Failed to save flashcards",
+        step: "review",
         isSaving: false,
       }));
     }
@@ -219,30 +256,45 @@ export const ImportFromDocScreen = () => {
 
   const renderUploadStep = () => (
     <ThemedView style={styles.container}>
-      <ThemedText style={styles.title}>Import Flashcards from Document</ThemedText>
+      <ThemedText style={styles.title}>
+        Import Flashcards from Document
+      </ThemedText>
       <ThemedText style={styles.subtitle}>
-        Upload a PDF, DOCX, or TXT file to generate flashcards automatically using AI
+        Document import is coming soon. You&apos;ll be able to turn a PDF, DOCX
+        or TXT file into flashcards automatically using AI.
       </ThemedText>
 
       <View style={styles.uploadArea}>
+        {/* Disabled until document import ships; handleDocumentPick is kept for then. */}
         <Button
           title="Choose Document"
+          disabled
           onPress={handleDocumentPick}
           variant="primary"
         />
       </View>
 
       {state.error && (
-        <View style={[styles.errorContainer, { backgroundColor: theme.surface }]}>
-          <ThemedText style={[styles.errorText, { color: theme.danger }]}>{state.error}</ThemedText>
+        <View
+          style={[styles.errorContainer, { backgroundColor: theme.surface }]}
+        >
+          <ThemedText style={[styles.errorText, { color: theme.danger }]}>
+            {state.error}
+          </ThemedText>
         </View>
       )}
 
-      <View style={[styles.supportedFormats, { backgroundColor: theme.surface }]}>
+      <View
+        style={[styles.supportedFormats, { backgroundColor: theme.surface }]}
+      >
         <ThemedText style={styles.formatsTitle}>Supported formats:</ThemedText>
         <ThemedText style={styles.formatsList}>• PDF files</ThemedText>
-        <ThemedText style={styles.formatsList}>• Microsoft Word documents (.docx)</ThemedText>
-        <ThemedText style={styles.formatsList}>• Plain text files (.txt)</ThemedText>
+        <ThemedText style={styles.formatsList}>
+          • Microsoft Word documents (.docx)
+        </ThemedText>
+        <ThemedText style={styles.formatsList}>
+          • Plain text files (.txt)
+        </ThemedText>
       </View>
     </ThemedView>
   );
@@ -250,9 +302,14 @@ export const ImportFromDocScreen = () => {
   const renderAnalyzingStep = () => (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Analyzing Document</ThemedText>
-      <ActivityIndicator size="large" color={theme.link} style={styles.loader} />
+      <ActivityIndicator
+        size="large"
+        color={theme.link}
+        style={styles.loader}
+      />
       <ThemedText style={styles.subtitle}>
-        AI is analyzing your document to identify key topics and suggest optimal flashcard settings...
+        AI is analyzing your document to identify key topics and suggest optimal
+        flashcard settings...
       </ThemedText>
     </ThemedView>
   );
@@ -266,19 +323,28 @@ export const ImportFromDocScreen = () => {
     return (
       <ThemedView style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <ThemedText style={styles.title}>Configure Flashcard Generation</ThemedText>
-          
+          <ThemedText style={styles.title}>
+            Configure Flashcard Generation
+          </ThemedText>
+
           {/* Document Preview */}
           <View style={[styles.section, { backgroundColor: theme.surface }]}>
-            <ThemedText style={styles.sectionTitle}>Document Preview</ThemedText>
-            <ThemedText style={styles.documentName}>{state.document.name}</ThemedText>
+            <ThemedText style={styles.sectionTitle}>
+              Document Preview
+            </ThemedText>
+            <ThemedText style={styles.documentName}>
+              {state.document.name}
+            </ThemedText>
             <ThemedText style={styles.documentStats}>
               {stats.wordCount} words • {stats.estimatedReadingTime} min read
             </ThemedText>
             <View
               style={[
                 styles.previewBox,
-                { backgroundColor: theme.background, borderLeftColor: theme.link },
+                {
+                  backgroundColor: theme.background,
+                  borderLeftColor: theme.link,
+                },
               ]}
             >
               <ThemedText style={styles.previewText}>{preview}</ThemedText>
@@ -289,24 +355,31 @@ export const ImportFromDocScreen = () => {
           <View style={[styles.section, { backgroundColor: theme.surface }]}>
             <ThemedText style={styles.sectionTitle}>AI Analysis</ThemedText>
             <ThemedText style={styles.analysisText}>
-              <ThemedText style={styles.label}>Topics:</ThemedText> {state.analysis.topics.join(', ')}
+              <ThemedText style={styles.label}>Topics:</ThemedText>{" "}
+              {state.analysis.topics.join(", ")}
             </ThemedText>
             <ThemedText style={styles.analysisText}>
-              <ThemedText style={styles.label}>Difficulty:</ThemedText> {state.analysis.difficulty}
+              <ThemedText style={styles.label}>Difficulty:</ThemedText>{" "}
+              {state.analysis.difficulty}
             </ThemedText>
             <ThemedText style={styles.analysisText}>
-              <ThemedText style={styles.label}>Suggested cards:</ThemedText> {state.analysis.suggestedCardCount}
+              <ThemedText style={styles.label}>Suggested cards:</ThemedText>{" "}
+              {state.analysis.suggestedCardCount}
             </ThemedText>
           </View>
 
           {/* Configuration Options */}
           <View style={[styles.section, { backgroundColor: theme.surface }]}>
-            <ThemedText style={styles.sectionTitle}>Flashcard Settings</ThemedText>
-            
+            <ThemedText style={styles.sectionTitle}>
+              Flashcard Settings
+            </ThemedText>
+
             <TextField
               label="Deck Title"
               value={state.deckTitle}
-              onChangeText={(text) => setState(prev => ({ ...prev, deckTitle: text }))}
+              onChangeText={(text) =>
+                setState((prev) => ({ ...prev, deckTitle: text }))
+              }
               placeholder="Enter deck title"
               className="mb-3"
             />
@@ -316,7 +389,10 @@ export const ImportFromDocScreen = () => {
               value={state.cardCount.toString()}
               onChangeText={(text) => {
                 const count = Number.parseInt(text) || 1;
-                setState(prev => ({ ...prev, cardCount: Math.min(Math.max(count, 1), 50) }));
+                setState((prev) => ({
+                  ...prev,
+                  cardCount: Math.min(Math.max(count, 1), 50),
+                }));
               }}
               placeholder="Number of flashcards"
               keyboardType="numeric"
@@ -328,7 +404,10 @@ export const ImportFromDocScreen = () => {
               value={state.deckPassMark.toString()}
               onChangeText={(text) => {
                 const passMark = Number.parseInt(text) || 70;
-                setState(prev => ({ ...prev, deckPassMark: Math.min(Math.max(passMark, 1), 100) }));
+                setState((prev) => ({
+                  ...prev,
+                  deckPassMark: Math.min(Math.max(passMark, 1), 100),
+                }));
               }}
               placeholder="Pass mark percentage"
               keyboardType="numeric"
@@ -340,7 +419,7 @@ export const ImportFromDocScreen = () => {
             <Button
               title="Back"
               className="flex-1"
-              onPress={() => setState(prev => ({ ...prev, step: 'upload' }))}
+              onPress={() => setState((prev) => ({ ...prev, step: "upload" }))}
               variant="outline"
             />
             <Button
@@ -358,7 +437,11 @@ export const ImportFromDocScreen = () => {
   const renderGeneratingStep = () => (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Generating Flashcards</ThemedText>
-      <ActivityIndicator size="large" color={theme.link} style={styles.loader} />
+      <ActivityIndicator
+        size="large"
+        color={theme.link}
+        style={styles.loader}
+      />
       <ThemedText style={styles.subtitle}>
         AI is creating {state.cardCount} flashcards from your document...
       </ThemedText>
@@ -368,8 +451,10 @@ export const ImportFromDocScreen = () => {
   const renderReviewStep = () => (
     <ThemedView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <ThemedText style={styles.title}>Review Generated Flashcards</ThemedText>
-        
+        <ThemedText style={styles.title}>
+          Review Generated Flashcards
+        </ThemedText>
+
         <View style={styles.actionButtons}>
           <Button
             title="Improve with AI"
@@ -380,29 +465,43 @@ export const ImportFromDocScreen = () => {
         </View>
 
         {state.editedFlashcards.map((flashcard, index) => (
-          <View key={flashcard.id} style={[styles.flashcardContainer, { backgroundColor: theme.surface }]}>
-            <ThemedText style={[styles.flashcardNumber, { color: theme.link }]}>Card {index + 1}</ThemedText>
-            
+          <View
+            key={flashcard.id}
+            style={[
+              styles.flashcardContainer,
+              { backgroundColor: theme.surface },
+            ]}
+          >
+            <ThemedText style={[styles.flashcardNumber, { color: theme.link }]}>
+              Card {index + 1}
+            </ThemedText>
+
             <TextField
               label="Question"
               value={flashcard.question}
-              onChangeText={(text) => updateFlashcard(flashcard.id, 'question', text)}
+              onChangeText={(text) =>
+                updateFlashcard(flashcard.id, "question", text)
+              }
               multiline
               className="mb-3"
             />
-            
+
             <TextField
               label="Answer"
               value={flashcard.answer}
-              onChangeText={(text) => updateFlashcard(flashcard.id, 'answer', text)}
+              onChangeText={(text) =>
+                updateFlashcard(flashcard.id, "answer", text)
+              }
               multiline
               className="mb-3"
             />
-            
+
             <TextField
               label="Hint (optional)"
-              value={flashcard.hint || ''}
-              onChangeText={(text) => updateFlashcard(flashcard.id, 'hint', text)}
+              value={flashcard.hint || ""}
+              onChangeText={(text) =>
+                updateFlashcard(flashcard.id, "hint", text)
+              }
               placeholder="Add a hint for this card"
               className="mb-3"
             />
@@ -412,13 +511,15 @@ export const ImportFromDocScreen = () => {
         <View style={styles.buttonContainer}>
           <Button
             title="Back"
-              className="flex-1"
-            onPress={() => setState(prev => ({ ...prev, step: 'configuring' }))}
+            className="flex-1"
+            onPress={() =>
+              setState((prev) => ({ ...prev, step: "configuring" }))
+            }
             variant="outline"
           />
           <Button
             title="Save Flashcards"
-              className="flex-1"
+            className="flex-1"
             onPress={saveFlashcards}
             loading={state.isSaving}
             variant="success"
@@ -431,7 +532,11 @@ export const ImportFromDocScreen = () => {
   const renderSavingStep = () => (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Saving Flashcards</ThemedText>
-      <ActivityIndicator size="large" color={theme.link} style={styles.loader} />
+      <ActivityIndicator
+        size="large"
+        color={theme.link}
+        style={styles.loader}
+      />
       <ThemedText style={styles.subtitle}>
         Saving {state.editedFlashcards.length} flashcards to your collection...
       </ThemedText>
@@ -441,32 +546,41 @@ export const ImportFromDocScreen = () => {
   const renderError = () => (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Error</ThemedText>
-      <ThemedText style={[styles.errorText, { color: theme.danger }]}>{state.error}</ThemedText>
+      <ThemedText style={[styles.errorText, { color: theme.danger }]}>
+        {state.error}
+      </ThemedText>
       <Button
         title="Try Again"
-        onPress={() => setState(prev => ({ ...prev, step: 'upload', error: undefined }))}
+        onPress={() =>
+          setState((prev) => ({ ...prev, step: "upload", error: undefined }))
+        }
         variant="primary"
       />
     </ThemedView>
   );
 
   // Main render logic
-  if (state.error && state.step !== 'upload' && state.step !== 'configuring' && state.step !== 'review') {
+  if (
+    state.error &&
+    state.step !== "upload" &&
+    state.step !== "configuring" &&
+    state.step !== "review"
+  ) {
     return renderError();
   }
 
   switch (state.step) {
-    case 'upload':
+    case "upload":
       return renderUploadStep();
-    case 'analyzing':
+    case "analyzing":
       return renderAnalyzingStep();
-    case 'configuring':
+    case "configuring":
       return renderConfiguringStep();
-    case 'generating':
+    case "generating":
       return renderGeneratingStep();
-    case 'review':
+    case "review":
       return renderReviewStep();
-    case 'saving':
+    case "saving":
       return renderSavingStep();
     default:
       return renderUploadStep();
@@ -480,13 +594,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 30,
     opacity: 0.7,
   },
@@ -500,7 +614,7 @@ const styles = StyleSheet.create({
   },
   formatsTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   formatsList: {
@@ -513,7 +627,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   errorText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   loader: {
     marginVertical: 30,
@@ -525,12 +639,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   documentName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 5,
   },
   documentStats: {
@@ -552,10 +666,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   label: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 10,
     marginTop: 30,
     marginBottom: 20,
@@ -570,7 +684,7 @@ const styles = StyleSheet.create({
   },
   flashcardNumber: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   flashcardInput: {

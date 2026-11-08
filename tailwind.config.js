@@ -6,19 +6,21 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      // Set at runtime from the chosen palette (see utils/palette-vars.ts); defaults live in global.css
       colors: {
-        primary: {
-          50: "#f1edff",
-          100: "#e4dcff",
-          200: "#cbbcff",
-          400: "#9a7fff",
-          500: "#7c5cff",
-          600: "#6a45f5",
-          700: "#5632d6",
-        },
-        canvas: "#f7f6fc",
-        // Dark surfaces, tinted toward the brand violet
-        ink: { 700: "#2c2848", 800: "#1b1830", 900: "#100e1d", 950: "#0b0914" },
+        primary: Object.fromEntries(
+          [50, 100, 200, 400, 500, 600, 700].map((shade) => [
+            shade,
+            `rgb(var(--primary-${shade}) / <alpha-value>)`,
+          ]),
+        ),
+        ink: Object.fromEntries(
+          [700, 800, 900, 950].map((shade) => [
+            shade,
+            `rgb(var(--ink-${shade}) / <alpha-value>)`,
+          ]),
+        ),
+        canvas: "rgb(var(--canvas) / <alpha-value>)",
       },
     },
   },

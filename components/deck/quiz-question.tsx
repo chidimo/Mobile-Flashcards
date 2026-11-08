@@ -12,9 +12,21 @@ interface Props {
 
 export const QuizQuestion = ({ qs }: Props) => {
   const [showAnswer, setShowAnswer] = useState(false);
-  const { showHint, peekAnswer, onAnswerQuestion, onEndQuiz } = useQuiz();
+  const {
+    showHint,
+    peekAnswer,
+    allowBack,
+    answers,
+    currentPosition,
+    onAnswerQuestion,
+    onPreviousQuestion,
+    onEndQuiz,
+  } = useQuiz();
 
   if (!qs) return null;
+
+  const position = currentPosition ?? 0;
+  const previousAnswer = answers[position];
 
   const answer = (side: "left" | "right") => {
     onAnswerQuestion(side);
@@ -60,6 +72,13 @@ export const QuizQuestion = ({ qs }: Props) => {
         ) : null}
       </Card>
 
+      {previousAnswer ? (
+        <Text className="text-center text-sm text-neutral-500 dark:text-neutral-400">
+          You answered:{" "}
+          {previousAnswer === "right" ? "😎 Got it" : "😕 Missed it"}
+        </Text>
+      ) : null}
+
       <View className="flex-row gap-3">
         <Button
           title="Missed it"
@@ -79,14 +98,28 @@ export const QuizQuestion = ({ qs }: Props) => {
         />
       </View>
 
-      <Button
-        title="Exit quiz"
-        variant="ghost"
-        onPress={() => {
-          onEndQuiz();
-          setShowAnswer(false);
-        }}
-      />
+      <View className="flex-row gap-3">
+        {allowBack && position > 0 ? (
+          <Button
+            title="Previous"
+            variant="secondary"
+            className="flex-1"
+            onPress={() => {
+              onPreviousQuestion();
+              setShowAnswer(false);
+            }}
+          />
+        ) : null}
+        <Button
+          title="Exit quiz"
+          variant="ghost"
+          className="flex-1"
+          onPress={() => {
+            onEndQuiz();
+            setShowAnswer(false);
+          }}
+        />
+      </View>
     </View>
   );
 };
