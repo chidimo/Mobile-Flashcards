@@ -21,13 +21,13 @@ export interface FlashContext {
     qId: string,
     question: string,
     answer: string,
-    hint?: string,
+    hint?: string
   ) => void;
   importDeck: (
     id: string | null,
     title: string,
     passMark: number,
-    questions: Question[],
+    questions: Question[]
   ) => void;
   deleteDeck: (deckId: string) => void;
   deleteCard: (deckId: string, qId: string) => void;
@@ -38,7 +38,7 @@ export interface FlashContext {
     id: string,
     question: string,
     answer: string,
-    hint?: string,
+    hint?: string
   ) => void;
   saveMyScore: (deckId: string, actualScore: number, qstns: number) => void;
   resetScore: (deckId: string) => void;
@@ -92,7 +92,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
               ...state.flashcards[deckId],
               questions: [
                 ...(state.flashcards?.[deckId].questions ?? []).filter(
-                  (q) => q.id !== qId,
+                  (q) => q.id !== qId
                 ),
               ],
             },
@@ -116,7 +116,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
         deckId: string,
         question: string,
         answer: string,
-        hint?: string,
+        hint?: string
       ) {
         if (!state.flashcards) return;
         const id = Crypto.randomUUID();
@@ -141,7 +141,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
         qId: string,
         question: string,
         answer: string,
-        hint?: string,
+        hint?: string
       ) {
         if (!state.flashcards) return;
         let updated = {
@@ -164,7 +164,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
       saveMyScore(
         deckId: string,
         actualScore: number,
-        numberOfQuestions: number,
+        numberOfQuestions: number
       ) {
         let updated = state;
         if (state.myScores === null) {
@@ -236,7 +236,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
         id: string | null,
         title: string,
         passMark: number,
-        questions: Question[],
+        questions: Question[]
       ) {
         const newId = id && isValidV4UUID(id) ? id : Crypto.randomUUID();
         let updated = state;
