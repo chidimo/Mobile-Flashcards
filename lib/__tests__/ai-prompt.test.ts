@@ -15,7 +15,7 @@ describe("deckPrompt", () => {
   });
 
   it("asks for both a file and a copyable block", () => {
-    expect(deckPrompt).toContain("deck.json");
+    expect(deckPrompt).toContain("[topic-name].json");
     expect(deckPrompt).toContain("ONE code block");
   });
 

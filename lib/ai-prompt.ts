@@ -21,7 +21,7 @@ export const deckPrompt = `Turn what we've discussed into a flashcard deck for m
 Make 10-20 cards that test understanding, not just recall. Mix "what does this code do?", "which property...?" and "why...?" questions.
 
 Give me the deck in BOTH of these forms:
-1. A downloadable file named deck.json (if you can create files).
+1. A downloadable file named after the topic, as [topic-name].json in lowercase with hyphens (for example css-flexbox.json), if you can create files.
 2. The same JSON in ONE code block I can copy.
 
 The JSON must match this shape exactly:
