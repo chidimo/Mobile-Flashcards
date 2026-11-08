@@ -44,11 +44,13 @@ export const QuizQuestion = ({ qs }: Props) => {
 
   return (
     <View className="flex-1 gap-4">
-      <Card className="flex-1 p-0">
-        <ScrollView
-          contentContainerClassName="grow justify-center gap-5 p-6"
-          showsVerticalScrollIndicator={false}
-        >
+      {/* The card hugs its content and sits in the middle; long code scrolls. */}
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="grow justify-center"
+        showsVerticalScrollIndicator={false}
+      >
+        <Card className="gap-4 p-4">
           <Markdown size={22} centered bold>
             {qs.question}
           </Markdown>
@@ -85,8 +87,8 @@ export const QuizQuestion = ({ qs }: Props) => {
               />
             </View>
           ) : null}
-        </ScrollView>
-      </Card>
+        </Card>
+      </ScrollView>
 
       {previousAnswer ? (
         <Text className="text-center text-sm text-neutral-500 dark:text-neutral-400">
