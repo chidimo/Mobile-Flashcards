@@ -11,7 +11,7 @@ export default function TabLayout() {
     {
       name: "deck-index",
       displayName: "Cards",
-      href: "/index",
+      href: `/${deckId}`,
       icon: (color: string) => (
         <Feather name="book-open" size={22} color={color} />
       ),
