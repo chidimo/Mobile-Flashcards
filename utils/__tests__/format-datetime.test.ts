@@ -11,7 +11,7 @@ describe("formatDate", () => {
 
   it("includes the time when asked", () => {
     expect(formatDate("2024-03-05T14:07:09", true)).toBe(
-      "Tue, 05 Mar 2024 @ 2:07:09 PM",
+      "Tue, 05 Mar 2024 @ 2:07:09 PM"
     );
   });
 });
