@@ -1,4 +1,5 @@
 import { Switch, Text, View } from "react-native";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { cn } from "@/utils/cn";
 
 type Props = {
@@ -15,26 +16,33 @@ export const ToggleRow = ({
   value,
   onValueChange,
   disabled = false,
-}: Props) => (
-  <View
-    className={cn("flex-row items-center gap-4 py-3", disabled && "opacity-50")}
-  >
-    <View className="flex-1 gap-0.5">
-      <Text className="text-base font-semibold text-neutral-900 dark:text-white">
-        {label}
-      </Text>
-      {description ? (
-        <Text className="text-sm text-neutral-500 dark:text-neutral-400">
-          {description}
+}: Props) => {
+  const { primary } = useAppTheme();
+
+  return (
+    <View
+      className={cn(
+        "flex-row items-center gap-4 py-3",
+        disabled && "opacity-50",
+      )}
+    >
+      <View className="flex-1 gap-0.5">
+        <Text className="text-base font-semibold text-neutral-900 dark:text-white">
+          {label}
         </Text>
-      ) : null}
+        {description ? (
+          <Text className="text-sm text-neutral-500 dark:text-neutral-400">
+            {description}
+          </Text>
+        ) : null}
+      </View>
+      <Switch
+        accessibilityLabel={label}
+        value={value}
+        disabled={disabled}
+        onValueChange={onValueChange}
+        trackColor={{ true: primary }}
+      />
     </View>
-    <Switch
-      accessibilityLabel={label}
-      value={value}
-      disabled={disabled}
-      onValueChange={onValueChange}
-      trackColor={{ true: "#6a45f5" }}
-    />
-  </View>
-);
+  );
+};

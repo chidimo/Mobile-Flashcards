@@ -42,6 +42,9 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/.kilo/"
+    ],
+    "setupFiles": [
+      "./jest.setup.js"
     ]
   },
   "dependencies": {

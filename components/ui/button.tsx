@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { cn } from "@/utils/cn";
 
 export type ButtonVariant =
@@ -51,6 +52,7 @@ export const Button = ({
   icon,
   className,
 }: Props) => {
+  const { primary } = useAppTheme();
   const inactive = disabled || loading;
   return (
     <Pressable
@@ -68,7 +70,7 @@ export const Button = ({
       )}
     >
       {loading ? (
-        <ActivityIndicator color={solid(variant) ? "#fff" : "#6a45f5"} />
+        <ActivityIndicator color={solid(variant) ? "#fff" : primary} />
       ) : (
         <>
           {icon ? <View className="mr-2.5">{icon}</View> : null}

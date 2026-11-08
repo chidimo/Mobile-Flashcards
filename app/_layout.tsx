@@ -3,26 +3,57 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { View } from "react-native";
 import "react-native-reanimated";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { ThemedView } from "@/components/ThemedView";
 import { FlashProvider } from "@/context/app-context";
 import { NotifierWrapper } from "react-native-notifier";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useThemeColor } from "@/hooks/use-theme-color";
 import { useAppTheme } from "@/hooks/use-app-theme";
-import { ThemeProvider } from "@/context/theme-context";
+import { ThemeProvider, usePalette } from "@/context/theme-context";
+import { paletteVars } from "@/utils/palette-vars";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+// Inside ThemeProvider so the chosen palette reaches classNames (via CSS variables) and headers.
+const AppShell = () => {
+  const palette = usePalette();
+  const { primary, text, bar, background } = useAppTheme();
+
+  return (
+    <View
+      style={[{ flex: 1, backgroundColor: background }, paletteVars(palette)]}
+    >
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: bar }}
+        edges={["bottom"]}
+      >
+        <Stack
+          screenOptions={{
+            headerTransparent: false,
+            headerShadowVisible: false,
+            headerTitleStyle: { color: text, fontWeight: "700" },
+            contentStyle: { backgroundColor: background },
+            headerStyle: { backgroundColor: background },
+          }}
+        >
+          <Stack.Screen
+            name="(tabs)"
+            options={{ headerTitle: "Flashcards", headerTintColor: primary }}
+          />
+          <Stack.Screen name="[deckId]" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </SafeAreaView>
+    </View>
+  );
+};
 
 export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-
-  const backgroundColor = useThemeColor({}, "background");
-  const { primary, text, bar } = useAppTheme();
 
   useEffect(() => {
     if (loaded) {
@@ -38,35 +69,7 @@ export default function RootLayout() {
         <NotifierWrapper>
           <ThemeProvider>
             <FlashProvider>
-              <ThemedView style={{ flex: 1 }}>
-                <SafeAreaView
-                  style={{ flex: 1, backgroundColor: bar }}
-                  edges={["bottom"]}
-                >
-                  <Stack
-                    screenOptions={{
-                      headerTransparent: false,
-                      headerShadowVisible: false,
-                      headerTitleStyle: { color: text, fontWeight: "700" },
-                      contentStyle: { backgroundColor },
-                      headerStyle: { backgroundColor },
-                    }}
-                  >
-                    <Stack.Screen
-                      name="(tabs)"
-                      options={{
-                        headerTitle: "Flashcards",
-                        headerTintColor: primary,
-                      }}
-                    />
-                    <Stack.Screen
-                      name="[deckId]"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name="+not-found" />
-                  </Stack>
-                </SafeAreaView>
-              </ThemedView>
+              <AppShell />
             </FlashProvider>
           </ThemeProvider>
         </NotifierWrapper>

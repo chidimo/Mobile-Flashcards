@@ -1,4 +1,7 @@
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { buildTheme } from "@/constants/theme";
+import { usePalette } from "@/context/theme-context";
+import { useColorScheme } from "react-native";
 
-export const useAppTheme = () => Colors[useColorScheme() ?? "light"];
+/** Hex colours for the current scheme and palette, for what classNames can't style (icons, headers). */
+export const useAppTheme = () =>
+  buildTheme(useColorScheme() ?? "light", usePalette());
