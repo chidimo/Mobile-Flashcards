@@ -1,0 +1,42 @@
+{
+  "id": "65de60c8-cd14-4385-af69-71c3013045ec",
+  "title": "Markdown showcase",
+  "passMark": 60,
+  "questions": [
+    {
+      "id": "5f55929b-2730-4ede-b375-5c4917d6c9e9",
+      "question": "What does this JavaScript log?\n```js\nconst nums = [1, 2, 3];\nconsole.log(nums.map((n) => n * 2));\n```",
+      "answer": "`[2, 4, 6]`: `map` returns a **new** array and leaves `nums` unchanged."
+    },
+    {
+      "id": "11266616-0bd6-4f0e-9e74-3c8a47ad56cb",
+      "question": "What is the type of `result`?\n```ts\nconst result = await fetch(url).then((r) => r.json());\n```",
+      "answer": "`any`: `Response.json()` returns `Promise<any>`. Validate it, e.g. with a **zod** schema."
+    },
+    {
+      "id": "f2203ea6-0651-43bf-8b60-f142411d4999",
+      "question": "Write a Python list comprehension for the squares of 0-4.",
+      "answer": "```python\nsquares = [n * n for n in range(5)]\n# [0, 1, 4, 9, 16]\n```"
+    },
+    {
+      "id": "e9e33e18-90a4-4f6b-9af4-2e451c825f99",
+      "question": "What does this SQL return?\n```sql\nSELECT team, COUNT(*)\nFROM players\nGROUP BY team;\n```",
+      "answer": "One row per team with the **number of players** on it."
+    },
+    {
+      "id": "9acc015e-c09d-4d90-90dc-51173ed3d37d",
+      "question": "Spot the problem in this JSON.\n```json\n{\n  \"name\": \"Ada\",\n  \"age\": 36,\n}\n```",
+      "answer": "The **trailing comma** after `36`. JSON doesn't allow it."
+    },
+    {
+      "id": "0d370282-6e9c-4bb3-a1a4-d79477855b0d",
+      "question": "What does `git rebase` do compared with `git merge`?",
+      "answer": "- **merge** joins two histories with a merge commit\n- **rebase** replays your commits on top of another branch, giving a **linear** history\n\nDon't rebase commits you've already pushed and shared."
+    },
+    {
+      "id": "23e8139a-c06b-44f8-936a-d871d66402ac",
+      "question": "Name three things Markdown can do in a card.",
+      "answer": "1. **Bold** and *italic* text\n2. `inline code` and fenced code blocks\n3. Lists, [links](https://commonmark.org) and headings\n\n> Blockquotes work too."
+    }
+  ]
+}

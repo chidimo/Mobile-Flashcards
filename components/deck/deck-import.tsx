@@ -8,6 +8,7 @@ import { useFlash } from "@/context/app-context";
 import { Question, TCreateDeck } from "@/types/generic";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { parseDeckFile } from "@/lib/deck-file";
+import { markdownToPlain } from "@/utils/markdown-plain";
 import { DeckFormFields } from "./deck-form-fields";
 import { isValidV4UUID } from "@/utils/validate-uuid";
 import { Button } from "../ui/button";
@@ -124,7 +125,7 @@ export const DeckImport = (props: DeckImportProps) => {
                 numberOfLines={1}
                 className="text-sm text-neutral-600 dark:text-neutral-300"
               >
-                • {question.question}
+                • {markdownToPlain(question.question)}
               </Text>
             ))}
             {questions.length > PREVIEW_COUNT ? (

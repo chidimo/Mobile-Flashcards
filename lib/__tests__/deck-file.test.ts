@@ -17,6 +17,15 @@ describe("deckFileName", () => {
     expect(deckFileName("  A/B: C  ")).toBe("a-b-c.json");
   });
 
+  it("stays fast on a very long run of separators", () => {
+    const start = Date.now();
+
+    expect(deckFileName(`${"-".repeat(30000)}x${"-".repeat(30000)}`)).toBe(
+      "x.json",
+    );
+    expect(Date.now() - start).toBeLessThan(300);
+  });
+
   it("falls back when the title has nothing usable", () => {
     expect(deckFileName("日本語")).toBe("deck.json");
     expect(deckFileName("")).toBe("deck.json");

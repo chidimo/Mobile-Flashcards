@@ -39,7 +39,7 @@
       "!**/__tests__/**"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?(react-native|@react-native|@react-native-community|expo|@expo|expo-.*|@expo-google-fonts|react-navigation|@react-navigation|uuid|nativewind|react-native-css-interop)/)"
+      "node_modules/(?!(jest-)?(react-native|@react-native|@react-native-community|expo|@expo|expo-.*|@expo-google-fonts|react-navigation|@react-navigation|uuid|nativewind|@ronradtke|@react-native-vector-icons|react-native-fit-image|react-native-css-interop)/)"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
@@ -52,6 +52,7 @@
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@ronradtke/react-native-markdown-display": "^9.0.3",
     "dayjs": "^1.11.11",
     "es-toolkit": "^1.40.0",
     "expo": "^58",
