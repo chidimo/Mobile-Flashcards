@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Text, View } from "react-native";
+import { Share, Text, View } from "react-native";
 import { useState } from "react";
 import * as Crypto from "expo-crypto";
 import { useFlash } from "@/context/app-context";
@@ -56,8 +56,14 @@ export const DeckImport = (props: DeckImportProps) => {
   });
 
   const copyPrompt = async () => {
-    await copyToClipboard(deckPrompt);
-    showNotification("Prompt copied", "Paste it into your AI chat.");
+    const copied = await copyToClipboard(deckPrompt).catch(() => false);
+    if (copied) {
+      showNotification("Prompt copied", "Paste it into your AI chat.");
+      return;
+    }
+    // The clipboard didn't take it: the share sheet has its own Copy.
+    showNotification("Couldn't copy", "Choose Copy in the share sheet.");
+    await Share.share({ message: deckPrompt }).catch(() => undefined);
   };
 
   const load = async () => {

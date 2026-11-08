@@ -68,12 +68,63 @@ describe("parseDeckFile", () => {
   });
 
   it("explains text that isn't JSON", () => {
-    expect(() => parseDeckFile("not json")).toThrow("isn't a JSON deck");
+    expect(() => parseDeckFile("not json")).toThrow("isn't valid JSON");
   });
 
   it("explains JSON that isn't a deck", () => {
     expect(() => parseDeckFile(JSON.stringify({ hello: "world" }))).toThrow(
       "isn't a flashcard deck",
     );
+  });
+
+  describe("forgiving of how it was copied", () => {
+    const text = deckToFileContent(deck);
+    const expected = parseDeckFile(text);
+
+    it("accepts a ```json fence", () => {
+      expect(parseDeckFile(`\`\`\`json\n${text}\n\`\`\``)).toEqual(expected);
+    });
+
+    it("accepts text around the JSON", () => {
+      expect(parseDeckFile(`Here is your deck:\n\n${text}\n\nEnjoy!`)).toEqual(
+        expected,
+      );
+    });
+
+    it("accepts a byte order mark and surrounding whitespace", () => {
+      expect(parseDeckFile(`\uFEFF\n  ${text}  \n`)).toEqual(expected);
+    });
+
+    it("accepts curly quotes", () => {
+      const curly = text.replace(/"/g, (_m, i: number) =>
+        i % 2 ? "\u201d" : "\u201c",
+      );
+
+      expect(parseDeckFile(curly).title).toBe("Spanish verbs");
+    });
+  });
+
+  describe("says what is wrong", () => {
+    it("explains an empty paste, which is what a blocked iPhone paste gives", () => {
+      expect(() => parseDeckFile("")).toThrow("Allow Paste");
+      expect(() => parseDeckFile("   \n ")).toThrow("nothing to import");
+    });
+
+    it("points at a truncated copy", () => {
+      expect(() => parseDeckFile(deckToFileContent(deck).slice(0, 60))).toThrow(
+        "isn't valid JSON",
+      );
+    });
+
+    it("names the field that is wrong in a deck", () => {
+      const broken = JSON.stringify({
+        id: "d",
+        title: "T",
+        passMark: 70,
+        questions: [{ id: "q", question: "Q" }],
+      });
+
+      expect(() => parseDeckFile(broken)).toThrow("questions.0.answer");
+    });
   });
 });

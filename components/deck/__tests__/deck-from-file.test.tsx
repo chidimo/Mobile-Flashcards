@@ -109,6 +109,6 @@ describe("DeckFromFile", () => {
 
     await act(async () => button("Choose file").props.onPress());
 
-    expect(text()).toContain("isn't a JSON deck");
+    expect(text()).toContain("isn't valid JSON");
   });
 });

@@ -1,3 +1,4 @@
+import { Share } from "react-native";
 import { act, create } from "react-test-renderer";
 
 import { deckPrompt } from "@/lib/ai-prompt";
@@ -6,6 +7,8 @@ import { DeckFromClipboard } from "../deck-from-clipboard";
 const mockImportDeck = jest.fn();
 const mockReplace = jest.fn();
 const mockCopy = jest.fn();
+let mockCopyWorks = true;
+const mockShare = jest.fn();
 const mockNotify = jest.fn();
 let mockClipboard = "";
 
@@ -14,7 +17,10 @@ jest.mock("@/context/app-context", () => ({
 }));
 jest.mock("@/hooks/use-clipboard", () => ({
   useClipboard: () => ({
-    copyToClipboard: async (text: string) => mockCopy(text),
+    copyToClipboard: async (text: string) => {
+      mockCopy(text);
+      return mockCopyWorks;
+    },
     fetchCopiedText: async (onCopy: (text: string) => void) =>
       onCopy(mockClipboard),
   }),
@@ -62,6 +68,12 @@ beforeEach(() => {
   mockImportDeck.mockReset();
   mockReplace.mockReset();
   mockCopy.mockReset();
+  mockShare.mockReset();
+  mockCopyWorks = true;
+  jest.spyOn(Share, "share").mockImplementation((content) => {
+    mockShare(content);
+    return Promise.resolve({ action: "dismissedAction" } as never);
+  });
   mockNotify.mockReset();
   mockClipboard = "";
 });
@@ -111,7 +123,7 @@ describe("ImportDeck", () => {
 
     await act(async () => button("Paste from clipboard").props.onPress());
 
-    expect(text()).toContain("isn't a JSON deck");
+    expect(text()).toContain("isn't valid JSON");
     expect(button("Import deck").props.disabled).toBe(true);
   });
 
@@ -153,5 +165,26 @@ describe("ImportDeck", () => {
     await act(async () => button("Paste from clipboard").props.onPress());
 
     expect(text()).not.toContain("Make a deck with AI");
+  });
+
+  it("falls back to the share sheet when the clipboard didn't take the prompt", async () => {
+    mockCopyWorks = false;
+    const { button } = render();
+
+    await act(async () => button("Copy AI prompt").props.onPress());
+
+    expect(mockNotify).toHaveBeenCalledWith(
+      "Couldn't copy",
+      expect.stringContaining("share sheet"),
+    );
+    expect(mockShare).toHaveBeenCalledWith({ message: deckPrompt });
+  });
+
+  it("does not open the share sheet when the copy worked", async () => {
+    const { button } = render();
+
+    await act(async () => button("Copy AI prompt").props.onPress());
+
+    expect(mockShare).not.toHaveBeenCalled();
   });
 });
