@@ -1,6 +1,6 @@
 import { Href } from "expo-router";
 import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@react-native-vector-icons/feather";
 import { TabMenuContainer, TabMenuItem } from "@/components/tab-menu-item";
 
 export default function TabLayout() {

@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@react-native-vector-icons/feather";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Share, Text, View } from "react-native";
 import { useState } from "react";

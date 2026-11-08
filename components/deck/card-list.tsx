@@ -1,5 +1,5 @@
 import { useFlash } from "@/context/app-context";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@react-native-vector-icons/feather";
 import { router, useGlobalSearchParams } from "expo-router";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { Text, View } from "react-native";
