@@ -1,10 +1,12 @@
 import { useFlash } from "@/context/app-context";
 import { Feather } from "@expo/vector-icons";
+import { useState } from "react";
 import { router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { Question } from "@/types/generic";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { Card } from "../ui/card";
+import { ConfirmDialog } from "../ui/confirm-dialog";
 
 interface Props {
   index: number;
@@ -15,6 +17,7 @@ interface Props {
 export const CardListItem = ({ index, deckId, question }: Props) => {
   const { deleteCard } = useFlash();
   const { danger, primary } = useAppTheme();
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   return (
     <Card className="gap-3">
@@ -40,7 +43,7 @@ export const CardListItem = ({ index, deckId, question }: Props) => {
             accessibilityRole="button"
             accessibilityLabel={`Delete card ${index + 1}`}
             hitSlop={10}
-            onPress={() => deleteCard(deckId, question.id)}
+            onPress={() => setConfirmingDelete(true)}
             className="active:opacity-60"
           >
             <Feather name="trash-2" size={20} color={danger} />
@@ -59,6 +62,17 @@ export const CardListItem = ({ index, deckId, question }: Props) => {
           Hint: {question.hint}
         </Text>
       ) : null}
+
+      <ConfirmDialog
+        visible={confirmingDelete}
+        title="Delete this card?"
+        message={`This deletes "${question.question}". You can't undo this.`}
+        onCancel={() => setConfirmingDelete(false)}
+        onConfirm={() => {
+          setConfirmingDelete(false);
+          deleteCard(deckId, question.id);
+        }}
+      />
     </Card>
   );
 };

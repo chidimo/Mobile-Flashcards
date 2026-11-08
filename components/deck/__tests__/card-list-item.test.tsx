@@ -47,11 +47,30 @@ describe("CardListItem", () => {
     expect(mockPush).toHaveBeenCalledWith("/d1/edit-card?cardId=q1");
   });
 
-  it("deletes this card", () => {
+  it("asks before deleting and does nothing yet", () => {
     const byLabel = render();
 
     act(() => byLabel("Delete card 1").props.onPress());
 
+    expect(mockDeleteCard).not.toHaveBeenCalled();
+    expect(byLabel("Delete")).toBeDefined();
+  });
+
+  it("deletes the card once confirmed", () => {
+    const byLabel = render();
+
+    act(() => byLabel("Delete card 1").props.onPress());
+    act(() => byLabel("Delete").props.onPress());
+
     expect(mockDeleteCard).toHaveBeenCalledWith("d1", "q1");
+  });
+
+  it("keeps the card when cancelled", () => {
+    const byLabel = render();
+
+    act(() => byLabel("Delete card 1").props.onPress());
+    act(() => byLabel("Cancel").props.onPress());
+
+    expect(mockDeleteCard).not.toHaveBeenCalled();
   });
 });
