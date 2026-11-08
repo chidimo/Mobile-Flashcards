@@ -6,7 +6,7 @@ const mockAnswer = jest.fn();
 let mockPeek = true;
 
 // The real icon loads a font asynchronously and logs after the test has finished.
-jest.mock("@expo/vector-icons", () => ({ Feather: () => null }));
+jest.mock("@react-native-vector-icons/feather", () => () => null);
 jest.mock("@/context/quiz-context", () => ({
   useQuiz: () => ({
     showHint: false,

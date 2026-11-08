@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@react-native-vector-icons/feather";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { cn } from "@/utils/cn";

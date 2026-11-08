@@ -13,7 +13,7 @@ let mockPicked: {
 };
 
 // The real icon loads a font asynchronously and logs after the test has finished.
-jest.mock("@expo/vector-icons", () => ({ Feather: () => null }));
+jest.mock("@react-native-vector-icons/feather", () => () => null);
 jest.mock("expo-file-system", () => ({
   File: { pickFileAsync: async () => mockPicked },
 }));

@@ -15,7 +15,7 @@
       "package": "com.chidimo.mobileflashcards",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#6a45f5"
       }
     },
     "web": {

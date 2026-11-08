@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import Feather from "@react-native-vector-icons/feather";
 import { LayoutAnimation, ScrollView, Text, View } from "react-native";
 import { useState } from "react";
 import { Question } from "@/types/generic";

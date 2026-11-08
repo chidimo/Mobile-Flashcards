@@ -12,7 +12,7 @@ jest.mock("expo-router", () => ({
   useGlobalSearchParams: () => mockParams,
 }));
 // The real icon loads a font asynchronously and logs after the test has finished.
-jest.mock("@expo/vector-icons", () => ({ Feather: () => null }));
+jest.mock("@react-native-vector-icons/feather", () => () => null);
 jest.mock("@/context/app-context", () => ({
   useFlash: () => ({
     getDeckById: () => ({ id: "d1", title: "Deck 1", questions: [] }),

@@ -1,6 +1,6 @@
 import { Deck } from "@/types/generic";
 import { router } from "expo-router";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@react-native-vector-icons/feather";
 import { Text, View } from "react-native";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { useReorderableDrag } from "react-native-reorderable-list";

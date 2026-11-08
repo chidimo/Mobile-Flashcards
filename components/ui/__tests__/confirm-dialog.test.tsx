@@ -2,7 +2,7 @@ import { act, create } from "react-test-renderer";
 
 import { ConfirmDialog } from "../confirm-dialog";
 
-jest.mock("@expo/vector-icons", () => ({ Feather: () => null }));
+jest.mock("@react-native-vector-icons/feather", () => () => null);
 
 const render = (visible = true) => {
   const onConfirm = jest.fn();
