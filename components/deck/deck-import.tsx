@@ -110,6 +110,10 @@ export const DeckImport = (props: DeckImportProps) => {
 
       {questions.length ? (
         <>
+          <Card>
+            <DeckFormFields isNew control={control} errors={errors} />
+          </Card>
+
           <Card className="gap-3">
             <Text className="text-base font-bold text-neutral-900 dark:text-white">
               {`${questions.length} ${questions.length === 1 ? "card" : "cards"} ready to import`}
@@ -128,10 +132,6 @@ export const DeckImport = (props: DeckImportProps) => {
                 and {questions.length - PREVIEW_COUNT} more
               </Text>
             ) : null}
-          </Card>
-
-          <Card>
-            <DeckFormFields isNew control={control} errors={errors} />
           </Card>
         </>
       ) : null}
