@@ -35,7 +35,7 @@ const items: Item[] = [
 export const AppDrawer = ({ navigation }: DrawerProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { primary, mutedIcon, bar } = useAppTheme();
+  const { primary, mutedIcon, surface } = useAppTheme();
 
   const go = (href: Href) => {
     navigation.closeDrawer();
@@ -43,7 +43,7 @@ export const AppDrawer = ({ navigation }: DrawerProps) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: bar }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: surface }}>
       <View className="gap-1 px-4 pt-4">
         <Text className="px-3 pb-3 text-2xl font-bold text-neutral-900 dark:text-white">
           Flashcards
@@ -59,10 +59,9 @@ export const AppDrawer = ({ navigation }: DrawerProps) => {
               onPress={() => go(item.href)}
               className={cn(
                 "flex-row items-center gap-3 rounded-xl px-3 py-3",
-                active
-                  ? "bg-neutral-100 dark:bg-neutral-800"
-                  : "active:bg-neutral-100 dark:active:bg-neutral-800",
+                !active && "active:bg-neutral-100 dark:active:bg-neutral-800",
               )}
+              style={active ? { backgroundColor: `${primary}26` } : undefined}
             >
               <Feather
                 name={item.icon}

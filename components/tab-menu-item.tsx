@@ -3,6 +3,7 @@ import { cn } from "@/utils/cn";
 import { TabTriggerSlotProps } from "expo-router/ui";
 import React from "react";
 import { Pressable, PressableProps, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Prop = TabTriggerSlotProps & {
   name: string;
@@ -47,8 +48,14 @@ export const TabMenuContainer = ({
   children,
 }: {
   children: React.ReactNode;
-}) => (
-  <View className="flex-row items-center border-t border-neutral-200 bg-white px-2 py-2 dark:border-ink-700 dark:bg-ink-900">
-    {children}
-  </View>
-);
+}) => {
+  const { bottom } = useSafeAreaInsets();
+  return (
+    <View
+      className="flex-row items-center border-t border-neutral-200 bg-white px-2 pt-2 dark:border-ink-700 dark:bg-ink-900"
+      style={{ paddingBottom: bottom + 8 }}
+    >
+      {children}
+    </View>
+  );
+};
