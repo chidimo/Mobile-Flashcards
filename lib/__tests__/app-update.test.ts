@@ -1,4 +1,8 @@
-import { checkForUpdate, isNewerVersion } from "../app-update";
+import {
+  checkForUpdate,
+  isNewerVersion,
+  parsePlayVersion,
+} from "../app-update";
 
 describe("isNewerVersion", () => {
   it("compares numerically, not as text", () => {
@@ -70,8 +74,55 @@ describe("checkForUpdate", () => {
     global.fetch = jest.fn() as unknown as typeof fetch;
 
     await expect(
-      checkForUpdate({ ...options, platform: "android" }),
+      checkForUpdate({ ...options, platform: "web" }),
     ).resolves.toBeNull();
     expect(global.fetch).not.toHaveBeenCalled();
+  });
+});
+
+describe("Google Play", () => {
+  const listing = (version: string) =>
+    `...,"141":[[["${version}"]],[[[36]],[[[24,"7.0"]]]]],"145":[null,[null,"notes"]]...`;
+  const respondWith = (response: object) => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue(response) as unknown as typeof fetch;
+  };
+  const options = {
+    platform: "android",
+    installedVersion: "1.1.0",
+    appId: "com.example.app",
+  };
+
+  it("reads the version out of the listing page", () => {
+    expect(parsePlayVersion(listing("1.2.3"))).toBe("1.2.3");
+    expect(parsePlayVersion("<html>nothing here</html>")).toBeUndefined();
+  });
+
+  it("returns the store version when it is newer", async () => {
+    respondWith({ ok: true, status: 200, text: async () => listing("1.2.0") });
+
+    await expect(checkForUpdate(options)).resolves.toEqual({
+      version: "1.2.0",
+      storeUrl: "https://play.google.com/store/apps/details?id=com.example.app",
+    });
+  });
+
+  it("returns null when the installed version is current", async () => {
+    respondWith({ ok: true, status: 200, text: async () => listing("1.1.0") });
+
+    await expect(checkForUpdate(options)).resolves.toBeNull();
+  });
+
+  it("returns null when the app is not listed", async () => {
+    respondWith({ ok: false, status: 404, text: async () => "" });
+
+    await expect(checkForUpdate(options)).resolves.toBeNull();
+  });
+
+  it("throws when the page has no version, so a changed page is noticed", async () => {
+    respondWith({ ok: true, status: 200, text: async () => "<html></html>" });
+
+    await expect(checkForUpdate(options)).rejects.toThrow("No version found");
   });
 });

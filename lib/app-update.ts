@@ -37,6 +37,29 @@ const latestOnAppStore = async (
   return { version: app.version, storeUrl: app.trackViewUrl };
 };
 
+const playListing = (packageName: string) =>
+  `https://play.google.com/store/apps/details?id=${encodeURIComponent(packageName)}`;
+
+/** The version in a Play listing page, which embeds it as `[[["1.2.0"]]`. */
+export const parsePlayVersion = (html: string) =>
+  /\[\[\["(\d+(?:\.\d+)+)"\]\]/.exec(html)?.[1];
+
+/**
+ * The live Google Play version for a package. Play has no public lookup, so this reads the public
+ * listing page; if Google changes that page the version isn't found and the check fails visibly.
+ */
+const latestOnPlayStore = async (
+  packageName: string,
+): Promise<StoreUpdate | null> => {
+  const response = await fetch(`${playListing(packageName)}&hl=en&gl=US`);
+  if (response.status === 404) return null;
+  if (!response.ok)
+    throw new Error(`Play Store lookup failed (${response.status})`);
+  const version = parsePlayVersion(await response.text());
+  if (!version) throw new Error("No version found on the Play Store page");
+  return { version, storeUrl: playListing(packageName) };
+};
+
 type CheckOptions = {
   platform: string;
   installedVersion: string;
@@ -46,10 +69,10 @@ type CheckOptions = {
 
 type Provider = (appId: string) => Promise<StoreUpdate | null>;
 
-// One lookup per platform. Android is missing on purpose: Google Play has no public version lookup,
-// so it needs the Play in-app updates native module. Adding it is one more entry here.
+// One lookup per platform.
 const providers: Record<string, Provider | undefined> = {
   ios: latestOnAppStore,
+  android: latestOnPlayStore,
 };
 
 /**

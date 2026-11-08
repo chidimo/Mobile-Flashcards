@@ -1,4 +1,4 @@
-import { updateDismissedKey } from "@/constants";
+import { updateCheckedAtKey, updateDismissedKey } from "@/constants";
 import { StoreUpdate, checkForUpdate } from "@/lib/app-update";
 import { getItemFromStorage, setItemToStorage } from "@/lib/work-with-storage";
 import Constants from "expo-constants";
@@ -28,6 +28,8 @@ interface UpdateContext {
 
 const UpdateCtx = createContext<UpdateContext | undefined>(undefined);
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 const installedVersion = Constants.expoConfig?.version ?? "0.0.0";
 // The id the platform's store knows this app by.
 const appId = Platform.select({
@@ -41,6 +43,14 @@ export const UpdateProvider = ({ children }: { children: React.ReactNode }) => {
   const [promptVisible, setPromptVisible] = useState(false);
 
   const check = useCallback(async (manual: boolean) => {
+    if (!manual) {
+      // A listing page is about 1 MB, so on launch check at most once a day.
+      let checkedAt = 0;
+      await getItemFromStorage<string>(updateCheckedAtKey, (time) => {
+        checkedAt = Date.parse(time) || 0;
+      });
+      if (Date.now() - checkedAt < DAY_MS) return;
+    }
     setStatus("checking");
     try {
       const found = await checkForUpdate({
@@ -48,6 +58,7 @@ export const UpdateProvider = ({ children }: { children: React.ReactNode }) => {
         installedVersion,
         appId,
       });
+      void setItemToStorage(new Date().toISOString(), updateCheckedAtKey);
       setUpdate(found);
       setStatus(found ? "available" : "current");
       if (!found) return;

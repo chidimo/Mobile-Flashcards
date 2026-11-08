@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Linking } from "react-native";
 import { act, create } from "react-test-renderer";
 
-import { updateDismissedKey } from "@/constants";
+import { updateCheckedAtKey, updateDismissedKey } from "@/constants";
 import { checkForUpdate } from "@/lib/app-update";
 import { UpdateProvider, useUpdate } from "../update-context";
 
@@ -81,7 +81,9 @@ describe("update context", () => {
 
   it("opens the store when the user chooses Update", async () => {
     check.mockResolvedValue(store);
-    const open = jest.spyOn(Linking, "openURL").mockResolvedValue(undefined as never);
+    const open = jest
+      .spyOn(Linking, "openURL")
+      .mockResolvedValue(undefined as never);
     const update = setup();
     await act(async () => update().checkNow());
 
@@ -89,5 +91,15 @@ describe("update context", () => {
 
     expect(open).toHaveBeenCalledWith(store.storeUrl);
     expect(update().promptVisible).toBe(false);
+  });
+
+  it("records when the last check happened", async () => {
+    check.mockResolvedValue(null);
+    const update = setup();
+
+    await act(async () => update().checkNow());
+
+    const stored = await AsyncStorage.getItem(updateCheckedAtKey);
+    expect(Date.parse(JSON.parse(stored!))).toBeGreaterThan(Date.now() - 5000);
   });
 });
