@@ -77,4 +77,60 @@ describe("quiz context", () => {
 
     expect(quiz().quizzes.map((q) => q.id)).toEqual(order);
   });
+
+  it("ignores Previous unless going back is allowed", () => {
+    const quiz = setup();
+    act(() => quiz().onStartQuiz());
+    act(() => quiz().onAnswerQuestion("right"));
+
+    act(() => quiz().onPreviousQuestion());
+
+    expect(quiz().currentQuestion?.id).toBe("2");
+  });
+
+  it("goes back to the previous question when allowed", () => {
+    const quiz = setup();
+    act(() => quiz().onUpdateAllowBack());
+    act(() => quiz().onStartQuiz());
+    act(() => quiz().onAnswerQuestion("right"));
+
+    act(() => quiz().onPreviousQuestion());
+
+    expect(quiz().currentQuestion?.id).toBe("1");
+    expect(quiz().currentPosition).toBe(0);
+    expect(quiz().answers[0]).toBe("right");
+  });
+
+  it("does not go back before the first question", () => {
+    const quiz = setup();
+    act(() => quiz().onUpdateAllowBack());
+    act(() => quiz().onStartQuiz());
+
+    act(() => quiz().onPreviousQuestion());
+
+    expect(quiz().currentPosition).toBe(0);
+  });
+
+  it("scores a changed answer once", () => {
+    const quiz = setup();
+    act(() => quiz().onUpdateAllowBack());
+    act(() => quiz().onStartQuiz());
+    act(() => quiz().onAnswerQuestion("right"));
+    act(() => quiz().onPreviousQuestion());
+    act(() => quiz().onAnswerQuestion("left"));
+    act(() => quiz().onAnswerQuestion("right"));
+
+    expect(quiz().ended).toBe(true);
+    expect(quiz().currentScore).toBe(1);
+  });
+
+  it("keeps the going-back option when the quiz is retaken", () => {
+    const quiz = setup();
+    act(() => quiz().onUpdateAllowBack());
+    act(() => quiz().onStartQuiz());
+    act(() => quiz().onRetakeQuiz());
+
+    expect(quiz().allowBack).toBe(true);
+    expect(quiz().answers).toEqual([]);
+  });
 });
