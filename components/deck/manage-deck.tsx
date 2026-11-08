@@ -1,14 +1,13 @@
 import { useFlash } from "@/context/app-context";
 import { router, useGlobalSearchParams } from "expo-router";
-import { Alert, Share, Text, View } from "react-native";
+import { Alert, Share } from "react-native";
 import { EditDeck } from "./edit-deck";
-import { DefaultModal } from "../modal";
 import { useOnOffSwitch } from "@/hooks/use-on-off-switch";
 import { useState } from "react";
 import { Deck } from "@/types/generic";
 import { ActionRow } from "../ui/action-row";
-import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { ConfirmDialog } from "../ui/confirm-dialog";
 import { PageTitle } from "../ui/page-title";
 import { Screen } from "../ui/screen";
 
@@ -26,35 +25,16 @@ const DeleteDeck = ({ deck }: { deck: Deck | null }) => {
         onPress={setOn}
       />
 
-      <DefaultModal
+      <ConfirmDialog
         visible={isOn}
         title={`Delete ${deck?.title}?`}
-        onRequestClose={setOff}
-      >
-        <View className="gap-6 pb-10">
-          <Text className="text-base text-neutral-700 dark:text-neutral-200">
-            This deletes the deck and all of its cards. You can&apos;t undo
-            this.
-          </Text>
-          <View className="flex-row gap-3">
-            <Button
-              title="Cancel"
-              variant="outline"
-              className="flex-1"
-              onPress={setOff}
-            />
-            <Button
-              title="Delete"
-              variant="danger"
-              className="flex-1"
-              onPress={() => {
-                deleteDeck(deck?.id as string);
-                router.replace(`/(tabs)`);
-              }}
-            />
-          </View>
-        </View>
-      </DefaultModal>
+        message="This deletes the deck and all of its cards. You can't undo this."
+        onCancel={setOff}
+        onConfirm={() => {
+          deleteDeck(deck?.id as string);
+          router.replace(`/(tabs)`);
+        }}
+      />
     </>
   );
 };
