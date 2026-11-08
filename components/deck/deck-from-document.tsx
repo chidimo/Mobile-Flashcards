@@ -260,13 +260,15 @@ export const DeckFromDocument = () => {
         Import Flashcards from Document
       </ThemedText>
       <ThemedText style={styles.subtitle}>
-        Upload a PDF, DOCX, or TXT file to generate flashcards automatically
-        using AI
+        Document import is coming soon. You&apos;ll be able to turn a PDF, DOCX
+        or TXT file into flashcards automatically using AI.
       </ThemedText>
 
       <View style={styles.uploadArea}>
+        {/* Disabled until document import ships; handleDocumentPick is kept for then. */}
         <Button
           title="Choose Document"
+          disabled
           onPress={handleDocumentPick}
           variant="primary"
         />
