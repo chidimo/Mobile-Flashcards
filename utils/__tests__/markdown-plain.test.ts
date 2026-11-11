@@ -15,6 +15,21 @@ describe("markdownToPlain", () => {
     ).toBe("What does this do? .a { display: flex; }");
   });
 
+  it("keeps the marks inside code", () => {
+    expect(markdownToPlain("What does `n => n * 2` return?")).toBe(
+      "What does n => n * 2 return?",
+    );
+    expect(
+      markdownToPlain("Run:\n```js\nconst b = a ** 2; // my_var\n```"),
+    ).toBe("Run: const b = a ** 2; // my_var");
+  });
+
+  it("drops blockquote marks and emphasis but keeps snake_case", () => {
+    expect(markdownToPlain("> Lists are _mutable_, see my_var")).toBe(
+      "Lists are mutable, see my_var",
+    );
+  });
+
   it("keeps link text and drops the url", () => {
     expect(markdownToPlain("See [the guide](https://x.dev/y)")).toBe(
       "See the guide",

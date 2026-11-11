@@ -4,12 +4,13 @@ import { QuizQuestion } from "../quiz-question";
 
 const mockAnswer = jest.fn();
 let mockPeek = true;
+let mockShowHint = false;
 
 // The real icon loads a font asynchronously and logs after the test has finished.
 jest.mock("@react-native-vector-icons/feather", () => () => null);
 jest.mock("@/context/quiz-context", () => ({
   useQuiz: () => ({
-    showHint: false,
+    showHint: mockShowHint,
     peekAnswer: mockPeek,
     allowBack: false,
     answers: [],
@@ -27,10 +28,12 @@ const card = {
   answer: "It sets the **gutter** of the flex items.",
 };
 
-const render = () => {
+const render = (
+  qs: { id: string; question: string; answer: string; hint?: string } = card,
+) => {
   let tree!: ReturnType<typeof create>;
   act(() => {
-    tree = create(<QuizQuestion qs={card} />);
+    tree = create(<QuizQuestion qs={qs} />);
   });
   const byLabel = (label: string) =>
     tree.root.findAll(
@@ -45,6 +48,7 @@ const render = () => {
 beforeEach(() => {
   mockAnswer.mockReset();
   mockPeek = true;
+  mockShowHint = false;
 });
 
 describe("QuizQuestion", () => {
@@ -81,6 +85,22 @@ describe("QuizQuestion", () => {
     const { byLabel } = render();
 
     expect(byLabel("Show answer")).toBeUndefined();
+  });
+
+  it("shows the hint when the card has one", () => {
+    mockShowHint = true;
+    const { text } = render({ ...card, hint: "Think gutters" });
+
+    expect(text()).toContain("Hint:");
+    expect(text()).toContain("Think gutters");
+  });
+
+  it("shows no hint line for a card without one", () => {
+    mockShowHint = true;
+    const { text } = render();
+
+    expect(text()).not.toContain("Hint");
+    expect(text()).not.toContain("N/A");
   });
 
   it("answers from the buttons", () => {

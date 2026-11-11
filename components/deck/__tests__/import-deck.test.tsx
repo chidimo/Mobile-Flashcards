@@ -105,6 +105,26 @@ describe("ImportDeck", () => {
     expect(mockReplace).toHaveBeenCalledWith(`/${deck.id}`);
   });
 
+  it("clears a stale name error when another deck is loaded", async () => {
+    mockClipboard = JSON.stringify(deck);
+    const { tree, button, text } = render();
+    await act(async () => button("Paste from clipboard").props.onPress());
+    const nameField = () =>
+      tree.root.findAll(
+        (node) =>
+          node.props.accessibilityLabel === "Deck name" &&
+          typeof node.type !== "string",
+      )[0];
+
+    await act(async () => nameField().props.onChangeText(""));
+    await act(async () => button("Import deck").props.onPress());
+    expect(text()).toContain("Name is required");
+
+    await act(async () => button("Paste from clipboard again").props.onPress());
+
+    expect(text()).not.toContain("Name is required");
+  });
+
   it("opens the imported deck under the id it was saved with", async () => {
     mockClipboard = JSON.stringify({ ...deck, id: "not-a-uuid" });
     const { button } = render();

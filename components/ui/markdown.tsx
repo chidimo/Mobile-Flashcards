@@ -1,5 +1,6 @@
 import MarkdownDisplay from "@ronradtke/react-native-markdown-display";
-import { useColorScheme } from "react-native";
+import { useState } from "react";
+import { useColorScheme, View } from "react-native";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { aliasFenceLanguages } from "@/utils/markdown-languages";
 
@@ -24,37 +25,45 @@ export const Markdown = ({
 }: Props) => {
   const scheme = useColorScheme() ?? "light";
   const { text, primary, surface, border } = useAppTheme();
+  // Code scrolls sideways in a view that only grows to its content, so give it the card's width to fill.
+  const [width, setWidth] = useState(0);
 
   return (
-    <MarkdownDisplay
-      colorScheme={scheme}
-      style={{
-        body: {
-          color: text,
-          fontSize: size,
-          lineHeight: Math.round(size * 1.45),
-          textAlign: centered ? "center" : "left",
-          fontWeight: bold ? "700" : "400",
-        },
-        paragraph: { marginTop: 0, marginBottom: 4 },
-        link: { color: primary },
-        strong: { fontWeight: "700" },
-        code_inline: {
-          color: text,
-          backgroundColor: surface,
-          borderColor: border,
-          borderRadius: 4,
-          fontFamily: "Menlo",
-          fontSize: Math.round(size * 0.9),
-        },
-        fence: { borderColor: border, borderRadius: 10, marginVertical: 8 },
-        fence_token: {
-          color: plainCodeColor[scheme],
-          fontSize: Math.round(size * 0.82),
-        },
-      }}
-    >
-      {aliasFenceLanguages(children)}
-    </MarkdownDisplay>
+    <View onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+      <MarkdownDisplay
+        colorScheme={scheme}
+        style={{
+          body: {
+            color: text,
+            fontSize: size,
+            lineHeight: Math.round(size * 1.45),
+            textAlign: centered ? "center" : "left",
+            fontWeight: bold ? "700" : "400",
+          },
+          paragraph: { marginTop: 0, marginBottom: 4 },
+          link: { color: primary },
+          strong: { fontWeight: "700" },
+          code_inline: {
+            color: text,
+            backgroundColor: surface,
+            borderColor: border,
+            borderRadius: 4,
+            fontFamily: "Menlo",
+            fontSize: Math.round(size * 0.9),
+          },
+          // Bullets and numbers stay beside their text even when the card is centred.
+          list_item: { textAlign: "left" },
+          fence: { borderColor: border, borderRadius: 10, marginVertical: 8 },
+          // Minus the fence's 1px border on each side.
+          fence_code: { minWidth: Math.max(width - 2, 0) },
+          fence_token: {
+            color: plainCodeColor[scheme],
+            fontSize: Math.round(size * 0.82),
+          },
+        }}
+      >
+        {aliasFenceLanguages(children)}
+      </MarkdownDisplay>
+    </View>
   );
 };
