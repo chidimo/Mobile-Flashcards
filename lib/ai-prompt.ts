@@ -1,39 +1,6 @@
-const example = {
-  id: "00000000-0000-4000-8000-000000000000",
-  title: "CSS Flexbox basics",
-  passMark: 70,
-  questions: [
-    {
-      id: "00000000-0000-4000-8000-000000000001",
-      question:
-        "What does this do?\n```css\n.row { display: flex; gap: 8px; }\n```",
-      answer: "It lays the children out in a **row** with 8px between them.",
-      hint: "Think main axis",
-    },
-  ],
-};
+/** What to paste into an AI chat so it turns the conversation into a deck file this app can import. */
+export const deckPrompt = `Turn what we've discussed into a flashcard deck and generate it as a downloadable file named [topic-name].json (lowercase, hyphens).
 
-export const exampleDeckJson = JSON.stringify(example, null, 2);
+Make 25-30 cards that test understanding, not just recall. If the topic is technical, mix theory with code: about half the cards should show code ("what does this do?", "spot the bug", "which property or function?") and the rest should cover concepts and why things work.
 
-/** What to paste into an AI chat so it turns the conversation into a deck this app can import. */
-export const deckPrompt = `Turn what we've discussed into a flashcard deck for my quiz app.
-
-Make 10-20 cards that test understanding, not just recall. Mix "what does this code do?", "which property...?" and "why...?" questions.
-
-Give me the deck in BOTH of these forms:
-1. A downloadable file named after the topic, as [topic-name].json in lowercase with hyphens (for example css-flexbox.json), if you can create files.
-2. The same JSON in ONE code block I can copy.
-
-The JSON must match this shape exactly:
-
-\`\`\`json
-${exampleDeckJson}
-\`\`\`
-
-Rules:
-- Return only valid JSON, with no comments and no trailing commas.
-- "id" values must be unique UUID v4 strings. Use a different one for the deck and every card.
-- "passMark" is a number from 1 to 100.
-- "hint" is optional; leave it out when there is nothing useful to say.
-- "question", "answer" and "hint" are Markdown. Put code in fenced blocks and ALWAYS name the language (\`\`\`css, \`\`\`js, \`\`\`html, \`\`\`ts, \`\`\`json, \`\`\`python), so it is syntax highlighted. Use \`inline code\` for names and values, and **bold** for key terms.
-- Keep answers short and focused: a sentence or two, plus a code sample only when it helps.`;
+File shape: {"id", "title", "passMark" (1-100), "questions": [{"id", "question", "answer", "hint" (optional)}]}. Valid JSON only. Every "id" is a unique UUID v4. "question", "answer" and "hint" are Markdown; put code in fenced blocks that name the language (\`\`\`css, \`\`\`js).`;

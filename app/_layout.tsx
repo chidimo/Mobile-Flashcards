@@ -1,5 +1,6 @@
 import "../global.css";
 import { useFonts } from "expo-font";
+import { StatusBar } from "expo-status-bar";
 import { Drawer } from "expo-router/drawer";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
@@ -29,6 +30,8 @@ const AppShell = () => {
     <View
       style={[{ flex: 1, backgroundColor: background }, paletteVars(palette)]}
     >
+      {/* "auto" follows the app's light/dark scheme, so the clock and icons stay readable. */}
+      <StatusBar style="auto" />
       <View style={{ flex: 1 }}>
         <Drawer
           drawerContent={(props) => <AppDrawer {...props} />}

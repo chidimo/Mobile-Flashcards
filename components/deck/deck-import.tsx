@@ -46,6 +46,7 @@ export const DeckImport = (props: DeckImportProps) => {
     reset,
     control,
     setValue,
+    clearErrors,
     handleSubmit,
     formState: { errors },
   } = useForm<TCreateDeck>({
@@ -80,6 +81,8 @@ export const DeckImport = (props: DeckImportProps) => {
           id: isValidV4UUID(q.id) ? q.id : Crypto.randomUUID(),
         })),
       );
+      // A failed submit earlier would otherwise leave "Name is required" under a name that is now filled.
+      clearErrors();
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Couldn't read that deck.");
@@ -135,8 +138,8 @@ export const DeckImport = (props: DeckImportProps) => {
               </Text>
               <Text className="text-sm text-neutral-600 dark:text-neutral-300">
                 Copy this prompt into Claude, ChatGPT or any AI after
-                you&apos;ve talked through a topic. It sends back a deck file,
-                and the same deck as text, to import here.
+                you&apos;ve talked through a topic. It sends back a deck file to
+                import here.
               </Text>
             </View>
           </View>
