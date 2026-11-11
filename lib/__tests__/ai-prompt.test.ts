@@ -10,11 +10,16 @@ describe("deckPrompt", () => {
     expect(deckPrompt).toContain("25-30 cards");
   });
 
+  it("asks for a mix of theory and code on technical topics", () => {
+    expect(deckPrompt).toContain("technical");
+    expect(deckPrompt).toContain("mix theory with code");
+  });
+
   it("tells the AI to name code languages", () => {
     expect(deckPrompt).toContain("name the language");
   });
 
   it("stays short enough to paste without flooding the chat", () => {
-    expect(deckPrompt.length).toBeLessThan(600);
+    expect(deckPrompt.length).toBeLessThan(900);
   });
 });
