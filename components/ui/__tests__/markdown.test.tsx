@@ -32,3 +32,40 @@ describe("Markdown code blocks", () => {
     },
   );
 });
+
+const flatStyle = (node: { props: { style?: unknown } }) =>
+  StyleSheet.flatten(node.props.style as never) as Record<string, unknown>;
+
+describe("Markdown layout", () => {
+  beforeEach(() => (useColorScheme as jest.Mock).mockReturnValue("light"));
+
+  it("keeps list text left-aligned inside a centred card", () => {
+    let tree!: ReturnType<typeof create>;
+    act(() => {
+      tree = create(
+        <Markdown centered>{"Pick one\n\n- alpha\n- beta"}</Markdown>,
+      );
+    });
+    const alpha = tree.root
+      .findAll((node) => (node.type as unknown) === Text)
+      .find((node) => node.props.children === "alpha");
+
+    expect(flatStyle(alpha!).textAlign).toBe("left");
+  });
+
+  it("stretches code to the card's width once measured", () => {
+    let tree!: ReturnType<typeof create>;
+    act(() => {
+      tree = create(<Markdown>{css}</Markdown>);
+    });
+    const onLayout = tree.root.findAll((node) => node.props.onLayout)[0].props
+      .onLayout;
+
+    act(() => onLayout({ nativeEvent: { layout: { width: 300 } } }));
+
+    const codeViews = tree.root.findAll(
+      (node) => flatStyle(node)?.minWidth === 298,
+    );
+    expect(codeViews.length).toBeGreaterThan(0);
+  });
+});

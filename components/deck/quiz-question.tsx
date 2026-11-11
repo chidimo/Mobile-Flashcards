@@ -55,10 +55,10 @@ export const QuizQuestion = ({ qs }: Props) => {
             {qs.question}
           </Markdown>
 
-          {showHint ? (
+          {showHint && qs.hint ? (
             <View className="opacity-70">
               <Markdown size={16} centered>
-                {`*Hint:* ${qs.hint ? qs.hint : "N/A"}`}
+                {`*Hint:* ${qs.hint}`}
               </Markdown>
             </View>
           ) : null}

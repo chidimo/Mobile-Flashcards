@@ -46,6 +46,7 @@ export const DeckImport = (props: DeckImportProps) => {
     reset,
     control,
     setValue,
+    clearErrors,
     handleSubmit,
     formState: { errors },
   } = useForm<TCreateDeck>({
@@ -80,6 +81,8 @@ export const DeckImport = (props: DeckImportProps) => {
           id: isValidV4UUID(q.id) ? q.id : Crypto.randomUUID(),
         })),
       );
+      // A failed submit earlier would otherwise leave "Name is required" under a name that is now filled.
+      clearErrors();
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Couldn't read that deck.");
