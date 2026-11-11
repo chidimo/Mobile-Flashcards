@@ -1,25 +1,20 @@
-import { parseDeckFile } from "../deck-file";
-import { deckPrompt, exampleDeckJson } from "../ai-prompt";
+import { deckPrompt } from "../ai-prompt";
 
 describe("deckPrompt", () => {
-  it("embeds an example deck the app can actually import", () => {
-    const deck = parseDeckFile(exampleDeckJson);
-
-    expect(deck.title).toBe("CSS Flexbox basics");
-    expect(deck.questions).toHaveLength(1);
-    expect(deck.questions[0].hint).toBe("Think main axis");
-  });
-
-  it("contains that same example", () => {
-    expect(deckPrompt).toContain(exampleDeckJson);
-  });
-
-  it("asks for both a file and a copyable block", () => {
+  it("asks for a downloadable file named after the topic", () => {
+    expect(deckPrompt).toContain("downloadable file");
     expect(deckPrompt).toContain("[topic-name].json");
-    expect(deckPrompt).toContain("ONE code block");
+  });
+
+  it("asks for 25-30 cards", () => {
+    expect(deckPrompt).toContain("25-30 cards");
   });
 
   it("tells the AI to name code languages", () => {
-    expect(deckPrompt).toContain("ALWAYS name the language");
+    expect(deckPrompt).toContain("name the language");
+  });
+
+  it("stays short enough to paste without flooding the chat", () => {
+    expect(deckPrompt.length).toBeLessThan(600);
   });
 });
