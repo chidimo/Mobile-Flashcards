@@ -38,6 +38,8 @@ export interface Deck {
   questions: Question[];
   passMark: number;
   addedOn: string;
+  /** Hidden from Home and listed under Archived; absent on decks saved before archiving existed. */
+  isArchived?: boolean;
 }
 
 export interface ScoreSaver {
