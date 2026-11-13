@@ -8,6 +8,7 @@ import { Card } from "../ui/card";
 import { PageTitle } from "../ui/page-title";
 import { Screen } from "../ui/screen";
 import { ToggleRow } from "../ui/toggle-row";
+import { SupportSection } from "./support-section";
 
 const updateDescription = (status: string, version: string) => {
   if (status === "checking") return "Checking…";
@@ -93,6 +94,8 @@ export const SettingsScreen = () => {
           onPress={() => void checkNow()}
         />
       </Card>
+
+      <SupportSection />
     </Screen>
   );
 };
