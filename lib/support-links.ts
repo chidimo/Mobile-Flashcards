@@ -23,7 +23,7 @@ export const supportLinks: SupportLink[] = [
     label: "Buy me a coffee",
     description: "A one-off thank you",
     icon: "coffee",
-    url: "",
+    url: "https://buymeacoffee.com/chidimo",
   },
   {
     id: "github-sponsors",
