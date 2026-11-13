@@ -28,6 +28,7 @@ const items: Item[] = [
     path: "/import-deck",
     icon: "file",
   },
+  { label: "Search", href: "/search", path: "/search", icon: "search" },
   {
     label: "Archived",
     href: "/archived",
