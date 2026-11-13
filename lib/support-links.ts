@@ -16,7 +16,7 @@ export const supportLinks: SupportLink[] = [
     label: "Buy me a malt",
     description: "A one-off thank you",
     icon: "gift",
-    url: "",
+    url: "https://buymeamalt.com/@chidimo",
   },
   {
     id: "buy-me-a-coffee",
