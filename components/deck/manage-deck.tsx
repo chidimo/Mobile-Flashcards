@@ -40,6 +40,36 @@ const DeleteDeck = ({ deck }: { deck: Deck | null }) => {
   );
 };
 
+const ArchiveDeck = ({ deck }: { deck: Deck | null }) => {
+  const { archiveDeck } = useFlash();
+  return (
+    <ActionRow
+      icon="archive"
+      label="Archive deck"
+      description="Hide it from Home. You can restore it later"
+      onPress={() => {
+        archiveDeck(deck?.id as string);
+        router.replace("/(tabs)");
+      }}
+    />
+  );
+};
+
+const UnarchiveDeck = ({ deck }: { deck: Deck | null }) => {
+  const { unarchiveDeck } = useFlash();
+  return (
+    <ActionRow
+      icon="inbox"
+      label="Unarchive deck"
+      description="Bring it back to Home"
+      onPress={() => {
+        unarchiveDeck(deck?.id as string);
+        router.replace("/(tabs)");
+      }}
+    />
+  );
+};
+
 const ResetScoreboard = ({ deck }: { deck: Deck | null }) => {
   const { isOn, setOn, setOff } = useOnOffSwitch();
   const { resetScore } = useFlash();
@@ -113,6 +143,11 @@ export const ManageDeck = () => {
           description="Send a .json file others can import"
           onPress={onShare}
         />
+        {deck?.isArchived ? (
+          <UnarchiveDeck deck={deck} />
+        ) : (
+          <ArchiveDeck deck={deck} />
+        )}
         <DeleteDeck deck={deck} />
       </Card>
     </Screen>
