@@ -138,4 +138,33 @@ describe("mergeBackup", () => {
     );
     expect(next.deckOrder).toEqual(["x"]);
   });
+
+  it("stamps imported decks and cards for sync", () => {
+    const { next } = mergeBackup(
+      { flashcards: null, myScores: null },
+      backup,
+      now,
+    );
+
+    const imported = next.flashcards?.[ID_A];
+    expect(imported?.updatedAt).toBe(now.toISOString());
+    expect(imported?.questions[0].updatedAt).toBe(now.toISOString());
+  });
+
+  it("forgets the deletion of a deck that comes back", () => {
+    const { next } = mergeBackup(
+      {
+        flashcards: null,
+        myScores: null,
+        deletedDecks: [
+          { id: ID_A, deletedAt: "t" },
+          { id: "other", deletedAt: "t" },
+        ],
+      },
+      backup,
+      now,
+    );
+
+    expect(next.deletedDecks).toEqual([{ id: "other", deletedAt: "t" }]);
+  });
 });

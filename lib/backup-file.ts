@@ -3,6 +3,7 @@ import { z } from "zod";
 import { Deck, ImportSchema, ScoreSaver, StoreValue } from "@/types/generic";
 import { isValidV4UUID } from "@/utils/validate-uuid";
 import { readJson } from "./deck-file";
+import { removeTombstone } from "./store-migration";
 
 const BackupSchema = z.object({
   type: z.literal("flashcards-backup"),
@@ -91,15 +92,28 @@ export const mergeBackup = (
 ) => {
   const flashcards = { ...state.flashcards };
   const myScores = { ...state.myScores };
+  const stamp = now.toISOString();
+  let deletedDecks = state.deletedDecks;
   let added = 0;
   for (const { scores, ...deck } of backup) {
     if (flashcards[deck.id]) continue;
-    flashcards[deck.id] = { ...deck, addedOn: now.toISOString() };
+    flashcards[deck.id] = {
+      ...deck,
+      addedOn: stamp,
+      updatedAt: stamp,
+      questions: deck.questions.map((q) => ({ ...q, updatedAt: stamp })),
+    };
+    deletedDecks = removeTombstone(deletedDecks, deck.id);
     if (scores.length > 0) myScores[deck.id] = scores;
     added += 1;
   }
   return {
-    next: { ...state, flashcards, myScores },
+    next: {
+      ...state,
+      flashcards,
+      myScores,
+      ...(deletedDecks ? { deletedDecks } : {}),
+    },
     added,
     skipped: backup.length - added,
   };
