@@ -2,7 +2,7 @@
 
 Created: 2026-11-13
 
-Status: Planned for after 1.4 (archive + search). Supersedes the Drive-only plan ([google-drive-sync](2026-11-09-google-drive-sync.md)), whose Google Cloud setup and olamma-reuse notes still apply to the Drive provider.
+Status: In progress, built as stacked PRs (see Progress). Dropbox and OneDrive sign-in are built but untested against the live services; Drive sign-in is not built.
 
 Goal: decks follow a person across devices through storage they already own. Text only, no server of ours. On open, decks are loaded from the connected storage, and edits flow back (two-way).
 
@@ -117,3 +117,25 @@ Change detection uses revisions and hashes, not clocks, so clock skew can't caus
 - Is one connected provider at a time enough, or should a person sync to two?
 - Sync deck order across devices, or keep it per device?
 - Per-card `updatedAt` from day one (recommended, because it makes conflicts mild), or deck-level first?
+
+## Progress
+
+| Step                                                                           | PR                         | State                                       |
+| ------------------------------------------------------------------------------ | -------------------------- | ------------------------------------------- |
+| 1 Data model: `updatedAt`, tombstones, migration                               | #89 (in the 1.5.0 release) | done                                        |
+| 2 Pure planner and deck merge                                                  | #91                        | done, tested                                |
+| 3 Engine, provider interface, remote file format                               | #92                        | done, tested with two simulated devices     |
+| 4 Engine wired to the app (adapter, `SyncProvider`)                            | #93                        | done, tested                                |
+| 5 Dropbox, OneDrive, Drive storage clients                                     | #94                        | done against a mocked `fetch` only          |
+| 6 Settings section                                                             | #95                        | done; hidden until a service is configured  |
+| 7 OAuth (PKCE) sign-in, secure token storage, Dropbox and OneDrive definitions | next PR                    | done against mocks; Drive sign-in not built |
+
+Not built yet: Drive sign-in, "Delete my synced data", purging old tombstones, the web build's sign-in, privacy policy and Data safety updates.
+
+## Owner setup for what is built
+
+- **Dropbox:** create an app (scoped access, "App folder"), enable `files.content.read` and `files.content.write`, add the redirect URI below, put the app key in `EXPO_PUBLIC_DROPBOX_APP_KEY` (in `eas.json` env). Development-status apps cap the number of linked users; check Dropbox's rule for applying for production.
+- **OneDrive:** Azure app registration, platform "Mobile and desktop", redirect URI below, delegated permissions `Files.ReadWrite.AppFolder` and `offline_access`, put the Application (client) ID in `EXPO_PUBLIC_ONEDRIVE_CLIENT_ID`.
+- **Redirect URI:** `myapp://oauth`. `myapp` is the template default in `app.json` (`scheme`); changing it to a real name before the first public release is cleaner, and the redirect URI registered with each service must match.
+- Builds without a key hide that service in Settings.
+- Tokens live in the device keychain/keystore (`expo-secure-store`, a new native module: needs a new native build).
