@@ -8,6 +8,8 @@ const routes = [
   { name: "index", href: "/index" },
   { name: "add-deck", href: "/add-deck" },
   { name: "import-deck", href: "/import-deck" },
+  { name: "search", href: "/search" },
+  { name: "archived", href: "/archived" },
   { name: "settings", href: "/settings" },
 ];
 

@@ -14,7 +14,9 @@ import { isValidV4UUID } from "@/utils/validate-uuid";
 
 interface FlashContext {
   deckNames: string[];
+  /** Active (not archived) decks in the person's order. */
   deckOfCards: Deck[] | null;
+  archivedDecks: Deck[];
   addDeck: (name: string, passMark: number) => void;
   updateDeck: (deckId: string, name: string, passMark: number) => void;
   updateCard: (
@@ -30,6 +32,8 @@ interface FlashContext {
     passMark: number,
     questions: Question[],
   ) => void;
+  archiveDeck: (deckId: string) => void;
+  unarchiveDeck: (deckId: string) => void;
   deleteDeck: (deckId: string) => void;
   /** Saves the decks in this order (all deck ids, first to last). */
   reorderDecks: (deckIds: string[]) => void;
@@ -67,10 +71,34 @@ export function FlashProvider({ children }: Readonly<Props>) {
     // clearAll();
   }, []);
 
+  const setDeckArchived = (deckId: string, isArchived: boolean) => {
+    if (!state.flashcards?.[deckId]) return;
+    const updated = {
+      ...state,
+      flashcards: {
+        ...state.flashcards,
+        [deckId]: { ...state.flashcards[deckId], isArchived },
+      },
+    };
+    setItemToStorage(updated, flashCardKey);
+    setState(updated);
+  };
+
   const memoizedCtxValue = useMemo(() => {
     return {
-      deckOfCards: orderDecks(flashes, state.deckOrder),
+      deckOfCards: orderDecks(flashes, state.deckOrder).filter(
+        (deck) => !deck.isArchived,
+      ),
+      archivedDecks: orderDecks(flashes, state.deckOrder).filter(
+        (deck) => deck.isArchived,
+      ),
       deckNames: flashes ? Object.values(flashes).map((e) => e.title) : [],
+      archiveDeck(deckId: string) {
+        setDeckArchived(deckId, true);
+      },
+      unarchiveDeck(deckId: string) {
+        setDeckArchived(deckId, false);
+      },
       deleteDeck(deckId: string) {
         if (!state.flashcards) return;
 

@@ -95,3 +95,37 @@ describe("deck order", () => {
     expect(saved.deckOrder).toEqual(["c", "b"]);
   });
 });
+
+describe("archiving", () => {
+  it("moves a deck from Home to Archived and back", async () => {
+    const flash = await setup(store);
+
+    await act(async () => flash().archiveDeck("b"));
+    expect(titles(flash())).toEqual(["A", "C"]);
+    expect(flash().archivedDecks.map((d) => d.title)).toEqual(["B"]);
+
+    await act(async () => flash().unarchiveDeck("b"));
+    expect(titles(flash())).toEqual(["A", "B", "C"]);
+    expect(flash().archivedDecks).toEqual([]);
+  });
+
+  it("keeps a deck archived after the app restarts", async () => {
+    const flash = await setup(store);
+    await act(async () => flash().archiveDeck("a"));
+    const saved = JSON.parse(
+      (await AsyncStorage.getItem(flashCardKey)) ?? "{}",
+    );
+
+    const reloaded = await setup(saved);
+
+    expect(reloaded().archivedDecks.map((d) => d.title)).toEqual(["A"]);
+  });
+
+  it("keeps an archived deck's cards and still finds it by id", async () => {
+    const flash = await setup(store);
+
+    await act(async () => flash().archiveDeck("c"));
+
+    expect(flash().getDeckById("c")?.isArchived).toBe(true);
+  });
+});
