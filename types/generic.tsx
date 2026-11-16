@@ -30,6 +30,8 @@ export interface Question {
   question: string;
   answer: string;
   hint?: string;
+  /** When the card was last changed (ISO). Drives sync; filled in by migrateStore for old data. */
+  updatedAt?: string;
 }
 
 export interface Deck {
@@ -40,6 +42,14 @@ export interface Deck {
   addedOn: string;
   /** Hidden from Home and listed under Archived; absent on decks saved before archiving existed. */
   isArchived?: boolean;
+  /** When the deck, its cards, its archive state or its scores last changed (ISO). */
+  updatedAt?: string;
+}
+
+/** A deleted deck, kept so a sync can tell it was deleted here rather than never existing. */
+export interface DeletedDeck {
+  id: string;
+  deletedAt: string;
 }
 
 export interface ScoreSaver {
@@ -53,4 +63,5 @@ export type StoreValue = {
   myScores: Record<string, ScoreSaver[]> | null;
   /** Deck ids in the order the person arranged them; absent until they first reorder. */
   deckOrder?: string[];
+  deletedDecks?: DeletedDeck[];
 };

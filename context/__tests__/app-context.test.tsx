@@ -129,3 +129,116 @@ describe("archiving", () => {
     expect(flash().getDeckById("c")?.isArchived).toBe(true);
   });
 });
+
+describe("sync fields", () => {
+  const stamped = {
+    ...store,
+    flashcards: {
+      a: {
+        ...deck("a", "A"),
+        updatedAt: "2026-01-01T00:00:00.000Z",
+        questions: [{ id: "q1", question: "Q", answer: "A" }],
+      },
+      b: deck("b", "B"),
+    },
+  };
+  const OLD = "2026-01-01T00:00:00.000Z";
+
+  it("fills in updatedAt for data saved before sync", async () => {
+    const flash = await setup(store);
+
+    expect(flash().getDeckById("a")?.updatedAt).toBe("2026-01-01");
+  });
+
+  it("bumps the deck's updatedAt when its title changes", async () => {
+    const flash = await setup(stamped);
+
+    await act(async () => flash().updateDeck("a", "New", 60));
+
+    expect(flash().getDeckById("a")?.updatedAt).not.toBe(OLD);
+    expect(flash().getDeckById("b")?.updatedAt).toBe("2026-01-01");
+  });
+
+  it("stamps a new card and its deck together", async () => {
+    const flash = await setup(stamped);
+
+    await act(async () => flash().addCardToDeck("a", "Q2", "A2"));
+
+    const added = flash().getDeckById("a");
+    const card = added?.questions[1];
+    expect(card?.updatedAt).toBeDefined();
+    expect(added?.updatedAt).toBe(card?.updatedAt);
+  });
+
+  it("bumps only the edited card", async () => {
+    const flash = await setup(stamped);
+
+    await act(async () => flash().updateCard("a", "q1", "Q!", "A!"));
+
+    const edited = flash().getDeckById("a");
+    expect(edited?.questions[0].updatedAt).not.toBe(OLD);
+    expect(edited?.updatedAt).toBe(edited?.questions[0].updatedAt);
+  });
+
+  it.each([
+    ["a card is deleted", (f: Flash) => f.deleteCard("a", "q1"), "a", OLD],
+    ["a deck is archived", (f: Flash) => f.archiveDeck("b"), "b", "2026-01-01"],
+    [
+      "a score is saved",
+      (f: Flash) => f.saveMyScore("b", 1, 2),
+      "b",
+      "2026-01-01",
+    ],
+    [
+      "the scoreboard is reset",
+      (f: Flash) => f.resetScore("b"),
+      "b",
+      "2026-01-01",
+    ],
+  ])("bumps the deck when %s", async (_name, change, id, before) => {
+    const flash = await setup({
+      ...stamped,
+      myScores: { b: [{ numberOfQuestions: 1, actualScore: 1, date: "d" }] },
+    });
+
+    await act(async () => change(flash()));
+
+    expect(flash().getDeckById(id)?.updatedAt).not.toBe(before);
+  });
+
+  it("records a tombstone when a deck is deleted", async () => {
+    const flash = await setup(stamped);
+
+    await act(async () => flash().deleteDeck("a"));
+
+    const saved = JSON.parse(
+      (await AsyncStorage.getItem(flashCardKey)) ?? "{}",
+    );
+    expect(saved.deletedDecks).toEqual([
+      { id: "a", deletedAt: expect.any(String) },
+    ]);
+    expect(saved.flashcards.a).toBeUndefined();
+  });
+
+  it("forgets the tombstone when the same deck is imported again", async () => {
+    const flash = await setup(stamped);
+    await act(async () => flash().deleteDeck("b"));
+
+    await act(async () =>
+      flash().importDeck("00000000-0000-4000-8000-0000000000bb", "B", 50, []),
+    );
+    // A different id never matched the tombstone, so it is still there.
+    let saved = JSON.parse((await AsyncStorage.getItem(flashCardKey)) ?? "{}");
+    expect(saved.deletedDecks).toHaveLength(1);
+
+    const id = "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d";
+    const fresh = await setup({
+      ...stamped,
+      deletedDecks: [{ id, deletedAt: "t" }],
+    });
+    await act(async () => fresh().importDeck(id, "Back", 50, []));
+    saved = JSON.parse((await AsyncStorage.getItem(flashCardKey)) ?? "{}");
+    expect(saved.deletedDecks).toEqual([]);
+    expect(saved.flashcards[id].updatedAt).toBeDefined();
+  });
+});
