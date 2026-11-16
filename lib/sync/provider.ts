@@ -23,3 +23,16 @@ export interface StorageProvider {
     ifRevision?: string,
   ): Promise<{ revision: string }>;
 }
+
+/** A storage service the person can connect: how to sign in, get back in silently, and sign out. */
+export interface ProviderDefinition {
+  id: string;
+  label: string;
+  /** False when this build has no client ID for it; the option is hidden. */
+  isConfigured(): boolean;
+  /** Interactive sign-in. */
+  connect(): Promise<StorageProvider>;
+  /** Back in without a prompt (a stored session), or null if the person must connect again. */
+  restore(): Promise<StorageProvider | null>;
+  disconnect(): Promise<void>;
+}

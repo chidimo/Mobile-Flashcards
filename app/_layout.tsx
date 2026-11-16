@@ -8,6 +8,7 @@ import { View } from "react-native";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { FlashProvider } from "@/context/app-context";
+import { SyncProvider } from "@/context/sync-context";
 import { NotifierWrapper } from "react-native-notifier";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppTheme } from "@/hooks/use-app-theme";
@@ -83,9 +84,11 @@ export default function RootLayout() {
         <NotifierWrapper>
           <ThemeProvider>
             <FlashProvider>
-              <UpdateProvider>
-                <AppShell />
-              </UpdateProvider>
+              <SyncProvider>
+                <UpdateProvider>
+                  <AppShell />
+                </UpdateProvider>
+              </SyncProvider>
             </FlashProvider>
           </ThemeProvider>
         </NotifierWrapper>
