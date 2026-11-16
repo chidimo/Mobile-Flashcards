@@ -8,6 +8,7 @@ import { Card } from "../ui/card";
 import { PageTitle } from "../ui/page-title";
 import { Screen } from "../ui/screen";
 import { ToggleRow } from "../ui/toggle-row";
+import { BackupSection } from "./backup-section";
 import { DeveloperLink } from "./developer-link";
 
 const updateDescription = (status: string, version: string) => {
@@ -94,6 +95,8 @@ export const SettingsScreen = () => {
           onPress={() => void checkNow()}
         />
       </Card>
+
+      <BackupSection />
 
       <DeveloperLink />
     </Screen>

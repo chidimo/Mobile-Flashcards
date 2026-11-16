@@ -59,22 +59,26 @@ const parseJson = (text: string): unknown => {
   }
 };
 
-/** Reads a deck from shared JSON, with errors fit to show a person. */
-export const parseDeckFile = (text: string): ImportedDeck => {
+/** Parses pasted or picked JSON text, with errors fit to show a person. */
+export const readJson = (text: string): unknown => {
   if (text.trim() === "") {
     throw new Error(
       "There's nothing to import: the text is empty. If iPhone asked to allow paste, choose Allow Paste.",
     );
   }
-  let data: unknown;
   try {
-    data = parseJson(extractJson(text));
+    return parseJson(extractJson(text));
   } catch (error) {
     const detail = error instanceof Error ? ` (${error.message})` : "";
     throw new Error(
       `That isn't valid JSON${detail}. Copy the whole deck and try again.`,
     );
   }
+};
+
+/** Reads a deck from shared JSON, with errors fit to show a person. */
+export const parseDeckFile = (text: string): ImportedDeck => {
+  const data = readJson(text);
   const result = ImportSchema.safeParse(data);
   if (!result.success) {
     const issue = result.error.issues[0];
