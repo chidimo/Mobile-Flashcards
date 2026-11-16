@@ -10,6 +10,10 @@
 
 - Persistent storage goes through `lib/work-with-storage.ts`, never `AsyncStorage` directly.
 
+## Releases
+
+- Before any production build, bump `version` in `app.json` (e.g. `1.3.0` to `1.4.0`) and ship the bump with the release. Never build production from an unbumped version. EAS auto-increments the Android version code, but not the version name.
+
 ## Git branching workflow
 
 - `master` is the deploy branch — always production-ready.
