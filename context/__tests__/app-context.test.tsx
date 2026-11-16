@@ -129,3 +129,42 @@ describe("archiving", () => {
     expect(flash().getDeckById("c")?.isArchived).toBe(true);
   });
 });
+
+describe("importing a backup", () => {
+  const backup = (id: string, title: string) => ({
+    id,
+    title,
+    passMark: 50,
+    questions: [],
+    scores: [{ numberOfQuestions: 2, actualScore: 1, date: "2026-02-02" }],
+  });
+
+  it("adds new decks with their scores and saves them", async () => {
+    const flash = await setup(store);
+
+    let result;
+    await act(async () => {
+      result = flash().importBackup([backup("d", "D")]);
+    });
+
+    expect(result).toEqual({ added: 1, skipped: 0 });
+    expect(titles(flash())).toEqual(["A", "B", "C", "D"]);
+    expect(flash().getScoresById("d")).toHaveLength(1);
+    const saved = JSON.parse(
+      (await AsyncStorage.getItem(flashCardKey)) ?? "{}",
+    );
+    expect(saved.flashcards.d.title).toBe("D");
+  });
+
+  it("skips a deck whose id is already here", async () => {
+    const flash = await setup(store);
+
+    let result;
+    await act(async () => {
+      result = flash().importBackup([backup("a", "Other A")]);
+    });
+
+    expect(result).toEqual({ added: 0, skipped: 1 });
+    expect(titles(flash())).toEqual(["A", "B", "C"]);
+  });
+});

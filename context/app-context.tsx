@@ -6,6 +6,7 @@ import {
   setItemToStorage,
 } from "@/lib/work-with-storage";
 import { orderDecks } from "@/lib/deck-order";
+import { BackupDeck, mergeBackup } from "@/lib/backup-file";
 import { createContext, useMemo, useState, useContext, useEffect } from "react";
 import { Deck, Question, ScoreSaver, StoreValue } from "@/types/generic";
 import { router } from "expo-router";
@@ -34,6 +35,8 @@ interface FlashContext {
   ) => void;
   archiveDeck: (deckId: string) => void;
   unarchiveDeck: (deckId: string) => void;
+  /** Adds the backed-up decks, skipping any whose id is already here. */
+  importBackup: (decks: BackupDeck[]) => { added: number; skipped: number };
   deleteDeck: (deckId: string) => void;
   /** Saves the decks in this order (all deck ids, first to last). */
   reorderDecks: (deckIds: string[]) => void;
@@ -93,6 +96,14 @@ export function FlashProvider({ children }: Readonly<Props>) {
         (deck) => deck.isArchived,
       ),
       deckNames: flashes ? Object.values(flashes).map((e) => e.title) : [],
+      importBackup(decks: BackupDeck[]) {
+        const { next, added, skipped } = mergeBackup(state, decks, new Date());
+        if (added > 0) {
+          setItemToStorage(next, flashCardKey);
+          setState(next);
+        }
+        return { added, skipped };
+      },
       archiveDeck(deckId: string) {
         setDeckArchived(deckId, true);
       },
