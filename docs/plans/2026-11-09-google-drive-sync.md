@@ -2,7 +2,7 @@
 
 Created: 2026-11-09
 
-Status: Planned. Starts after the 1.3.0 release and the web deployment ([web plan](2026-11-09-web-deploy.md)); nothing is built yet.
+Status: Superseded by [cloud-sync](2026-11-13-cloud-sync.md), which adds Dropbox and OneDrive and a two-way merge design. Kept for the Google setup details. Was: Planned. Starts after the 1.3.0 release and the web deployment ([web plan](2026-11-09-web-deploy.md)); nothing is built yet.
 
 Goal: a person signs in with Google once per device and their decks follow them (phone, PC web). Text only, no server of ours.
 
