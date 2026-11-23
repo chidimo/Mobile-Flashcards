@@ -8,7 +8,9 @@ import { Card } from "../ui/card";
 import { PageTitle } from "../ui/page-title";
 import { Screen } from "../ui/screen";
 import { ToggleRow } from "../ui/toggle-row";
+import { BackupSection } from "./backup-section";
 import { DeveloperLink } from "./developer-link";
+import { SyncSection } from "./sync-section";
 
 const updateDescription = (status: string, version: string) => {
   if (status === "checking") return "Checking…";
@@ -94,6 +96,10 @@ export const SettingsScreen = () => {
           onPress={() => void checkNow()}
         />
       </Card>
+
+      <SyncSection />
+
+      <BackupSection />
 
       <DeveloperLink />
     </Screen>

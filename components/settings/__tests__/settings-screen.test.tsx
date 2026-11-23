@@ -7,6 +7,12 @@ import { ThemeProvider } from "@/context/theme-context";
 import { UpdateProvider } from "@/context/update-context";
 import { SettingsScreen } from "../settings-screen";
 
+jest.mock("@/components/settings/sync-section", () => ({
+  SyncSection: () => null,
+}));
+jest.mock("@/components/settings/backup-section", () => ({
+  BackupSection: () => null,
+}));
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
