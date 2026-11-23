@@ -2,17 +2,25 @@ import { showNotification } from "@/components/notifier";
 import { flashCardKey } from "@/constants";
 import {
   // clearAll,
-  getItemFromStorage,
+  readFromStorage,
   setItemToStorage,
 } from "@/lib/work-with-storage";
 import { orderDecks } from "@/lib/deck-order";
+import { applyChangesToStore, StoreChanges } from "@/lib/sync/store-adapter";
 import { BackupDeck, mergeBackup } from "@/lib/backup-file";
 import {
   addTombstone,
   migrateStore,
   removeTombstone,
 } from "@/lib/store-migration";
-import { createContext, useMemo, useState, useContext, useEffect } from "react";
+import {
+  createContext,
+  useMemo,
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { Deck, Question, ScoreSaver, StoreValue } from "@/types/generic";
 import { router } from "expo-router";
 import * as Crypto from "expo-crypto";
@@ -42,6 +50,12 @@ interface FlashContext {
   unarchiveDeck: (deckId: string) => void;
   /** Adds the backed-up decks, skipping any whose id is already here. */
   importBackup: (decks: BackupDeck[]) => { added: number; skipped: number };
+  /** False until the saved decks have been read; sync must not run before then. */
+  isLoaded: boolean;
+  /** The latest data, for code that runs outside a render (sync). */
+  readStore: () => StoreValue;
+  /** Applies decks and removals that arrived from sync. */
+  applySyncChanges: (changes: StoreChanges) => void;
   deleteDeck: (deckId: string) => void;
   /** Saves the decks in this order (all deck ids, first to last). */
   reorderDecks: (deckIds: string[]) => void;
@@ -78,11 +92,17 @@ export function FlashProvider({ children }: Readonly<Props>) {
     flashcards: null,
     myScores: null,
   });
+  // Updated during render and on sync, so async code never reads a stale render.
+  const stateRef = useRef(state);
+  stateRef.current = state;
   const flashes = state.flashcards ?? {};
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    getItemFromStorage<StoreValue>(flashCardKey, (data) => {
+    void readFromStorage<StoreValue>(flashCardKey).then((data) => {
       if (data) setState(migrateStore(data));
+      setIsLoaded(true);
     });
     // clearAll();
   }, []);
@@ -120,6 +140,14 @@ export function FlashProvider({ children }: Readonly<Props>) {
           setState(next);
         }
         return { added, skipped };
+      },
+      isLoaded,
+      readStore: () => stateRef.current,
+      applySyncChanges(changes: StoreChanges) {
+        const next = applyChangesToStore(stateRef.current, changes);
+        stateRef.current = next;
+        setItemToStorage(next, flashCardKey);
+        setState(next);
       },
       archiveDeck(deckId: string) {
         setDeckArchived(deckId, true);
@@ -353,7 +381,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
         showNotification("Success", "Scoreboard reset successfully!");
       },
     };
-  }, [state]);
+  }, [state, isLoaded]);
 
   return (
     <FlashContext.Provider value={memoizedCtxValue}>
