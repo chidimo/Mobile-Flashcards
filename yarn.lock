@@ -4780,6 +4780,11 @@ expo-router@~58.0.30:
     sf-symbols-typescript "^2.1.0"
     standard-navigation "^0.0.5"
 
+expo-secure-store@~58.0.3:
+  version "58.0.3"
+  resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-58.0.3.tgz#db03d96b6aa185c9775034bbd84cbf07d72b3deb"
+  integrity sha512-RpubZfqJREEcwKbx3HFoWbtDd31t+yESMj7Ei5/mGQp5vViwUBzL4nUCZRLFyt+O690mT8We7dDtIUZeIk6LbQ==
+
 expo-server@^58.0.6:
   version "58.0.6"
   resolved "https://registry.yarnpkg.com/expo-server/-/expo-server-58.0.6.tgz#1bc9cdaa3843b7a33608e653dc8b1b8f88feaee8"
