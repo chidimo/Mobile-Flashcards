@@ -6,6 +6,12 @@ import {
   setItemToStorage,
 } from "@/lib/work-with-storage";
 import { orderDecks } from "@/lib/deck-order";
+import { BackupDeck, mergeBackup } from "@/lib/backup-file";
+import {
+  addTombstone,
+  migrateStore,
+  removeTombstone,
+} from "@/lib/store-migration";
 import { createContext, useMemo, useState, useContext, useEffect } from "react";
 import { Deck, Question, ScoreSaver, StoreValue } from "@/types/generic";
 import { router } from "expo-router";
@@ -34,6 +40,8 @@ interface FlashContext {
   ) => void;
   archiveDeck: (deckId: string) => void;
   unarchiveDeck: (deckId: string) => void;
+  /** Adds the backed-up decks, skipping any whose id is already here. */
+  importBackup: (decks: BackupDeck[]) => { added: number; skipped: number };
   deleteDeck: (deckId: string) => void;
   /** Saves the decks in this order (all deck ids, first to last). */
   reorderDecks: (deckIds: string[]) => void;
@@ -57,6 +65,14 @@ interface Props {
   children: React.ReactNode;
 }
 
+const now = () => new Date().toISOString();
+
+/** The decks with this one's updatedAt set to now (scores live outside the deck but sync with it). */
+const touchDeck = (decks: StoreValue["flashcards"], deckId: string) =>
+  decks?.[deckId]
+    ? { ...decks, [deckId]: { ...decks[deckId], updatedAt: now() } }
+    : decks;
+
 export function FlashProvider({ children }: Readonly<Props>) {
   const [state, setState] = useState<StoreValue>({
     flashcards: null,
@@ -66,7 +82,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
 
   useEffect(() => {
     getItemFromStorage<StoreValue>(flashCardKey, (data) => {
-      if (data) setState(data);
+      if (data) setState(migrateStore(data));
     });
     // clearAll();
   }, []);
@@ -77,7 +93,11 @@ export function FlashProvider({ children }: Readonly<Props>) {
       ...state,
       flashcards: {
         ...state.flashcards,
-        [deckId]: { ...state.flashcards[deckId], isArchived },
+        [deckId]: {
+          ...state.flashcards[deckId],
+          isArchived,
+          updatedAt: now(),
+        },
       },
     };
     setItemToStorage(updated, flashCardKey);
@@ -93,6 +113,14 @@ export function FlashProvider({ children }: Readonly<Props>) {
         (deck) => deck.isArchived,
       ),
       deckNames: flashes ? Object.values(flashes).map((e) => e.title) : [],
+      importBackup(decks: BackupDeck[]) {
+        const { next, added, skipped } = mergeBackup(state, decks, new Date());
+        if (added > 0) {
+          setItemToStorage(next, flashCardKey);
+          setState(next);
+        }
+        return { added, skipped };
+      },
       archiveDeck(deckId: string) {
         setDeckArchived(deckId, true);
       },
@@ -110,6 +138,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
         };
         delete updated.flashcards[deckId];
         updated.deckOrder = state.deckOrder?.filter((id) => id !== deckId);
+        updated.deletedDecks = addTombstone(state.deletedDecks, deckId, now());
         setItemToStorage(updated, flashCardKey);
         setState(updated);
       },
@@ -127,6 +156,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
             ...state.flashcards,
             [deckId]: {
               ...state.flashcards[deckId],
+              updatedAt: now(),
               questions: [
                 ...(state.flashcards?.[deckId].questions ?? []).filter(
                   (q) => q.id !== qId,
@@ -157,15 +187,17 @@ export function FlashProvider({ children }: Readonly<Props>) {
       ) {
         if (!state.flashcards) return;
         const id = Crypto.randomUUID();
+        const stamp = now();
         const updated = {
           ...state,
           flashcards: {
             ...state.flashcards,
             [deckId]: {
               ...state.flashcards[deckId],
+              updatedAt: stamp,
               questions: [
                 ...(state.flashcards?.[deckId].questions ?? []),
-                { id, question, answer, hint },
+                { id, question, answer, hint, updatedAt: stamp },
               ],
             },
           },
@@ -181,14 +213,17 @@ export function FlashProvider({ children }: Readonly<Props>) {
         hint?: string,
       ) {
         if (!state.flashcards) return;
+        const stamp = now();
         let updated = {
           ...state,
           flashcards: {
             ...state.flashcards,
             [deckId]: {
               ...state.flashcards[deckId],
+              updatedAt: stamp,
               questions: state.flashcards?.[deckId].questions.map((q) => {
-                if (q.id === qId) return { ...q, question, answer, hint };
+                if (q.id === qId)
+                  return { ...q, question, answer, hint, updatedAt: stamp };
                 return q;
               }),
             },
@@ -209,6 +244,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
         }
         updated = {
           ...state,
+          flashcards: touchDeck(state.flashcards, deckId),
           myScores: {
             ...state.myScores,
             [deckId]: [
@@ -235,6 +271,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
               ...state.flashcards[deckId],
               title,
               passMark,
+              updatedAt: now(),
             },
           },
         };
@@ -251,6 +288,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
           showNotification("Fail", "Deck already exists");
           return;
         }
+        const stamp = now();
         updated = {
           ...state,
           flashcards: {
@@ -260,7 +298,8 @@ export function FlashProvider({ children }: Readonly<Props>) {
               title: name,
               questions: [],
               passMark,
-              addedOn: new Date().toISOString(),
+              addedOn: stamp,
+              updatedAt: stamp,
             },
           },
         };
@@ -280,16 +319,19 @@ export function FlashProvider({ children }: Readonly<Props>) {
         if (state.flashcards === null) {
           updated.flashcards = {};
         }
+        const stamp = now();
         updated = {
           ...state,
+          deletedDecks: removeTombstone(state.deletedDecks, newId),
           flashcards: {
             ...state.flashcards,
             [newId]: {
               id: newId,
               title,
-              questions,
+              questions: questions.map((q) => ({ ...q, updatedAt: stamp })),
               passMark,
-              addedOn: new Date().toISOString(),
+              addedOn: stamp,
+              updatedAt: stamp,
             },
           },
         };
@@ -300,6 +342,7 @@ export function FlashProvider({ children }: Readonly<Props>) {
         if (!state.myScores) return;
         let updated = {
           ...state,
+          flashcards: touchDeck(state.flashcards, deckId),
           myScores: {
             ...state.myScores,
             [deckId]: [],
